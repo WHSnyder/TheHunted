@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
+
+
+//Help with jumping 
+//https://answers.unity.com/questions/574328/jumping-with-a-character-controller.html
 
 public class Hunted : NetworkBehaviour
 {
@@ -22,13 +27,17 @@ public class Hunted : NetworkBehaviour
     private AudioSource source;
     private float volLowRange = .5f;
     private float volHighRange = 1.0f;
+    private Vector3 moveDirectionUp = Vector3.zero; 
+    private float jump = 5.0f;
+    private float gravity = 9.8f;
 
-
-    public Rigidbody rb;
-
+    private Rigidbody rb;
+    private CharacterController control; 
 
     // Start is called before the first frame update
     void Start() {
+
+        control = GetComponent<CharacterController>();
 
         if (isLocalPlayer)
         {
@@ -38,8 +47,7 @@ public class Hunted : NetworkBehaviour
             //I think land state was auto set to change...
             source = GetComponent<AudioSource>();
 
-            rb = GetComponent<Rigidbody>();
-
+            //rb = GetComponent<Rigidbody>();
             GameObject.Find("Main Camera").gameObject.transform.parent = this.transform;
         }
         else return;
@@ -52,17 +60,19 @@ public class Hunted : NetworkBehaviour
 
         if (!isLocalPlayer) return;
 
-        if (Input.GetKeyDown("w")) speed = move();
+        if (Input.GetKeyDown("w") || (Input.GetKeyDown("s"))) speed = move();
 
         if (Input.GetKey("w") == false && ButtonCooler <= 0.0f)
         {
             anim.SetFloat("MoveSpeed", 0.0f);
         }
 
-        if (Input.GetKeyDown("space"))
+        //jump if grouned
+        if (Input.GetKeyDown("space") && (control.isGrounded))
         {
+
             anim.Play(jumpHash);
-            rb.AddForce(Vector3.up * 200);
+            moveDirectionUp.y = jump;
         }
 
         if (ButtonCooler > 0.0f) ButtonCooler -= 1.0f * Time.deltaTime;
@@ -71,8 +81,18 @@ public class Hunted : NetworkBehaviour
         float x = Input.GetAxis("Horizontal") * Time.deltaTime * 150.0f;
         float ver = Input.GetAxis("Vertical") * Time.deltaTime * speed;
 
+
         transform.Rotate(0, x, 0);
-        transform.Translate(0, 0, ver);
+        control.Move(transform.forward * ver);
+
+        //jumps
+        moveDirectionUp.y -= gravity * Time.deltaTime;
+        control.Move(moveDirectionUp * Time.deltaTime);
+
+        if (transform.position.y < -1.0f) {
+            SceneManager.LoadScene("NetworkTest"); 
+        }
+
     }
 
 
@@ -81,15 +101,20 @@ public class Hunted : NetworkBehaviour
         if (ButtonCooler > 0.0f && ButtonCount == 1) {
             print("Double tap!");
             anim.SetFloat("MoveSpeed", 1.0f);
+            //if () {
+                return 5;
+            //}
+            //else {
+            //    return 3;
+            //}
 
-            return 6;
         }
         else {
             ButtonCooler = 0.5f;
             ButtonCount += 1;
             anim.SetFloat("MoveSpeed", .3f);
 
-            return 2;
+            return 3;
         }
     }
 
