@@ -31,6 +31,8 @@ public class Hunted : NetworkBehaviour
     private float jump = 5.0f;
     private float gravity = 9.8f;
 
+    private int midair = 0;
+
     private Rigidbody rb;
     private CharacterController control; 
 
@@ -46,6 +48,8 @@ public class Hunted : NetworkBehaviour
             anim.SetFloat("MoveSpeed", 0f);
             //I think land state was auto set to change...
             source = GetComponent<AudioSource>();
+
+
 
             //rb = GetComponent<Rigidbody>();
             GameObject.Find("Main Camera").gameObject.transform.parent = this.transform;
@@ -67,12 +71,24 @@ public class Hunted : NetworkBehaviour
             anim.SetFloat("MoveSpeed", 0.0f);
         }
 
+        if (midair == 1)
+        {
+            if (control.isGrounded)
+            {
+                anim.SetBool("Grounded", true);
+                midair = 0;
+            }
+        }
+
+
         //jump if grouned
         if (Input.GetKeyDown("space") && (control.isGrounded))
         {
 
             anim.Play(jumpHash);
             moveDirectionUp.y = jump;
+            anim.SetBool("Grounded", false);
+            midair = 1;
         }
 
         if (ButtonCooler > 0.0f) ButtonCooler -= 1.0f * Time.deltaTime;
