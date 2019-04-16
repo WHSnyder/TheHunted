@@ -52,6 +52,8 @@ public class Hunted : NetworkBehaviour
 
 
             //rb = GetComponent<Rigidbody>();
+            Vector3 cameraSpawn = this.transform.position - 2*Vector3.forward + 1.2f*Vector3.up;
+            GameObject.Find("Main Camera").gameObject.transform.SetPositionAndRotation(cameraSpawn, Quaternion.identity);
             GameObject.Find("Main Camera").gameObject.transform.parent = this.transform;
         }
         else return;
@@ -105,9 +107,9 @@ public class Hunted : NetworkBehaviour
         moveDirectionUp.y -= gravity * Time.deltaTime;
         control.Move(moveDirectionUp * Time.deltaTime);
 
-        if (transform.position.y < -1.0f) {
-            SceneManager.LoadScene("NetworkTest"); 
-        }
+       // if (transform.position.y < -1.0f) {
+       //     SceneManager.LoadScene("NetworkTest"); 
+       // }
 
     }
 
@@ -134,5 +136,5 @@ public class Hunted : NetworkBehaviour
         }
     }
 
-    public void Step() { source.PlayOneShot(stepSound,1f); }
+    public void Step() { /*source.PlayOneShot(stepSound,1f);*/ }
 }
