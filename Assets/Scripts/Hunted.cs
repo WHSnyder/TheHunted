@@ -22,7 +22,7 @@ public class Hunted : NetworkBehaviour
     int jumpHash = Animator.StringToHash("Base Layer.Jump");
     int walkHash = Animator.StringToHash("Base Layer.Movement");
 
-
+    public GameObject crumb; 
     public AudioClip stepSound;
     private AudioSource source;
     private float volLowRange = .5f;
@@ -43,6 +43,8 @@ public class Hunted : NetworkBehaviour
 
         if (isLocalPlayer)
         {
+
+            GameObject crumb = Resources.Load("BreadCrumb") as GameObject; 
 
             anim = GetComponent<Animator>();
             anim.SetFloat("MoveSpeed", 0f);
@@ -71,6 +73,10 @@ public class Hunted : NetworkBehaviour
         if (Input.GetKey("w") == false && ButtonCooler <= 0.0f)
         {
             anim.SetFloat("MoveSpeed", 0.0f);
+        } 
+
+        if (Input.GetKeyDown("b")) {
+            dropBread(); 
         }
 
         if (midair == 1)
@@ -136,5 +142,14 @@ public class Hunted : NetworkBehaviour
         }
     }
 
-    public void Step() { source.PlayOneShot(stepSound,1f); }
+    public void Step() {/* source.PlayOneShot(stepSound,1f); */}
+
+    public void dropBread()
+    {
+        Vector3 v = new Vector3(transform.position.x, transform.position.y - .1f,
+                                    transform.position.z);
+        GameObject b = Instantiate(crumb, v, transform.rotation);
+
+    }
+
 }
