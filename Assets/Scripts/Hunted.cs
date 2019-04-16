@@ -83,7 +83,7 @@ public class Hunted : NetworkBehaviour
         }
 
 
-        //jump if grouned
+        //jump if grounded
         if (Input.GetKeyDown("space") && (control.isGrounded))
         {
 
