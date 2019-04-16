@@ -1,8 +1,12 @@
 fileFormatVersion: 2
 guid: d0eea83ed8c35c64f8da6c1d8700a2df
 TextureImporter:
+<<<<<<< HEAD
   fileIDToRecycleName:
     2186277476908879412: ImportLogs
+=======
+  fileIDToRecycleName: {}
+>>>>>>> 43cc2b504d1f0a359ce3042e625ed0941aaf5919
   externalObjects: {}
   serializedVersion: 7
   mipmaps:
@@ -28,7 +32,7 @@ TextureImporter:
   generateCubemap: 6
   cubemapConvolution: 0
   seamlessCubemap: 0
-  textureFormat: -1
+  textureFormat: 1
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
