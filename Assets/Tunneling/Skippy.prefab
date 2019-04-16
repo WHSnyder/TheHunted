@@ -195,6 +195,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fb9e010c5b654cd3a0f858593fef5ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  crumb: {fileID: 122821679249730176, guid: 5fe2276dd598d45669c01f7afe66192f, type: 3}
   stepSound: {fileID: 8300000, guid: 20d2d7095a3b13c43baf263091e3a359, type: 3}
 --- !u!1001 &299551462721996511
 PrefabInstance:
