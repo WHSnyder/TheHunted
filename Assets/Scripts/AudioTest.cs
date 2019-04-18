@@ -11,15 +11,16 @@ public class AudioTest : MonoBehaviour
 
     void Start()
     {
-        source = this.GetComponent<AudioSource>();   
+        source = this.GetComponent<AudioSource>();
+        source.Play();  
     }
 
     // Update is called once per frame
     void Update()
     {
-        soundIncr += Time.deltaTime;
+       soundIncr += Time.deltaTime;
 
-        if (soundIncr > 1)
+       if (soundIncr > .5)
         {
             soundIncr = 0;
             source.Play();

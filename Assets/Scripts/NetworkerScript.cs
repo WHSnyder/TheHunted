@@ -33,14 +33,11 @@ public class NetworkerScript : NetworkManager
 
         if (NetworkServer.connections.Count == 1)
         {
-            Debug.Log("Spawning Hunted...");
 
             player = Instantiate(characters[0], startPos, Quaternion.identity) as GameObject;
         }
         else
         {
-            Debug.Log("Spawning Kathy...");
-
             player = Instantiate(characters[1], startPos, Quaternion.identity) as GameObject;
 
         }
