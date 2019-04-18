@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraMainMenu : MonoBehaviour
 {
 
-    private float RotationSpeed = 5.0f;
+    private float RotationSpeed = 6.0f;
 
     // Update is called once per frame
     void Update()
