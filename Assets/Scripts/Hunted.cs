@@ -142,7 +142,7 @@ public class Hunted : NetworkBehaviour
         }
     }
 
-    public void Step() {/* source.PlayOneShot(stepSound,1f); */}
+    public void Step() { source.PlayOneShot(stepSound,1f); }
 
     public void dropBread()
     {
