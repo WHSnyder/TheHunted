@@ -57,6 +57,10 @@ public class Hunted : NetworkBehaviour
             Vector3 cameraSpawn = this.transform.position - 2*Vector3.forward + 1.2f*Vector3.up;
             GameObject.Find("Main Camera").gameObject.transform.SetPositionAndRotation(cameraSpawn, Quaternion.identity);
             GameObject.Find("Main Camera").gameObject.transform.parent = this.transform;
+
+            Vector3 lightPos = this.transform.position + Vector3.right + .5f*Vector3.up;
+            GameObject.Find("FlashLight").gameObject.transform.SetPositionAndRotation(lightPos, Quaternion.Euler(0,0,0));
+            GameObject.Find("FlashLight").gameObject.transform.parent = this.transform;
         }
         else return;
     }

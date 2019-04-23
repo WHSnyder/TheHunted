@@ -18,12 +18,12 @@ public class AudioTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       soundIncr += Time.deltaTime;
+       /*soundIncr += Time.deltaTime;
 
        if (soundIncr > .5)
         {
             soundIncr = 0;
             source.Play();
-        }
+        }*/
     }
 }
