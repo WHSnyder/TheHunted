@@ -7,6 +7,8 @@ public class FLSource : MonoBehaviour {
 
     private Light source, bounce;
     private bool on = false;
+    private float power = 10.0f;
+    private bool hasPower = true;
 
     int layerMask;
 
@@ -44,7 +46,7 @@ public class FLSource : MonoBehaviour {
             on = false;
         }
 
-        if (on){
+        if ((on) && (hasPower)){
             // Does the ray intersect any objects excluding the player layer
             if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity,layerMask)){
 
@@ -60,6 +62,17 @@ public class FLSource : MonoBehaviour {
                 bounce.enabled = true;
 
                 Debug.DrawRay(hit.point, reflection*10, Color.red);
+
+                power -= 1f; 
+                if (power < 0) {
+                    hasPower = false;
+                }
+                else {
+                    hasPower = true;
+                }
+                Debug.Log(power);
+
+
             }
         }
     }

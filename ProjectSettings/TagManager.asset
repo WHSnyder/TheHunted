@@ -9,6 +9,9 @@ TagManager:
   - Enemy
   - Player2
   - Maze
+  - New tag
+  - WaterSwitch
+  - Water
   layers:
   - Default
   - TransparentFX
