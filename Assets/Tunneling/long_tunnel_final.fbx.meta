@@ -5,8 +5,12 @@ ModelImporter:
   fileIDToRecycleName:
     100000: Coll
     100002: //RootNode
+    100004: Arches
+    100006: Join
     400000: Coll
     400002: //RootNode
+    400004: Arches
+    400006: Join
     2100000: Floor
     2100002: DarkBrick.001
     2100004: Rusty
@@ -14,10 +18,16 @@ ModelImporter:
     2100008: DarkBrick
     2300000: Coll
     2300002: //RootNode
+    2300004: Arches
+    2300006: Join
     3300000: Coll
     3300002: //RootNode
+    3300004: Arches
+    3300006: Join
     4300000: Arches
     4300002: Coll
+    4300004: Join
+    2186277476908879412: ImportLogs
   externalObjects: {}
   materials:
     importMaterials: 1

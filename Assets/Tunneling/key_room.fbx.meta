@@ -1,34 +1,77 @@
 fileFormatVersion: 2
-guid: 66af3dbb77a404d96804180ee4933d81
+guid: a8861c06980104922accb14ae5ab0390
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
-    100000: Coll
-    100002: //RootNode
-    400000: Coll
-    400002: //RootNode
-    2100000: Floor
-    2100002: DarkBrick
-    2100004: CenterBrick
-    2100006: Stone
+    100000: Casing
+    100002: Coll
+    100004: Connection
+    100006: //RootNode
+    100008: Lid
+    100010: MarbleRing
+    100012: MIddle.001
+    100014: Palm.001
+    100016: Pinky.001
+    100018: Pointer.001
+    100020: Ring.001
+    100022: Stairs
+    100024: Thumb.001
+    400000: Casing
+    400002: Coll
+    400004: Connection
+    400006: //RootNode
+    400008: Lid
+    400010: MarbleRing
+    400012: MIddle.001
+    400014: Palm.001
+    400016: Pinky.001
+    400018: Pointer.001
+    400020: Ring.001
+    400022: Stairs
+    400024: Thumb.001
+    2100000: DarkBrick.001
+    2100002: DarkBrick.003
+    2100004: Floor
+    2100006: CenterBrick
     2100008: Marble
-    2300000: Coll
-    2300002: //RootNode
-    3300000: Coll
-    3300002: //RootNode
-    4300000: TheEntrance
-    4300002: Coll
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Marble
-    second: {fileID: 2100000, guid: d1477019038d24dc78fd7a21018c7917, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Stone
-    second: {fileID: 2100000, guid: 16a1eca0725ff4001aa38b59dd16d798, type: 2}
+    2100010: Stone
+    2300000: Casing
+    2300002: Coll
+    2300004: Connection
+    2300006: Lid
+    2300008: MarbleRing
+    2300010: MIddle.001
+    2300012: Palm.001
+    2300014: Pinky.001
+    2300016: Pointer.001
+    2300018: Ring.001
+    2300020: Stairs
+    2300022: Thumb.001
+    3300000: Casing
+    3300002: Coll
+    3300004: Connection
+    3300006: Lid
+    3300008: MarbleRing
+    3300010: MIddle.001
+    3300012: Palm.001
+    3300014: Pinky.001
+    3300016: Pointer.001
+    3300018: Ring.001
+    3300020: Stairs
+    3300022: Thumb.001
+    4300000: Lid
+    4300002: Casing
+    4300004: Coll
+    4300006: Connection
+    4300008: Palm.001
+    4300010: MarbleRing
+    4300012: Stairs
+    4300014: Thumb.001
+    4300016: Pointer.001
+    4300018: MIddle.001
+    4300020: Ring.001
+    4300022: Pinky.001
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
@@ -84,7 +127,7 @@ ModelImporter:
     hasPreviousCalculatedGlobalScale: 0
   tangentSpace:
     normalSmoothAngle: 60
-    normalImportMode: 0
+    normalImportMode: 1
     tangentImportMode: 3
     normalCalculationMode: 4
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
