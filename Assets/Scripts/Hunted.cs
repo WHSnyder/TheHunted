@@ -113,7 +113,9 @@ public class Hunted : NetworkBehaviour
 
         //jumps
         moveDirectionUp.y -= gravity * Time.deltaTime;
-        control.Move(moveDirectionUp * Time.deltaTime);
+        control.Move(moveDirectionUp * Time.deltaTime); 
+
+        
 
        // if (transform.position.y < -1.0f) {
        //     SceneManager.LoadScene("NetworkTest"); 
