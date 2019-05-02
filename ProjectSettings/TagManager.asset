@@ -9,6 +9,18 @@ TagManager:
   - Enemy
   - Player2
   - Maze
+  - LongTurn
+  - Tunnel
+  - LongTunnel
+  - KeyRoom
+  - PumpRoom
+  - QuadJoiner
+  - ShortTurn
+  - ShortTunnel
+  - segOne
+  - segTwo
+  - segFour
+  - segEight
   layers:
   - Default
   - TransparentFX
