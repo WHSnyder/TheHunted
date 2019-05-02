@@ -1,60 +1,32 @@
 fileFormatVersion: 2
-guid: 003fcf9e4697f43b4b293bd3a4ceff46
+guid: 322e6f9d27e334f3399d5acc838965bc
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
-    100000: Floor
-    100002: Floor_Col
-    100004: //RootNode
-    100006: Shell
-    100008: Shell_Col
-    100010: Join-X
-    100012: Join-Z
-    100014: JoinX
-    100016: JoinZ
-    400000: Floor
-    400002: Floor_Col
-    400004: //RootNode
-    400006: Shell
-    400008: Shell_Col
-    400010: Join-X
-    400012: Join-Z
-    400014: JoinX
-    400016: JoinZ
-    2100000: Floor.003
-    2100002: DarkBrick.006
-    2100004: CenterBrick.003
-    2100006: Floor
-    2100008: DarkBrick
-    2100010: CenterBrick
-    2100012: No Name
-    2100014: Floor.001
-    2100016: DarkBrick.007
-    2300000: Floor
-    2300002: Floor_Col
-    2300004: Shell
-    2300006: Shell_Col
-    2300008: Join-X
-    2300010: Join-Z
-    2300012: JoinX
-    2300014: JoinZ
-    3300000: Floor
-    3300002: Floor_Col
-    3300004: Shell
-    3300006: Shell_Col
-    3300008: Join-X
-    3300010: Join-Z
-    3300012: JoinX
-    3300014: JoinZ
-    4300000: Shell
-    4300002: Floor
-    4300004: Floor_Col
-    4300006: Shell_Col
-    4300008: Join-X
-    4300010: Join-Z
-    4300012: JoinX
-    4300014: JoinZ
-    2186277476908879412: ImportLogs
+    100000: seg8_arch
+    100002: seg8_collision
+    100004: seg8_tunnel
+    100006: //RootNode
+    400000: seg8_arch
+    400002: seg8_collision
+    400004: seg8_tunnel
+    400006: //RootNode
+    2100000: DarkBrick.007
+    2100002: Floor.001
+    2100004: DarkBrick.002
+    2100006: Rusty.001
+    2100008: Floor.002
+    2100010: DarkBrick.003
+    2100012: CenterBrick.002
+    2300000: seg8_arch
+    2300002: seg8_collision
+    2300004: seg8_tunnel
+    3300000: seg8_arch
+    3300002: seg8_collision
+    3300004: seg8_tunnel
+    4300000: seg8_collision
+    4300002: seg8_arch
+    4300004: seg8_tunnel
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -110,8 +82,8 @@ ModelImporter:
     previousCalculatedGlobalScale: 1
     hasPreviousCalculatedGlobalScale: 0
   tangentSpace:
-    normalSmoothAngle: 60
-    normalImportMode: 0
+    normalSmoothAngle: 88
+    normalImportMode: 1
     tangentImportMode: 3
     normalCalculationMode: 4
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0

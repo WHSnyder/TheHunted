@@ -52,8 +52,6 @@ public class Hunted : NetworkBehaviour
             source = GetComponent<AudioSource>();
 
 
-
-            //rb = GetComponent<Rigidbody>();
             Vector3 cameraSpawn = this.transform.position - 2*Vector3.forward + 1.2f*Vector3.up;
             GameObject.Find("Main Camera").gameObject.transform.SetPositionAndRotation(cameraSpawn, Quaternion.identity);
             GameObject.Find("Main Camera").gameObject.transform.parent = this.transform;
@@ -62,11 +60,11 @@ public class Hunted : NetworkBehaviour
             GameObject.Find("FlashLight").gameObject.transform.SetPositionAndRotation(lightPos, Quaternion.Euler(0,0,0));
             GameObject.Find("FlashLight").gameObject.transform.parent = this.transform;
         }
-        else return;
+       else return;
     }
 
 
-    // Update is called once per frame
+
 
     void Update() {
 
@@ -115,7 +113,9 @@ public class Hunted : NetworkBehaviour
 
         //jumps
         moveDirectionUp.y -= gravity * Time.deltaTime;
-        control.Move(moveDirectionUp * Time.deltaTime);
+        control.Move(moveDirectionUp * Time.deltaTime); 
+
+        
 
        // if (transform.position.y < -1.0f) {
        //     SceneManager.LoadScene("NetworkTest"); 

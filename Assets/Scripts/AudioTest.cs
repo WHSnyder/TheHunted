@@ -7,23 +7,25 @@ public class AudioTest : MonoBehaviour
 {
     // Start is called before the first frame update
     private float soundIncr = 0;
-    private AudioSource source;
+    public GameObject stepSourceOne;
+    public GameObject stepSourceTwo;
 
-    void Start()
-    {
-        source = this.GetComponent<AudioSource>();
-        source.Play();  
-    }
+    private Vector3 location;
 
-    // Update is called once per frame
-    void Update()
-    {
-       /*soundIncr += Time.deltaTime;
+    public AudioPlanner planner;
 
-       if (soundIncr > .5)
-        {
+
+
+    void Update(){
+
+        soundIncr += Time.deltaTime;
+
+        if (soundIncr > .5){
+
             soundIncr = 0;
-            source.Play();
-        }*/
+
+            stepSourceOne.GetComponent<AudioSource>().Play();
+            stepSourceTwo.GetComponent<AudioSource>().Play();
+        }
     }
 }
