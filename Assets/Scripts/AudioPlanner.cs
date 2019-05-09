@@ -10,19 +10,22 @@ public enum nodeType {
 };
 
 
+
+
+
+
+
 public class AudioNode
 {
 
     public nodeType type;
     public ArrayList neighbors;
     public Vector3 location, forwards;
-    public bool dest, source, visited;
+    public bool dest, source, visited, closed;
     public int cost;
     public float strength;
 
-    public AudioNode(nodeType _type, Vector3 _loc, Vector3 _forwards)
-    {
-
+    public AudioNode(nodeType _type, Vector3 _loc, Vector3 _forwards){
 
         type = _type;
         neighbors = new ArrayList();
@@ -35,9 +38,10 @@ public class AudioNode
         dest = false;
         source = false;
         visited = false;
+        closed = false;
 
-        switch (_type)
-        {
+        switch (_type){
+
             case nodeType.OneSeg:
 
                 cost = 1;
@@ -79,6 +83,8 @@ public class AudioNode
                 break;
         }
     }
+    
+
 
     public ArrayList searchPositions(){
 
@@ -222,20 +228,17 @@ public class AudioNode
 
         Debug.DrawRay(pos + Vector3.up * 10, 1000*Vector3.down, Color.green, 100);
 
-        if (Physics.Raycast(pos, Vector3.down, out hit, 10000))
-        {
+        if (Physics.Raycast(pos, Vector3.down, out hit, 10000)){
+
             anuda1 = AudioNodeFromObj(hit.collider.gameObject);
             //Debug.Log("not crazy!!");
 
-            if (!map.ContainsKey(hit.collider.gameObject.transform.position))
-            {
-                //Debug.Log("found new....");
-
+            if (!map.ContainsKey(hit.collider.gameObject.transform.position)){
+            
                 result = anuda1;
                 map.Add(hit.collider.gameObject.transform.position, anuda1);
             }
-            else
-            {
+            else{
                 //Debug.Log("found existing....");
                 result = map[anuda1.location];
             }
@@ -256,25 +259,37 @@ public class AudioPlanner : MonoBehaviour {
 
     float timer = 0;
 
-    public GameObject player;
-    public GameObject source;
+    public GameObject player, source;
+
+    RaycastHit hit1, hit2;
+    int layerMask = ~(1 << 9);
+
 
     public int dieDist, decayRate, startStrength;
 
     GameObject stepSourceOne, stepSourceTwo;
 
+    AudioSource stepClipOne, stepClipTwo;
 
     public void Start(){
 
         //start on a quad joiner....
         AudioNode first = AudioNode.AudioNodeFromObj(source), curr;
+
+
         hashMap.Add(first.location, first);
 
         ArrayList neighbors = first.addNeighbors(hashMap);
 
         stepSourceOne = GameObject.Find("stepSourceOne");
         stepSourceTwo = GameObject.Find("stepSourceTwo");
-        player = GameObject.Find("SkippyAlone");
+
+        stepClipOne = stepSourceOne.GetComponent<AudioSource>();
+        stepClipTwo = stepSourceTwo.GetComponent<AudioSource>();
+
+
+
+        player = GameObject.Find("Flasher");
 
         queue.Enqueue(first);
 
@@ -296,34 +311,58 @@ public class AudioPlanner : MonoBehaviour {
             }
         }
         queue.Clear();
+
+        if (player == null || source == null)
+        {
+            Debug.Log("yea its null here");
+        }
     }
 
 
     public void Update(){
 
-        AudioNode playerNode, sourceNode, curr;
+        AudioNode playerNode = null, sourceNode = null, curr = null;
         timer = timer + Time.deltaTime;
 
-        if (timer > 2){
+
+
+        if (player == null)
+        {
+            Debug.Log("source null");
+        }
+
+        stepClipOne.volume =
+        1 - Vector3.Magnitude(player.transform.position - source.transform.position) / dieDist;
+
+        stepClipTwo.volume =
+        1 - Vector3.Magnitude(player.transform.position - source.transform.position) / dieDist;
+
+
+        if (timer > 3){
 
             //Debug.Log("beginning");
 
             float startTime = Time.time; 
 
             timer = 0;
-            RaycastHit hit1, hit2;
-            ArrayList neighbors;
+            ArrayList neighbors, destNeighbors = new ArrayList();
 
-            if (Physics.Raycast(player.transform.position + Vector3.right + 30 * Vector3.up, Vector3.down, out hit1, 1000)
-            && Physics.Raycast(source.transform.position + 20 * Vector3.up, Vector3.down, out hit2, 1000)){
+            if (Physics.Raycast(player.transform.position + Vector3.right + 30 * Vector3.up, Vector3.down, out hit1, 1000, layerMask)
+            && Physics.Raycast(source.transform.position + 20 * Vector3.up, Vector3.down, out hit2, 1000, layerMask)){
 
                 //Debug.Log("Player shot hit: " + hit1.collider.gameObject.ToString());
+                try
+                {
+                    playerNode = hashMap[hit1.collider.gameObject.transform.position];
 
-                playerNode = hashMap[hit1.collider.gameObject.transform.position];
+                    //Debug.Log("Nodes established.....");
 
-                //Debug.Log("Nodes established.....");
-
-                sourceNode = hashMap[hit2.collider.gameObject.transform.position];
+                    sourceNode = hashMap[hit2.collider.gameObject.transform.position];
+                }
+                catch (KeyNotFoundException e)
+                {
+                    Debug.Log("COULDNT FIND VECTOR " + e.Message);
+                }
 
 
                 sourceNode.source = true;
@@ -347,12 +386,18 @@ public class AudioPlanner : MonoBehaviour {
 
                             foreach (AudioNode node in curr.neighbors){
 
-                                if (node != null && node.visited == false && node.dest == false){
+                                if (node == null || node.visited == true || node.strength <= 0 || node.closed) { continue; }
+
+                                if (!node.dest){
 
                                     //Debug.Log("Updating neighbor: " + node.type);
 
                                     node.strength = curr.strength - decayRate * curr.cost;
                                     queue.Enqueue(node);
+                                }
+                                else {
+
+                                    destNeighbors.Add(curr);
                                 }
                             }
                         }
@@ -361,35 +406,35 @@ public class AudioPlanner : MonoBehaviour {
 
                 //Debug.Log("Done search, loggging neighbors of final now ("+ playerNode.type +")............");
 
-                bool flag = false;
+                int count = 0;
                 foreach (AudioNode node in playerNode.neighbors) {
 
-                    if (node == null)
-                    {
+                    if (node == null){
+
                         Debug.Log("yep just null...");
                         continue;
                     }
 
+                    if (node.visited && count == 0){
 
-                    if (node.strength > 0 && !flag){
                         //Debug.Log("Neighbor (" + node.type +") with strength " + node.strength);
                         stepSourceOne.transform.position = node.location;
-                        stepSourceOne.GetComponent<AudioSource>().volume = node.strength / 100;
-                        flag = true;
+                        //stepSourceOne.GetComponent<AudioSource>().volume = node.strength / 100;
+                        count = 1;
                         continue;
                     }
-                    if (node.strength > 0 && flag){
+
+                    if (node.visited && count == 1){
+
                         //Debug.Log("Neighbor (" + node.type + ") with strength " + node.strength);
                         stepSourceTwo.transform.position = node.location;
-                        stepSourceTwo.GetComponent<AudioSource>().volume = node.strength / 100;
-                        flag = true;
-                        break;
+                        //stepSourceOne.GetComponent<AudioSource>().volume = node.strength / 100;
+                        continue;
                     }
                 }
+                count = 0;
 
                 //Debug.Log("........................................................");
-
-                
 
 
                 foreach (Vector3 key in hashMap.Keys) {
