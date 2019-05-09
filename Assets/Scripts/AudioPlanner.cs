@@ -273,7 +273,7 @@ public class AudioPlanner : MonoBehaviour {
 
     public void Start(){
 
-        //start on a quad joiner....
+       /* //start on a quad joiner....
         AudioNode first = AudioNode.AudioNodeFromObj(source), curr;
 
 
@@ -315,7 +315,7 @@ public class AudioPlanner : MonoBehaviour {
         if (player == null || source == null)
         {
             Debug.Log("yea its null here");
-        }
+        }*/
     }
 
 
@@ -324,7 +324,7 @@ public class AudioPlanner : MonoBehaviour {
         AudioNode playerNode = null, sourceNode = null, curr = null;
         timer = timer + Time.deltaTime;
 
-
+        /*
 
         if (player == null)
         {
@@ -445,6 +445,6 @@ public class AudioPlanner : MonoBehaviour {
                     reset.visited = false;
                 }
             }
-        }
+        }*/
     }
 }
