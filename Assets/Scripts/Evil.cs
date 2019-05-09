@@ -69,6 +69,7 @@ public class Evil : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        agent.SetDestination(playerTransform.position);
         toPlayer = playerTransform.position - enemyTransform.position;
         toNavDest = enemyTransform.position - navDest;
 
@@ -76,7 +77,7 @@ public class Evil : MonoBehaviour
 
         
 
-        if (Vector3.Magnitude(toNavDest) < 1){
+        /*if (Vector3.Magnitude(toNavDest) < 1){
 
             currState = EvilState.Looking;
 
@@ -85,7 +86,7 @@ public class Evil : MonoBehaviour
             navDest = patrolPoints[(int) index].transform.position;
             agent.SetDestination(navDest);
 
-        }
+        }*/
 
 
 
@@ -102,8 +103,8 @@ public class Evil : MonoBehaviour
 
 
         if (currState == EvilState.Patrolling ||
-            currState == EvilState.Looking ||
-            currState == EvilState.Searching){
+            //currState == EvilState.Looking 
+             currState == EvilState.Searching){
 
             Debug.DrawRay(enemyTransform.position, toPlayer, Color.green, 1f);
 
