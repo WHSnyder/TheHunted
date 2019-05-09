@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class FLSource : MonoBehaviour {
+public class FLSource : MonoBehaviour
+{
 
-    private Light source, bounce;
+    private VolumetricLight source;
+    private Light bounce;
     private bool on = false;
     private float power = 10.0f;
     private bool hasPower = true;
@@ -17,12 +19,14 @@ public class FLSource : MonoBehaviour {
 
 
     // Start is called before the first frame update
-    void Start(){
+    void Start()
+    {
         layerMask = 1 << 8;
         layerMask = ~layerMask;
 
-        source  = transform.GetChild(0).gameObject.GetComponent<Light>();
-        bounce = transform.GetChild(1).gameObject.GetComponent<Light>();
+        source = GetComponent<VolumetricLight>();
+        bounce = GetComponent<Light>();
+        //bounce = transform.GetChild(1).gameObject.GetComponent<Light>();
 
         bounce.enabled = false;
         source.enabled = false;
@@ -31,49 +35,61 @@ public class FLSource : MonoBehaviour {
 
 
     // Update is called once per frame
-    void Update(){
+    void Update()
+    {
 
-        if (Input.GetMouseButtonDown(0)){
-            source.enabled = true;
-            on = true;
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            source.enabled = !source.enabled;
+            bounce.enabled = !bounce.enabled;
+            //on = true;
 
 
         }
 
-        if (Input.GetMouseButtonUp(0)){
-            source.enabled = false;
-            bounce.enabled = false;
-            on = false;
-        }
 
-        if ((on) && (hasPower)){
-            // Does the ray intersect any objects excluding the player layer
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity,layerMask)){
+        //else
+        //{
+        //    source.enabled = false;
+        //    bounce.enabled = false;
+        //    on = false;
+        //}
 
-                //print("Shot");
+        // if (Input.GetKey(KeyCode.F)){
+        //  source.enabled = false;
+        //    bounce.enabled = false;
+        //     on = false;
+        // }
 
-                Vector3 forward = transform.TransformDirection(Vector3.forward) * 10;
-                Debug.DrawRay(transform.position, forward, Color.green);
+        //if ((on) && (hasPower)){
+        // Does the ray intersect any objects excluding the player layer
+        //if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity,layerMask)){
 
-                shot = hit.point - this.transform.position;
-                reflection = Vector3.Reflect(shot, hit.normal);
+        //    //print("Shot");
 
-                bounce.transform.SetPositionAndRotation(hit.point, Quaternion.LookRotation(reflection));
-                bounce.enabled = true;
+        //    Vector3 forward = transform.TransformDirection(Vector3.forward) * 10;
+        //    Debug.DrawRay(transform.position, forward, Color.green);
 
-                Debug.DrawRay(hit.point, reflection*10, Color.red);
+        //    shot = hit.point - this.transform.position;
+        //    reflection = Vector3.Reflect(shot, hit.normal);
 
-                power -= 1f; 
-                if (power < 0) {
-                    hasPower = false;
-                }
-                else {
-                    hasPower = true;
-                }
-               // Debug.Log(power);
+        //    bounce.transform.SetPositionAndRotation(hit.point, Quaternion.LookRotation(reflection));
+        //    //bounce.enabled = true;
+
+        //    Debug.DrawRay(hit.point, reflection*10, Color.red);
+
+        //    power -= 1f; 
+        //    if (power < 0) {
+        //        hasPower = false;
+        //    }
+        //    else {
+        //        hasPower = true;
+        //    }
+        //   // Debug.Log(power);
 
 
-            }
-        }
+        //}
+        //    }
+        //}
     }
 }
