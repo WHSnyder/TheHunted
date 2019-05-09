@@ -1008,7 +1008,7 @@ PrefabInstance:
     - target: {fileID: 432353996401090155, guid: 2225c4bfc578845f1a63fe957296943b,
         type: 3}
       propertyPath: m_RootOrder
-      value: 77
+      value: 78
       objectReference: {fileID: 0}
     - target: {fileID: 432353996401090155, guid: 2225c4bfc578845f1a63fe957296943b,
         type: 3}
@@ -3624,7 +3624,7 @@ PrefabInstance:
     - target: {fileID: 3907022417247249116, guid: fdd5abfc8e0374a848a4db6c439b7b75,
         type: 3}
       propertyPath: m_Name
-      value: key_room (1)
+      value: key_room
       objectReference: {fileID: 0}
     - target: {fileID: 3907022417247420156, guid: fdd5abfc8e0374a848a4db6c439b7b75,
         type: 3}
