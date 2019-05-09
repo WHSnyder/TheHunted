@@ -1,32 +1,73 @@
 fileFormatVersion: 2
-guid: b5fdbd9a66a2046189888f026cbcc278
+guid: 59084c36429f047d8ac5c9304cd4bb78
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
-    100000: seg2_arch
-    100002: seg2_collision
-    100004: seg2_tunnel
-    100006: //RootNode
-    400000: seg2_arch
-    400002: seg2_collision
-    400004: seg2_tunnel
-    400006: //RootNode
-    2100000: DarkBrick.007
-    2100002: Floor.001
-    2100004: DarkBrick.002
-    2100006: Rusty.001
-    2100008: Floor.002
-    2100010: DarkBrick.003
-    2100012: CenterBrick.002
-    2300000: seg2_arch
-    2300002: seg2_collision
-    2300004: seg2_tunnel
-    3300000: seg2_arch
-    3300002: seg2_collision
-    3300004: seg2_tunnel
-    4300000: seg2_collision
-    4300002: seg2_arch
-    4300004: seg2_tunnel
+    100000: Ankle.L
+    100002: Ankle.R
+    100004: Arm.L
+    100006: Arm.R
+    100008: Armature
+    100010: Ball.L
+    100012: Ball.L_end
+    100014: Ball.R
+    100016: Ball.R_end
+    100018: Bod
+    100020: Chest
+    100022: Forearm.L
+    100024: Forearm.L_end
+    100026: Forearm.R
+    100028: Forearm.R_end
+    100030: Head
+    100032: Head_end
+    100034: IK.L
+    100036: IK.L_end
+    100038: IK.R
+    100040: IK.R_end
+    100042: MiddleThigh.L
+    100044: MiddleThigh.R
+    100046: Root
+    100048: Shin.L
+    100050: Shin.R
+    100052: //RootNode
+    100054: Thigh.L
+    100056: Thigh.R
+    400000: Ankle.L
+    400002: Ankle.R
+    400004: Arm.L
+    400006: Arm.R
+    400008: Armature
+    400010: Ball.L
+    400012: Ball.L_end
+    400014: Ball.R
+    400016: Ball.R_end
+    400018: Bod
+    400020: Chest
+    400022: Forearm.L
+    400024: Forearm.L_end
+    400026: Forearm.R
+    400028: Forearm.R_end
+    400030: Head
+    400032: Head_end
+    400034: IK.L
+    400036: IK.L_end
+    400038: IK.R
+    400040: IK.R_end
+    400042: MiddleThigh.L
+    400044: MiddleThigh.R
+    400046: Root
+    400048: Shin.L
+    400050: Shin.R
+    400052: //RootNode
+    400054: Thigh.L
+    400056: Thigh.R
+    2100000: Sock
+    2100002: Skin
+    2100004: Eyes
+    4300000: Bod
+    7400000: Armature|Run
+    9500000: //RootNode
+    13700000: Bod
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -79,11 +120,11 @@ ModelImporter:
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 1
-    hasPreviousCalculatedGlobalScale: 0
+    previousCalculatedGlobalScale: 0.01
+    hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
-    normalSmoothAngle: 107
-    normalImportMode: 1
+    normalSmoothAngle: 60
+    normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
@@ -107,7 +148,7 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 0
+  animationType: 2
   humanoidOversampling: 1
   additionalBone: 0
   userData: 

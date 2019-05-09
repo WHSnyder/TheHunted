@@ -50,7 +50,7 @@ public class FLSource : MonoBehaviour {
             // Does the ray intersect any objects excluding the player layer
             if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity,layerMask)){
 
-                print("Shot");
+                //print("Shot");
 
                 Vector3 forward = transform.TransformDirection(Vector3.forward) * 10;
                 Debug.DrawRay(transform.position, forward, Color.green);
@@ -70,7 +70,7 @@ public class FLSource : MonoBehaviour {
                 else {
                     hasPower = true;
                 }
-                Debug.Log(power);
+               // Debug.Log(power);
 
 
             }
