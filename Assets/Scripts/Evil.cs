@@ -48,7 +48,6 @@ public class Evil : MonoBehaviour
     void Start(){
 
 
-
         agent = GetComponent<NavMeshAgent>();
         player = GameObject.FindWithTag("Player");
         playerTransform = player.transform;
@@ -69,12 +68,14 @@ public class Evil : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+       //agent.SetDestination(playerTransform.position);
+
         toPlayer = playerTransform.position - enemyTransform.position;
         toNavDest = enemyTransform.position - navDest;
 
         //Debug.Log("dist to mark: " + Vector3.Magnitude(toNavDest));
 
-        
 
         if (Vector3.Magnitude(toNavDest) < 1){
 
@@ -101,7 +102,7 @@ public class Evil : MonoBehaviour
 
 
 
-        if (currState == EvilState.Patrolling ||
+       /*if (currState == EvilState.Patrolling ||
             currState == EvilState.Looking ||
             currState == EvilState.Searching){
 
@@ -132,7 +133,7 @@ public class Evil : MonoBehaviour
                     }
                 }
             }
-        }
+        }*/
 
 
 
