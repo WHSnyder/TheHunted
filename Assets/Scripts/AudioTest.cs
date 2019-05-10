@@ -25,6 +25,10 @@ public class AudioTest : MonoBehaviour
         //one.spread = 180;
         //one.panStereo = 1;
 
+
+
+        one.rolloffMode = AudioRolloffMode.Custom;
+
         positions[0] = Vector3.zero;
         positions[1] = new Vector3(9, 0, -12);
         positions[2] = new Vector3(9, 0, 9);
