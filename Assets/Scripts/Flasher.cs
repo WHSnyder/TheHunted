@@ -35,10 +35,7 @@ public class Flasher : MonoBehaviour{
         GameObject.Find("Main Camera").gameObject.transform.SetPositionAndRotation(cameraSpawn, Quaternion.identity);
         GameObject.Find("Main Camera").gameObject.transform.parent = this.transform;
 
-        //Vector3 lightPos = this.transform.position + .25f * Vector3.right + .25f*Vector3.forward;
-        //GameObject.Find("FlashLight").gameObject.transform.SetPositionAndRotation(lightPos, Quaternion.Euler(0, 0, 0));
-        //GameObject.Find("FlashLight").gameObject.transform.parent = this.transform;
-
+        Vector3 lightPos = this.transform.position + .25f * Vector3.right + .25f * Vector3.forward;         GameObject.Find("FlashLight").gameObject.transform.SetPositionAndRotation(lightPos, Quaternion.Euler(0, 0, 0));         GameObject.Find("FlashLight").gameObject.transform.parent = GameObject.Find("Main Camera").gameObject.transform;          GameObject.Find("Flashlight2").gameObject.transform.SetPositionAndRotation(this.transform.position + .7f * Vector3.forward         + .2f * Vector3.right - .15f * Vector3.up, Quaternion.Euler(90, 0, 0));         GameObject.Find("Flashlight2").gameObject.transform.parent = GameObject.Find("Main Camera").gameObject.transform;
     }
 
     // Update is called once per frame
@@ -56,7 +53,6 @@ public class Flasher : MonoBehaviour{
         Vector2 mc = new Vector2(Input.GetAxisRaw("Mouse X"),
             Input.GetAxisRaw("Mouse Y"));
 
-
         // Add new movement to current mouse direction.
         mDir += mc;
 
@@ -64,6 +60,14 @@ public class Flasher : MonoBehaviour{
         // This rotates the camera on X-axis.
         GameObject.Find("Main Camera").gameObject.transform.localRotation =
             Quaternion.AngleAxis(-mDir.y, Vector3.right);
+
+       // GameObject.Find("FlashLight").gameObject.transform.localRotation
+       //  = GameObject.Find("Main Camera").gameObject.transform.localRotation;
+
+       // GameObject.Find("FlashLight2").gameObject.transform.localRotation
+       //= GameObject.Find("Main Camera").gameObject.transform.localRotation;
+
+
 
 
         // Rotate body left or right.

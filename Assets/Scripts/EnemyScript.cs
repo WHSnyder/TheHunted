@@ -8,7 +8,7 @@ using UnityEngine.AI;
 
 public class EnemyScript : MonoBehaviour
 {
-    public GameObject brain; 
+    private GameObject brain; 
     public NavMeshAgent agent;
     //bool paused = false;
     bool hasScreamed = false;
@@ -53,6 +53,8 @@ public class EnemyScript : MonoBehaviour
 
     // Start is called before the first frame update
     void Start(){
+
+        brain = GameObject.Find("AIBrain"); 
 
         sourceOne = Instantiate(Resources.Load<GameObject>("AudioEmitter")) as GameObject;
         sourceTwo = Instantiate(Resources.Load<GameObject>("AudioEmitter")) as GameObject;

@@ -24,12 +24,12 @@ public class FLSource : MonoBehaviour
         layerMask = 1 << 8;
         layerMask = ~layerMask;
 
-        //source = GetComponent<VolumetricLight>();
-        //bounce = GetComponent<Light>();
-        //bounce = transform.GetChild(1).gameObject.GetComponent<Light>();
-        //
-       //bounce.enabled = false;
-        //source.enabled = false;
+        source = GetComponent<VolumetricLight>();
+        bounce = GetComponent<Light>();
+        bounce = transform.GetChild(1).gameObject.GetComponent<Light>();
+        
+       bounce.enabled = false;
+        source.enabled = false;
     }
 
 
@@ -40,9 +40,9 @@ public class FLSource : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            //source.enabled = !source.enabled;
-            //bounce.enabled = !bounce.enabled;
-            //on = true;
+            source.enabled = !source.enabled;
+            bounce.enabled = !bounce.enabled;
+            on = true;
 
 
         }
