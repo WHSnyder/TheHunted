@@ -5,27 +5,41 @@ using UnityEngine.Audio;
 
 public class AudioTest : MonoBehaviour
 {
-    // Start is called before the first frame update
-    private float soundIncr = 0;
-    public GameObject stepSourceOne;
-    public GameObject stepSourceTwo;
 
-    private Vector3 location;
+    GameObject source;
+    AudioSource one;
+    public AudioClip stepSound;
+    float timer;
+    int index = 0;
 
-    public AudioPlanner planner;
+    Vector3[] positions = new Vector3[4];
 
+
+    void Start()
+    {
+        source = GameObject.Find("AudioTest");
+        one = source.GetComponent<AudioSource>();
+        //one.clip = stepSound;
+        source.AddComponent<AudioReverbFilter>().reverbPreset = AudioReverbPreset.StoneCorridor;
+        //one.spatialBlend = 1;
+        //one.spread = 180;
+        //one.panStereo = 1;
+
+        positions[0] = Vector3.zero;
+        positions[1] = new Vector3(9, 0, -12);
+        positions[2] = new Vector3(9, 0, 9);
+        positions[3] = new Vector3(17,0,1);
+    }
 
 
     void Update(){
 
-        soundIncr += Time.deltaTime;
+        timer += Time.deltaTime;
 
-        if (soundIncr > .5){
-
-            soundIncr = 0;
-
-            stepSourceOne.GetComponent<AudioSource>().Play();
-            stepSourceTwo.GetComponent<AudioSource>().Play();
+        if (timer > .5){
+            timer = 0;
+            //source.transform.position = positions[index++ % 4];
+            one.PlayOneShot(stepSound, 1);
         }
     }
 }

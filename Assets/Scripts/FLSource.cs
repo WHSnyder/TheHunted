@@ -26,9 +26,9 @@ public class FLSource : MonoBehaviour
 
         source = GetComponent<VolumetricLight>();
         bounce = GetComponent<Light>();
-        //bounce = transform.GetChild(1).gameObject.GetComponent<Light>();
-
-        bounce.enabled = false;
+        bounce = transform.GetChild(1).gameObject.GetComponent<Light>();
+        
+       bounce.enabled = false;
         source.enabled = false;
     }
 
@@ -42,7 +42,7 @@ public class FLSource : MonoBehaviour
         {
             source.enabled = !source.enabled;
             bounce.enabled = !bounce.enabled;
-            //on = true;
+            on = true;
 
 
         }
