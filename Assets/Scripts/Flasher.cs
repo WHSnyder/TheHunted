@@ -34,8 +34,11 @@ public class Flasher : MonoBehaviour{
 
         Vector3 lightPos = this.transform.position + .25f * Vector3.right + .25f*Vector3.forward;
         GameObject.Find("FlashLight").gameObject.transform.SetPositionAndRotation(lightPos, Quaternion.Euler(0, 0, 0));
-        GameObject.Find("FlashLight").gameObject.transform.parent = this.transform;
+        GameObject.Find("FlashLight").gameObject.transform.parent = GameObject.Find("Main Camera").gameObject.transform;
 
+        GameObject.Find("Flashlight2").gameObject.transform.SetPositionAndRotation(this.transform.position+ .7f * Vector3.forward
+        +.2f*Vector3.right-.15f*Vector3.up, Quaternion.Euler(90, 0, 0));
+        GameObject.Find("Flashlight2").gameObject.transform.parent = GameObject.Find("Main Camera").gameObject.transform;
     }
 
     // Update is called once per frame
@@ -60,8 +63,17 @@ public class Flasher : MonoBehaviour{
 
         // Rotate head up or down.
         // This rotates the camera on X-axis.
-        this.transform.localRotation =
+        GameObject.Find("Main Camera").gameObject.transform.localRotation =
             Quaternion.AngleAxis(-mDir.y, Vector3.right);
+
+       // GameObject.Find("FlashLight").gameObject.transform.localRotation
+       //  = GameObject.Find("Main Camera").gameObject.transform.localRotation;
+
+       // GameObject.Find("FlashLight2").gameObject.transform.localRotation
+       //= GameObject.Find("Main Camera").gameObject.transform.localRotation;
+
+
+
 
         // Rotate body left or right.
         // This rotates the parent body (a capsule), not the camera,
