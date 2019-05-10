@@ -55,13 +55,15 @@ public class Flasher : MonoBehaviour{
         Vector2 mc = new Vector2(Input.GetAxisRaw("Mouse X"),
             Input.GetAxisRaw("Mouse Y"));
 
+
         // Add new movement to current mouse direction.
         mDir += mc;
 
         // Rotate head up or down.
         // This rotates the camera on X-axis.
-        this.transform.localRotation =
+        GameObject.Find("Main Camera").gameObject.transform.localRotation =
             Quaternion.AngleAxis(-mDir.y, Vector3.right);
+
 
         // Rotate body left or right.
         // This rotates the parent body (a capsule), not the camera,
