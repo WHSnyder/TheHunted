@@ -44,7 +44,8 @@ public class Flasher : MonoBehaviour{
     // Update is called once per frame
     void Update(){
         setMouseParams();
-        setMovementParams();
+        setMovementParams(); 
+
     }
 
 
@@ -78,6 +79,10 @@ public class Flasher : MonoBehaviour{
 
 
     private void setMovementParams(){
+
+        if (Input.GetKeyDown("b")) {
+            dropBread();
+        }
 
         if (Input.GetKeyDown("w") || (Input.GetKeyDown("s"))) speed = move();
 
