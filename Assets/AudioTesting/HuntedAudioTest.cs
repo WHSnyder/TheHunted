@@ -39,7 +39,7 @@ public class HuntedAudioTest : MonoBehaviour
     void Start()
     {
 
-        control = GetComponent<CharacterController>();
+            control = GetComponent<CharacterController>();
 
 
 

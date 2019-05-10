@@ -13,8 +13,7 @@ public enum EvilState {
 
 
 
-public class Evil : MonoBehaviour
-{
+public class Evil : MonoBehaviour{
 
     NavMeshAgent agent;
     bool paused = false;
@@ -27,10 +26,7 @@ public class Evil : MonoBehaviour
 
     GameObject[] patrolPoints;
 
-
-
     public static bool hittable = true;
-
 
     RaycastHit caster;
     Vector3 toPlayer, navDest, toNavDest;
@@ -41,12 +37,8 @@ public class Evil : MonoBehaviour
 
 
 
-
-
-
     // Start is called before the first frame update
     void Start(){
-
 
         agent = GetComponent<NavMeshAgent>();
         player = GameObject.FindWithTag("Player");
@@ -56,18 +48,14 @@ public class Evil : MonoBehaviour
         patrolPoints = GameObject.FindGameObjectsWithTag("PatrolPoint");
         currState = EvilState.Looking;
 
-
         navDest = GameObject.Find("PP1").transform.position;
         agent.SetDestination(navDest);
 
         Random.InitState(1233445);
-
-
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update(){
 
        //agent.SetDestination(playerTransform.position);
 
