@@ -51,7 +51,7 @@ public class Evil : MonoBehaviour{
         navDest = GameObject.Find("PP1").transform.position;
         agent.SetDestination(navDest);
 
-        Random.InitState(1233445);
+        Random.InitState((int) Time.time);
     }
 
     // Update is called once per frame

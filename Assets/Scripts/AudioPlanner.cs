@@ -10,8 +10,7 @@ public enum nodeType {
 };
 
 
-public class AudioData
-{
+public class AudioData{
 
     public int time, freq;
     public GameObject source, audio1, audio2;
@@ -25,8 +24,6 @@ public class AudioData
         audio2 = _audio2;
     }
 }
-
-
 
 public class AudioNode{
 
@@ -293,7 +290,7 @@ public class AudioPlanner : MonoBehaviour {
         timer += Time.deltaTime;
         bool toPrint = false; ;
 
-        if (timer > .5) {
+        if (timer > .2) {
 
             timer = 0;
 
@@ -302,7 +299,6 @@ public class AudioPlanner : MonoBehaviour {
                 if (datum.freq == 1){
                     toPrint = true;
                 }
-
                 searchResult = audioSearch(position(datum.source.transform.position), toPrint);
 
                 if (searchResult[0] != Vector3.zero){
@@ -397,10 +393,6 @@ public class AudioPlanner : MonoBehaviour {
                         continue;
                     }
 
-
-                    //if (node.dest) { Debug.Log("Adding to result"); }
-
-
                     if (!node.dest) {
                         //if (print) { Debug.Log("lil more"); }
                         node.strength = vol;
@@ -456,7 +448,4 @@ public class AudioPlanner : MonoBehaviour {
         }
         nodes.Clear();
     }
-
-
-
 }

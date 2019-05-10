@@ -66,7 +66,6 @@ public class EnemyScript : MonoBehaviour
 
 
         planner.requestSearch(data);
-
         animator = GetComponent<Animator>();
 
         agent = GetComponent<NavMeshAgent>();
