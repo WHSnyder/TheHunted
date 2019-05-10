@@ -21,26 +21,28 @@ public class Flasher : MonoBehaviour{
 
     private CharacterController control;
 
+    public GameObject crumb;
+
 
     // Start is called before the first frame update
     void Start(){
 
 
         control = GetComponent<CharacterController>();
+        crumb = Resources.Load("BreadCrumb") as GameObject;
 
         Vector3 cameraSpawn = this.transform.position + .1f * Vector3.forward;
         GameObject.Find("Main Camera").gameObject.transform.SetPositionAndRotation(cameraSpawn, Quaternion.identity);
         GameObject.Find("Main Camera").gameObject.transform.parent = this.transform;
 
-        Vector3 lightPos = this.transform.position + .25f * Vector3.right + .25f*Vector3.forward;
-        GameObject.Find("FlashLight").gameObject.transform.SetPositionAndRotation(lightPos, Quaternion.Euler(0, 0, 0));
-        GameObject.Find("FlashLight").gameObject.transform.parent = this.transform;
+        //Vector3 lightPos = this.transform.position + .25f * Vector3.right + .25f*Vector3.forward;
+        //GameObject.Find("FlashLight").gameObject.transform.SetPositionAndRotation(lightPos, Quaternion.Euler(0, 0, 0));
+        //GameObject.Find("FlashLight").gameObject.transform.parent = this.transform;
 
     }
 
     // Update is called once per frame
     void Update(){
-
         setMouseParams();
         setMovementParams();
     }
@@ -91,7 +93,7 @@ public class Flasher : MonoBehaviour{
 
 
         transform.Rotate(0, x, 0);
-        control.Move(transform.forward * ver);
+        control.Move(transform.forward * ver*2);
 
         //jumps
         moveDirectionUp.y -= gravity * Time.deltaTime;
@@ -107,6 +109,17 @@ public class Flasher : MonoBehaviour{
             ButtonCount += 1;
             return 3;
         }
+    }
+
+
+    public void Step(){
+        //source.PlayOneShot(stepSound, 1f);
+    }
+
+    public void dropBread(){
+        Vector3 v = new Vector3(transform.position.x, transform.position.y - .1f,
+                                    transform.position.z);
+        GameObject b = Instantiate(crumb, v, transform.rotation);
     }
 }
 

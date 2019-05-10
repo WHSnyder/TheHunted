@@ -10,13 +10,25 @@ public enum nodeType {
 };
 
 
-
-
-
-
-
-public class AudioNode
+public class AudioData
 {
+
+    public int time, freq;
+    public GameObject source, audio1, audio2;
+
+    public AudioData(int _freq, int _time, GameObject _source, GameObject _audio1, GameObject _audio2){
+
+        time = _time;
+        freq = _freq;
+        source = _source;
+        audio1 = _audio1;
+        audio2 = _audio2;
+    }
+}
+
+
+
+public class AudioNode{
 
     public nodeType type;
     public ArrayList neighbors;
@@ -24,6 +36,7 @@ public class AudioNode
     public bool dest, source, visited, closed;
     public int cost;
     public float strength;
+
 
     public AudioNode(nodeType _type, Vector3 _loc, Vector3 _forwards){
 
@@ -74,7 +87,7 @@ public class AudioNode
 
             case nodeType.Quad:
 
-                cost = 6;
+                cost = 5;
                 break;
 
             case nodeType.Key:
@@ -226,12 +239,9 @@ public class AudioNode
         AudioNode anuda1;
         AudioNode result;
 
-        Debug.DrawRay(pos + Vector3.up * 10, 1000*Vector3.down, Color.green, 100);
-
         if (Physics.Raycast(pos, Vector3.down, out hit, 10000)){
 
             anuda1 = AudioNodeFromObj(hit.collider.gameObject);
-            //Debug.Log("not crazy!!");
 
             if (!map.ContainsKey(hit.collider.gameObject.transform.position)){
             
@@ -254,42 +264,65 @@ public class AudioPlanner : MonoBehaviour {
 
     Dictionary<Vector3, AudioNode> hashMap = new Dictionary<Vector3, AudioNode>();
 
-    ArrayList check = new ArrayList();
+    ArrayList check = new ArrayList(), toClear = new ArrayList();
     Queue<AudioNode> queue = new Queue<AudioNode>();
+
+    public GameObject init;
+
+    RaycastHit hit, hit1, hit2;
+    int layerMask = ~(1 << 9);
 
     float timer = 0;
 
-    public GameObject player, source;
-
-    RaycastHit hit1, hit2;
-    int layerMask = ~(1 << 9);
-
+    Vector3[] searchResult;
 
     public int dieDist, decayRate, startStrength;
 
-    GameObject stepSourceOne, stepSourceTwo;
+    ArrayList requests = new ArrayList(), constants = new ArrayList();
 
-    AudioSource stepClipOne, stepClipTwo;
+
 
     public void Start(){
+        initAudioGraph(AudioNode.AudioNodeFromObj(init));
+    }
 
-       /* //start on a quad joiner....
-        AudioNode first = AudioNode.AudioNodeFromObj(source), curr;
 
 
+    public void Update(){
+
+        timer += Time.deltaTime;
+        bool toPrint = false; ;
+
+        if (timer > .5) {
+
+            timer = 0;
+
+            foreach (AudioData datum in requests) {
+
+                if (datum.freq == 1){
+                    toPrint = true;
+                }
+
+                searchResult = audioSearch(position(datum.source.transform.position), toPrint);
+
+                if (searchResult[0] != Vector3.zero){
+                    datum.audio1.transform.position = searchResult[0];
+                }
+
+                if (searchResult[1] != Vector3.zero){
+                    datum.audio1.transform.position = searchResult[1];
+                }
+                toPrint = false;
+            }
+        }
+    }
+
+
+    private void initAudioGraph(AudioNode first) {
+
+        AudioNode curr;
         hashMap.Add(first.location, first);
-
-        ArrayList neighbors = first.addNeighbors(hashMap);
-
-        stepSourceOne = GameObject.Find("stepSourceOne");
-        stepSourceTwo = GameObject.Find("stepSourceTwo");
-
-        stepClipOne = stepSourceOne.GetComponent<AudioSource>();
-        stepClipTwo = stepSourceTwo.GetComponent<AudioSource>();
-
-
-
-        player = GameObject.Find("Flasher");
+        ArrayList neighbors, _toClear = new ArrayList();
 
         queue.Enqueue(first);
 
@@ -297,11 +330,14 @@ public class AudioPlanner : MonoBehaviour {
 
             curr = queue.Dequeue();
 
+            _toClear.Add(curr);
+
             if (curr.visited == false){
+
                 neighbors = curr.addNeighbors(hashMap);
                 curr.neighbors = neighbors;
                 curr.visited = true;
-                
+
                 foreach (AudioNode node in neighbors){
 
                     if (node != null && node.visited == false){
@@ -311,140 +347,116 @@ public class AudioPlanner : MonoBehaviour {
             }
         }
         queue.Clear();
-
-        if (player == null || source == null)
-        {
-            Debug.Log("yea its null here");
-        }*/
+        clearNodes(_toClear);
     }
 
 
-    public void Update(){
+    public Vector3[] audioSearch(AudioNode source, bool print){
 
-        AudioNode playerNode = null, sourceNode = null, curr = null;
-        timer = timer + Time.deltaTime;
 
-        /*
+        Vector3[] result = new Vector3[2];
+        AudioNode dest = position(gameObject.transform.position), curr = null;
 
-        if (player == null)
-        {
-            Debug.Log("source null");
+        if (source.location.Equals(dest.location)){
+            result[0] = source.location;
+            return result;
         }
 
-        stepClipOne.volume =
-        1 - Vector3.Magnitude(player.transform.position - source.transform.position) / dieDist;
+        if (Vector3.Magnitude(source.location - dest.location) >= dieDist)
+        {
+            return result;
+        }
 
-        stepClipTwo.volume =
-        1 - Vector3.Magnitude(player.transform.position - source.transform.position) / dieDist;
+        toClear.Add(source);
+        toClear.Add(dest);
 
+        int index = 0, vol = 0;
 
-        if (timer > 3){
+        bool stop = false;
 
-            //Debug.Log("beginning");
-
-            float startTime = Time.time; 
-
-            timer = 0;
-            ArrayList neighbors, destNeighbors = new ArrayList();
-
-            if (Physics.Raycast(player.transform.position + Vector3.right + 30 * Vector3.up, Vector3.down, out hit1, 1000, layerMask)
-            && Physics.Raycast(source.transform.position + 20 * Vector3.up, Vector3.down, out hit2, 1000, layerMask)){
-
-                //Debug.Log("Player shot hit: " + hit1.collider.gameObject.ToString());
-                try
-                {
-                    playerNode = hashMap[hit1.collider.gameObject.transform.position];
-
-                    //Debug.Log("Nodes established.....");
-
-                    sourceNode = hashMap[hit2.collider.gameObject.transform.position];
-                }
-                catch (KeyNotFoundException e)
-                {
-                    Debug.Log("COULDNT FIND VECTOR " + e.Message);
-                }
+        source.source = true; dest.dest = true;
+        source.strength = (int)startStrength;
 
 
-                sourceNode.source = true;
-                playerNode.dest = true;
+        queue.Enqueue(source);
 
-                sourceNode.strength = (int)startStrength;
+        while (queue.Count > 0 && stop == false) {
 
-                queue.Enqueue(sourceNode);
+            curr = queue.Dequeue();
+            toClear.Add(curr);
 
-                while (queue.Count > 0){
+            if (Vector3.Magnitude(curr.location - source.location) < dieDist) {
 
-                    curr = queue.Dequeue();
+                //if (print) { Debug.Log("Visiting...."); }
 
-                    if (curr.visited == false && curr.strength > 0 ){
+                vol = (int) curr.strength - decayRate * curr.cost;
 
-                        if (Vector3.Magnitude(curr.location - playerNode.location) < dieDist){
+                foreach (AudioNode node in curr.neighbors) {
 
-                           //Debug.Log("At " + curr.type + " (" + curr.strength + ")");
-
-                            curr.visited = true;
-
-                            foreach (AudioNode node in curr.neighbors){
-
-                                if (node == null || node.visited == true || node.strength <= 0 || node.closed) { continue; }
-
-                                if (!node.dest){
-
-                                    //Debug.Log("Updating neighbor: " + node.type);
-
-                                    node.strength = curr.strength - decayRate * curr.cost;
-                                    queue.Enqueue(node);
-                                }
-                                else {
-
-                                    destNeighbors.Add(curr);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                //Debug.Log("Done search, loggging neighbors of final now ("+ playerNode.type +")............");
-
-                int count = 0;
-                foreach (AudioNode node in playerNode.neighbors) {
-
-                    if (node == null){
-
-                        Debug.Log("yep just null...");
+                    if (node == null || vol <= node.strength || vol <= 0 || node.closed) { 
                         continue;
                     }
 
-                    if (node.visited && count == 0){
 
-                        //Debug.Log("Neighbor (" + node.type +") with strength " + node.strength);
-                        stepSourceOne.transform.position = node.location;
-                        //stepSourceOne.GetComponent<AudioSource>().volume = node.strength / 100;
-                        count = 1;
-                        continue;
+                    //if (node.dest) { Debug.Log("Adding to result"); }
+
+
+                    if (!node.dest) {
+                        //if (print) { Debug.Log("lil more"); }
+                        node.strength = vol;
+                        queue.Enqueue(node);
+                    }   
+                    else {
+                       // Debug.Log("Adding to result"); 
+                        result[index++] = curr.location;
+                        if (index == 2) { stop = true; break; }
                     }
-
-                    if (node.visited && count == 1){
-
-                        //Debug.Log("Neighbor (" + node.type + ") with strength " + node.strength);
-                        stepSourceTwo.transform.position = node.location;
-                        //stepSourceOne.GetComponent<AudioSource>().volume = node.strength / 100;
-                        continue;
-                    }
-                }
-                count = 0;
-
-                //Debug.Log("........................................................");
-
-
-                foreach (Vector3 key in hashMap.Keys) {
-                    AudioNode reset = hashMap[key];
-                    reset.dest = false;
-                    reset.source = false;
-                    reset.strength = 0;
-                    reset.visited = false;
                 }
             }
-        }*/
+            else
+            {
+                Debug.Log("Agent out of range...");
+            }
+        }
+
+        queue.Clear();
+        clearNodes(toClear);
+        return result;
     }
+
+
+    private AudioNode position(Vector3 pos){
+        if (Physics.Raycast(pos, Vector3.down, out hit, 10000, layerMask)){
+            return (hashMap[hit.collider.transform.position]);
+        }
+        else return null;
+    }
+
+
+    public void requestSearch(AudioData req){
+        requests.Add(req);
+    }
+
+
+
+    public void Ray(Vector3 pos, Color color){
+        Debug.DrawRay(pos + Vector3.up * 10, 1000 * Vector3.down, color, 3);
+    }
+
+
+    public void clearNodes(ArrayList nodes) { 
+
+        foreach (AudioNode node in nodes){
+
+            node.dest = false;
+            node.source = false;
+            node.strength = 0;
+            node.visited = false;
+
+        }
+        nodes.Clear();
+    }
+
+
+
 }

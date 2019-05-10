@@ -6,15 +6,18 @@ using UnityEngine.AI;
 
 
 
-
 public class EnemyScript : MonoBehaviour
 {
 
     NavMeshAgent agent;
     bool paused = false;
     private Transform pausepos;
-    private int just = 0;
+    private static int seed = 0;
 
+    private AudioPlanner planner;
+
+    public AudioClip stepSound;
+    public int freq = 0;
 
     GameObject player;
     Transform playerTransform, enemyTransform;
@@ -22,9 +25,8 @@ public class EnemyScript : MonoBehaviour
     GameObject[] patrolPoints;
 
 
-
-    public static bool hittable = true;
-
+    Vector3 patrolPt;
+    
 
     RaycastHit caster;
     Vector3 toPlayer, navDest, toNavDest;
@@ -34,16 +36,36 @@ public class EnemyScript : MonoBehaviour
     int index = 0;
 
 
+
     Animator animator;
 
     int moveHash = Animator.StringToHash("Base Layer.Running");
 
+    private GameObject sourceOne, sourceTwo;
 
+    private AudioSource one, two;
+
+    public int maxDist;
+
+    bool first = true;
 
 
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start(){
+
+        sourceOne = Instantiate(Resources.Load<GameObject>("AudioEmitter")) as GameObject;
+        sourceTwo = Instantiate(Resources.Load<GameObject>("AudioEmitter")) as GameObject;
+
+        one = sourceOne.GetComponent<AudioSource>();
+        two = sourceTwo.GetComponent<AudioSource>();
+
+        planner = GameObject.Find("Main Camera").GetComponent<AudioPlanner>();
+
+
+        AudioData data = new AudioData(freq, 1, gameObject, sourceOne, sourceTwo);
+
+
+        planner.requestSearch(data);
 
         animator = GetComponent<Animator>();
 
@@ -55,39 +77,34 @@ public class EnemyScript : MonoBehaviour
         patrolPoints = GameObject.FindGameObjectsWithTag("PatrolPoint");
         currState = EvilState.Looking;
 
-
-        navDest = GameObject.Find("PP1").transform.position;
-        agent.SetDestination(navDest);
-
-        Random.InitState(1233445);
+        Random.InitState(++seed);
 
         animator.Play(moveHash);
-
-
     }
 
+
+
     // Update is called once per frame
-    void Update()
-    {
-
-        //agent.SetDestination(playerTransform.position);
-
+    void Update(){
+    
         toPlayer = playerTransform.position - enemyTransform.position;
         toNavDest = enemyTransform.position - navDest;
       
-
-        if (Vector3.Magnitude(toNavDest) < 1)
-        {
+        if (Vector3.Magnitude(toNavDest) < 1 || first){
 
             currState = EvilState.Looking;
 
             index = Random.Range(0, patrolPoints.Length);
 
-            navDest = patrolPoints[(int)index].transform.position;
+            //Debug.Log("My index is: " + index);
+
+            patrolPt = patrolPoints[(int)index].transform.position;
+
+            navDest = new Vector3(patrolPt.x, 0, patrolPt.z);
+
             agent.SetDestination(navDest);
-
+            first = false;
         }
-
 
 
 
@@ -155,5 +172,14 @@ public class EnemyScript : MonoBehaviour
             agent.Resume();
         }
         *///end perhaps irrelevant code....
+    }
+
+
+    public void Step(){
+
+        float vol = 1 - Vector3.Magnitude(transform.position - player.transform.position)/maxDist;
+
+        one.PlayOneShot(stepSound, vol);
+        two.PlayOneShot(stepSound, vol);
     }
 }
