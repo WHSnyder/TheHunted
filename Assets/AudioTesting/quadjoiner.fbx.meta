@@ -55,7 +55,52 @@ ModelImporter:
     4300012: JoinX
     4300014: JoinZ
     2186277476908879412: ImportLogs
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: CenterBrick
+    second: {fileID: 2100000, guid: c9feba48cb1ed4a238d25cd498c34942, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: CenterBrick.003
+    second: {fileID: 2100000, guid: d5a736b6a49474d0facca9675ae6d595, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DarkBrick
+    second: {fileID: 2100000, guid: d4cc025e6b9884410ac9fcb43597e718, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DarkBrick.006
+    second: {fileID: 2100000, guid: d4cc025e6b9884410ac9fcb43597e718, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DarkBrick.007
+    second: {fileID: 2100000, guid: d4cc025e6b9884410ac9fcb43597e718, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Floor
+    second: {fileID: 2100000, guid: 7f9f93ab13da24ba0bbdedfa9875f2ef, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Floor.001
+    second: {fileID: 2100000, guid: 1c8b42fe016bc47d091982475331061d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Floor.003
+    second: {fileID: 2100000, guid: 8a0ad3fd841a34501ae24bbe02ab6db2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: No Name
+    second: {fileID: 2100000, guid: 61b9396671ee74dd7a9ce2015b6710dd, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -111,7 +156,7 @@ ModelImporter:
     hasPreviousCalculatedGlobalScale: 0
   tangentSpace:
     normalSmoothAngle: 115
-    normalImportMode: 1
+    normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
