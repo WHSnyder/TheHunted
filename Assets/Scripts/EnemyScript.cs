@@ -40,6 +40,8 @@ public class EnemyScript : MonoBehaviour
     Animator animator;
 
     int moveHash = Animator.StringToHash("Base Layer.Running");
+    int lookHash = Animator.StringToHash("Base Layer.Looking");
+
 
     private GameObject sourceOne, sourceTwo;
 

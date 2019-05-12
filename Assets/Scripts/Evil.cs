@@ -73,7 +73,6 @@ public class Evil : MonoBehaviour{
 
             navDest = patrolPoints[(int) index].transform.position;
             agent.SetDestination(navDest);
-
         }
 
 

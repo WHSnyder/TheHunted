@@ -46,7 +46,6 @@ public class Flasher : MonoBehaviour{
 
 
 
-
     private void setMouseParams(){
 
         Vector2 mc = new Vector2(Input.GetAxisRaw("Mouse X"),
