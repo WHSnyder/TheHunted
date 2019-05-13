@@ -27,7 +27,27 @@ ModelImporter:
     4300000: seg8_collision
     4300002: seg8_arch
     4300004: seg8_tunnel
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: CenterBrick.002
+    second: {fileID: 2100000, guid: e0000263064294d8f8bd596e65b2bba7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DarkBrick.003
+    second: {fileID: 2100000, guid: 470deed0e1fb5491b93f377ba64d0fda, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DarkBrick.007
+    second: {fileID: 2100000, guid: 5ed364fe8da3d4c11a33fa309715de5c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Floor.002
+    second: {fileID: 2100000, guid: a16c74af1538344b2a2d8d34c5ca2e9d, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

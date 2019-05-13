@@ -5,10 +5,6 @@ using UnityEngine.Networking;
 using UnityEngine.AI;
 
 
-public enum EvilState {
-
-    Patrolling, Looking, Leaping, Searching
-};
 
 
 

@@ -27,7 +27,42 @@ ModelImporter:
     4300000: seg4_tunnel
     4300002: seg4_arch
     4300004: seg4_collision
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: CenterBrick.002
+    second: {fileID: 2100000, guid: ebf97c9288f314883b491813e51f6fde, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DarkBrick.002
+    second: {fileID: 2100000, guid: 222776a816b4a46e299d8890d866aa2b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DarkBrick.003
+    second: {fileID: 2100000, guid: 79d2925916d254a4397ff6aa254ae0de, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DarkBrick.007
+    second: {fileID: 2100000, guid: 4370ebc51c85d43e38727985fc1501a0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Floor.001
+    second: {fileID: 2100000, guid: dfe0d4a659ed545d8b249b4f479b7d26, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Floor.002
+    second: {fileID: 2100000, guid: b970834ee6e2a4fbb8f160631a931b5d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rusty.001
+    second: {fileID: 2100000, guid: ca63eaee15f284e3ba2acf78fc450a10, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

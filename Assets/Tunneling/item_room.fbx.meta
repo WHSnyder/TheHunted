@@ -19,7 +19,27 @@ ModelImporter:
     3300002: PumpRoom
     4300000: Coll
     4300002: PumpRoom
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: CenterBrick
+    second: {fileID: 2100000, guid: 92eb29c207f6449ddad94fe4999306d9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DarkBrick
+    second: {fileID: 2100000, guid: aac0634e627f4447980c9176d643ba99, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Floor
+    second: {fileID: 2100000, guid: 0837f2bb827e24264b8beaf96dd0bbae, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Marble
+    second: {fileID: 2100000, guid: aa951937790e04eec9892096f15257a9, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
