@@ -22,6 +22,9 @@ TagManager:
   - segFour
   - segEight
   - PatrolPoint
+  - Key
+  - Lock
+  - Battery
   layers:
   - Default
   - TransparentFX

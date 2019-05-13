@@ -6,36 +6,39 @@ public class AIBrain : MonoBehaviour
 {
     public bool allChase = false;
     private bool seen;
-    private float time = 10.0f;
+    private bool flag; 
+    private float time = 30.0f;
     //public GameObject player; 
     void Start()
     {
         seen = false;
+        flag = false;
     }
 
 
     // Update is called once per frame
     void Update()
     {
-
         GameObject[] enemyList = GameObject.FindGameObjectsWithTag("Enemy");
+
         for (int x = 0; x < enemyList.Length; x++) { 
             if (enemyList[x].GetComponent<EnemyScript>().currState == EvilState.Searching) {
                 seen = true;
             }
             else if (seen) {
-                Debug.Log("countdown");
+                //Debug.Log(time);
                 countDown(time);
             } 
             else {
-                //enemyList[x].GetComponent<EnemyScript>().Update(); 
+                //enemyList[x].GetComponent<EnemyScript>().Update();  
+                //Debug.Log(time);
                 seen = false;
-                time = 5.0f;
+                time = 30.0f;
             }
         }    
 
         if (time <= 0.0f) {
-            Debug.Log("ooooh shit");
+            //Debug.Log(time);
             allChase = true;
         }
 
