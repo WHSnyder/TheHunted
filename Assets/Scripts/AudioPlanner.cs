@@ -263,9 +263,7 @@ public class AudioPlanner : MonoBehaviour {
 
     ArrayList check = new ArrayList(), toClear = new ArrayList();
     Queue<AudioNode> queue = new Queue<AudioNode>();
-
-    public GameObject init;
-
+    
     RaycastHit hit, hit1, hit2;
     int layerMask = ~(1 << 9);
 
@@ -280,7 +278,7 @@ public class AudioPlanner : MonoBehaviour {
 
 
     public void Start(){
-        initAudioGraph(AudioNode.AudioNodeFromObj(init));
+        initAudioGraph(AudioNode.AudioNodeFromObj(GameObject.Find("seg_four").transform.GetChild(1).gameObject));
     }
 
 
@@ -407,7 +405,7 @@ public class AudioPlanner : MonoBehaviour {
             }
             else
             {
-                Debug.Log("Agent out of range...");
+               // Debug.Log("Agent out of range...");
             }
         }
 
