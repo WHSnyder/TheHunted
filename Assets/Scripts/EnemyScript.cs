@@ -80,7 +80,7 @@ public class EnemyScript : MonoBehaviour
         patrolPoints = GameObject.FindGameObjectsWithTag("PatrolPoint");
         currState = EvilState.Looking;
 
-        Random.InitState(++seed);
+        Random.InitState(System.DateTime.Now.Millisecond);
 
         animator.Play(moveHash);
     }
@@ -88,14 +88,11 @@ public class EnemyScript : MonoBehaviour
 
 
     // Update is called once per frame
-    public void Update(){ 
+    public void Update(){
 
-
-    
         toPlayer = playerTransform.position - enemyTransform.position;
         toNavDest = enemyTransform.position - navDest;
         float angle1 = Vector3.Angle(this.transform.forward, toPlayer);
-
 
         if (brain.GetComponent<AIBrain>().allChase) {
             agent.SetDestination(player.transform.position);
@@ -132,8 +129,7 @@ public class EnemyScript : MonoBehaviour
 
         else  //(Vector3.Magnitude(toNavDest) < 1 || first)
         {
-            //Debug.Log("searching");
-            //Debug.Log("Where is he? ");
+
             if (Vector3.Magnitude(toNavDest) < 1 || first) {
                 currState = EvilState.Looking;
 
