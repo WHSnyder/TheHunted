@@ -71,7 +71,37 @@ ModelImporter:
     4300018: MIddle.001
     4300020: Ring.001
     4300022: Pinky.001
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: CenterBrick
+    second: {fileID: 2100000, guid: 2c29a0d53c280435fa91c8aecb59964d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DarkBrick.001
+    second: {fileID: 2100000, guid: 095f11e28a57242f18499ef375d1eaf6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DarkBrick.003
+    second: {fileID: 2100000, guid: 470deed0e1fb5491b93f377ba64d0fda, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Floor
+    second: {fileID: 2100000, guid: 6614c1f04d93d4a89b4cf677b7084356, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Marble
+    second: {fileID: 2100000, guid: 99c9abae8c7054179b0d88e97585121d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Stone
+    second: {fileID: 2100000, guid: fd1a0b20ef6d240f0816913ab3b2a574, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

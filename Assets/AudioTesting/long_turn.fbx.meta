@@ -25,7 +25,32 @@ ModelImporter:
     4300000: longTurn.001
     4300002: longTurnCollision
     4300004: longTurnHighArches
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: CenterBrick
+    second: {fileID: 2100000, guid: e7f9c5b39a5e04643aae5648a03d2312, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DarkBrick
+    second: {fileID: 2100000, guid: e13197856c44041bfab9ce74a908465d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DarkBrick.001
+    second: {fileID: 2100000, guid: 095f11e28a57242f18499ef375d1eaf6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Floor
+    second: {fileID: 2100000, guid: 4de547db37a4349399a4a118af5e3923, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rusty
+    second: {fileID: 2100000, guid: 64dfad18a23df461e8c2eb121a4d9c2d, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

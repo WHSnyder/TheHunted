@@ -27,7 +27,27 @@ ModelImporter:
     4300000: shortTurnTunnel
     4300002: shortTurnArches
     4300004: shortTurnCollision
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: CenterBrick.002
+    second: {fileID: 2100000, guid: 4cec562b6dc1348bab85286e2fe1c27b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DarkBrick.003
+    second: {fileID: 2100000, guid: 76d1d2c1d573c4caeb2abf4fc00f800f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DarkBrick.007
+    second: {fileID: 2100000, guid: 19972198359714de4a6e66da0df6436d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Floor.002
+    second: {fileID: 2100000, guid: d68e86b729ef74dbeb615e5b9e42ab9f, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

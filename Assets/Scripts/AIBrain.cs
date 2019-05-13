@@ -28,25 +28,6 @@ public class AIBrain : MonoBehaviour
     // Update is called once per frame
     void Update(){
 
-        for (int x = 0; x < enemyList.Length; x++) { 
-            if (enemyList[x].GetComponent<EnemyScript>().currState == EvilState.Searching) {
-                seen = true;
-            }
-            else if (seen) {
-                Debug.Log("countdown");
-                countDown(time);
-            } 
-            else {
-                //enemyList[x].GetComponent<EnemyScript>().Update(); 
-                seen = false;
-                time = 5.0f;
-            }
-        }    
-
-        if (time <= 0.0f) {
-            Debug.Log("ooooh shit");
-            allChase = true;
-        }
     } 
 
     void countDown(float t) {
@@ -54,12 +35,12 @@ public class AIBrain : MonoBehaviour
     }
 
 
-    void notifyFound(Vector3 playerLoc){
+    public void notifyFound(Vector3 playerLoc){
 
         foreach (EnemyScript enemy in enemyList){
-//            enemy.
-        }
 
+            enemy.processCommand(playerLoc, EvilState.Searching);
+        }
     }
 
 
