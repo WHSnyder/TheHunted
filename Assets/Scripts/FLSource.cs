@@ -28,7 +28,7 @@ public class FLSource : MonoBehaviour
         bounce = GetComponent<Light>();
         bounce = transform.GetChild(1).gameObject.GetComponent<Light>();
         
-       bounce.enabled = false;
+        bounce.enabled = false;
         source.enabled = false;
     }
 
@@ -48,7 +48,7 @@ public class FLSource : MonoBehaviour
         }
 
 
-        //else
+        // else
         //{
         //    source.enabled = false;
         //    bounce.enabled = false;

@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement; 
+using UnityEngine.UI;
 
 public class Flasher : MonoBehaviour{
 
@@ -18,18 +20,32 @@ public class Flasher : MonoBehaviour{
     private float jump = 5.0f;
     private float gravity = 9.8f;
 
+    //Dan adds 5/12
+    private GameObject door;
+    private bool win = false;
+    private bool dead = false; 
+    private float time = 5.0f;
+    private float transparency = 0.0f;
+    private float power = 100.0f;
+    public Text victoryText;
+
 
     private CharacterController control;
 
     public GameObject crumb;
+    public GameObject key;
+    public Image img;
 
 
     // Start is called before the first frame update
     void Start(){
-
+        door = GameObject.Find("Door");
+        var copyCol = img.color;
+        copyCol.a = 0.0f;
+        img.color = copyCol; 
 
         control = GetComponent<CharacterController>();
-        crumb = Resources.Load("BreadCrumb") as GameObject;
+        //acrumb = Resources.Load("BreadCrumb") as GameObject;
 
         Vector3 cameraSpawn = this.transform.position + .1f * Vector3.forward;
         GameObject.Find("Main Camera").gameObject.transform.SetPositionAndRotation(cameraSpawn, Quaternion.identity);
@@ -40,11 +56,48 @@ public class Flasher : MonoBehaviour{
 
     // Update is called once per frame
     void Update(){
+
         setMouseParams();
         setMovementParams(); 
 
-    }
+        GameObject [] batteryList  = GameObject.FindGameObjectsWithTag("Battery"); 
 
+        for (int a = 0; a < batteryList.Length; a++) { 
+            if (Vector3.Magnitude(transform.position - batteryList[a].transform.position) < 1) {
+                Destroy(batteryList[a]);
+                power += 25.0f;
+            }
+        }
+
+        if (GameObject.FindGameObjectsWithTag("Key").Length != 0) {
+            if (Vector3.Magnitude(transform.position - key.transform.position) < 2)
+            {
+                Destroy(key);
+            }
+        }
+
+        if (GameObject.FindGameObjectsWithTag("Lock").Length == 0) { 
+            if (Vector3.Magnitude(transform.position - door.transform.position) < 2) { 
+                win = true;
+                setInfoText();
+                countdown();
+                //call countdown 5 seconds dim screen 
+                //SceneManager.LoadScene("MainMenu");
+            }
+        }  
+
+        if (!win) {
+            GameObject[] enemyList = GameObject.FindGameObjectsWithTag("Enemy");
+            for (int z = 0; z < enemyList.Length; z++) { 
+                if ((Vector3.Magnitude(transform.position - enemyList[z].transform.position) < 2)
+                        || (transform.position.y < -10.0f)) {
+                    dead = true;
+                    win = false; 
+                    setInfoText();
+                }
+            }
+        }
+    }
 
 
     private void setMouseParams(){
@@ -59,15 +112,6 @@ public class Flasher : MonoBehaviour{
         // This rotates the camera on X-axis.
         GameObject.Find("Main Camera").gameObject.transform.localRotation =
             Quaternion.AngleAxis(-mDir.y, Vector3.right);
-
-       // GameObject.Find("FlashLight").gameObject.transform.localRotation
-       //  = GameObject.Find("Main Camera").gameObject.transform.localRotation;
-
-       // GameObject.Find("FlashLight2").gameObject.transform.localRotation
-       //= GameObject.Find("Main Camera").gameObject.transform.localRotation;
-
-
-
 
         // Rotate body left or right.
         // This rotates the parent body (a capsule), not the camera,
@@ -86,7 +130,6 @@ public class Flasher : MonoBehaviour{
         if (Input.GetKeyDown("b")) {
             dropBread();
         }
-
         if (Input.GetKeyDown("w") || (Input.GetKeyDown("s"))) speed = move();
 
         //jump if grounded
@@ -113,23 +156,54 @@ public class Flasher : MonoBehaviour{
 
 
     private int move() { 
-        if (ButtonCooler > 0.0f && ButtonCount == 1){return 5;}
+        if (ButtonCooler > 0.0f && ButtonCount == 1){
+            if ((dead) || (win)) {
+                return 0;
+            }
+            return 4;}
         else{
             ButtonCooler = 0.5f;
-            ButtonCount += 1;
-            return 3;
+            ButtonCount += 1; 
+            if ((dead) || (win)) {
+                return 0;
+            }
+            return 2;
         }
     }
 
-
-    public void Step(){
-        //source.PlayOneShot(stepSound, 1f);
-    }
 
     public void dropBread(){
         Vector3 v = new Vector3(transform.position.x, transform.position.y - .1f,
                                     transform.position.z);
         GameObject b = Instantiate(crumb, v, transform.rotation);
+    } 
+
+    public void setInfoText() { 
+        if (win) {
+
+            victoryText.color = Color.green;
+            victoryText.text = "You Escaped!";
+            countdown();
+
+        }
+        if (dead) {
+            victoryText.color = Color.red;
+            victoryText.text = "You're Dead";
+            countdown();
+        }
+    } 
+
+    void countdown() {
+        if (time >= 0.0f) {
+            var copyCol2 = img.color;
+            transparency += .005f;
+            copyCol2.a = transparency;
+            img.color = copyCol2;
+            time -= Time.deltaTime; 
+        } 
+        else {
+            SceneManager.LoadScene("MainMenu");
+        }
     }
 }
 
