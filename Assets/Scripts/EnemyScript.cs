@@ -11,7 +11,7 @@ using UnityEngine.AI;
 //will add ambush if have time...
 public enum EvilState
 {
-    Patrolling, Looking, Attacking, Searching, Ambush, Stunned, Init 
+    Patrolling, Looking, Attacking, Seeking, Ambush, Stunned, Init 
 };
 
 //commands can be sent from brain (to search), from the player (to stun),
@@ -34,9 +34,11 @@ public class EnemyScript : MonoBehaviour{
     //AI stuff
     private AIBrain brain; 
     private NavMeshAgent agent;
+    public int id = 0;
+    public static int idCounter = 0;
+
 
     //for random patrol initialization...
-    private static int seed = 0;
     int index = 0;
 
 
@@ -44,7 +46,6 @@ public class EnemyScript : MonoBehaviour{
     Vector3 toPlayer, navDest, toNavDest;
     private float angleToPlayer, magToPlayer;
     RaycastHit caster;
-
 
 
     //variables referring to other relevant objects and the player
@@ -62,13 +63,11 @@ public class EnemyScript : MonoBehaviour{
     private Command queuedCommand = null;
 
 
-
     //animator params
     Animator animator;
     int moveHash = Animator.StringToHash("Base Layer.Running");
     int lookHash = Animator.StringToHash("Base Layer.Looking");
     int stunHash = Animator.StringToHash("Base Layer.Stunning");
-
 
 
     //audio params
@@ -80,18 +79,16 @@ public class EnemyScript : MonoBehaviour{
     public int maxDistAudio = 30;
 
 
-
-
     //PUBLIC vars to be set in editor for tweaking behavior (myhead is head collider, prolly fine as is)
     public GameObject myHead;
-    public int sightRange = 20; 
+    public static int sightRange = 15; 
 
 
-    //Timers for each state, can be set in editor for performance
+    //Timers for each state, can be set in editor for performance tweaks
     //the time far stays as is, the timer vars change...
-    public float stunTime = 5;
+    public static float stunTime = 5;
     private float stunTimer;
-    private float lookTime = 10;
+    public static float lookTime = 4;
     private float lookTimer;
 
 
@@ -103,6 +100,8 @@ public class EnemyScript : MonoBehaviour{
 
         brain = GameObject.Find("AIBrain").GetComponent<AIBrain>();
 
+        id = idCounter++;
+        
         sourceOne = Instantiate(Resources.Load<GameObject>("AudioEmitter")) as GameObject;
         sourceTwo = Instantiate(Resources.Load<GameObject>("AudioEmitter")) as GameObject;
 
@@ -126,7 +125,7 @@ public class EnemyScript : MonoBehaviour{
 
         patrolPoints = GameObject.FindGameObjectsWithTag("PatrolPoint");
 
-        Random.InitState(++seed);
+        Random.InitState(System.DateTime.Now.Millisecond);
     }
 
 
@@ -134,35 +133,38 @@ public class EnemyScript : MonoBehaviour{
     public void Update() {
     
         //set important vectors and quantities we often need
-        toPlayer = playerTransform.position - myTransform.position;
+        toPlayer = playerTransform.position - myHead.transform.position;
         toNavDest = myTransform.position - navDest;
-        angleToPlayer = Vector3.Angle(myTransform.forward, toPlayer);
+        angleToPlayer = Vector3.Angle(myHead.transform.forward, toPlayer);
         magToPlayer = Vector3.Magnitude(toPlayer);
+
+        //testing the ambush state...
+        if (Input.GetKeyDown("t")){
+            transitionToAmbush();
+        }
 
 
         switch (currState) {
 
             //start state that always patrols...
             case EvilState.Init:
-
                 transitionToPatrolling();
-                //Debug.Log("now patrolling");
                 break;
-
 
             //if player is seen they will be attacked and brain notified of position
             // no matter what, a searching slist will follow orders eg; if brain
             //says the player is somewhere, they go, if the player says to get stunned
             //the slist stuns...
-            case EvilState.Searching:
+            case EvilState.Seeking:
 
                 if (queuedCommand != null){
                     transitionFromCommand(queuedCommand);
+                    return;
                 }
 
-                if (checkSight()) {
-                    if (withinRange()) {
-                        brain.notifyFound(player.transform.position);
+                if (withinRange()) {
+                    if (checkSight()){
+                        brain.notifyFound(player.transform.position, id);
                         transitionToAttacking();
                     }
                 }
@@ -180,20 +182,19 @@ public class EnemyScript : MonoBehaviour{
                 //Debug.Log("in patrol...");
 
                 if (queuedCommand != null) {
-                    transitionToSearching(queuedCommand.loc);
+                    transitionFromCommand(queuedCommand);
                     return;
                 }
 
                 if (withinRange()) {//no need to do raycast if out of range
-                    Debug.Log("within range!");
+                    Debug.Log("ohhhh shit");
                     if (checkSight()) {
-                        Debug.Log("sighted!");
-                        brain.notifyFound(player.transform.position);
+                        Debug.Log("found!");
+                        brain.notifyFound(player.transform.position, id);
                         transitionToAttacking();
                         return;
                     }
                 }
-
                 if (Vector3.Magnitude(toNavDest) < 1) {
                     transitionToLooking();
                 }
@@ -226,13 +227,27 @@ public class EnemyScript : MonoBehaviour{
                 if (queuedCommand != null){
                     lookTimer = lookTime;
                     transitionFromCommand(queuedCommand);
+                    return;
                 }
 
                 if (lookTimer < 0) {
                     lookTimer = lookTime;
+                    transitionToPatrolling();
                 }
-
                 else lookTimer -= Time.deltaTime;
+
+                break;
+
+            case EvilState.Attacking:
+
+                //play some anim
+                agent.SetDestination(playerTransform.position);
+                break;
+
+            case EvilState.Ambush:
+
+                //nada for now
+
 
                 break;
         }
@@ -248,9 +263,9 @@ public class EnemyScript : MonoBehaviour{
                 transitionToLooking();
                 break;
 
-            case EvilState.Searching:
+            case EvilState.Seeking:
 
-                transitionToSearching(command.loc);
+                transitionToSeeking(command.loc);
                 break;
 
             case EvilState.Patrolling:
@@ -261,13 +276,13 @@ public class EnemyScript : MonoBehaviour{
     }
 
     //if slist stunned, she will search when wake up, else they move to that location
-    private void transitionToSearching(Vector3 loc) {
+    private void transitionToSeeking(Vector3 loc) {
 
         if (currState == EvilState.Stunned){
-            queuedCommand = new Command(loc, EvilState.Searching);
+            queuedCommand = new Command(loc, EvilState.Seeking);
         }
         else{
-            currState = EvilState.Searching;
+            currState = EvilState.Seeking;
             navDest = loc;
             agent.SetDestination(loc);
             animator.Play(moveHash);
@@ -284,10 +299,13 @@ public class EnemyScript : MonoBehaviour{
         animator.Play(lookHash);
     }
 
+
     //no idea how to animate/do physics for this yet..
     private void transitionToAttacking() {
         currState = EvilState.Attacking;
         queuedCommand = null;
+        agent.SetDestination(playerTransform.position);
+        agent.speed = agent.speed * 2;
     }
 
 
@@ -300,7 +318,6 @@ public class EnemyScript : MonoBehaviour{
 
     //get random patrol point then go to it...
     private void transitionToPatrolling() {
-
         index = Random.Range(0, patrolPoints.Length);
         patrolPt = patrolPoints[(int)index].transform.position;
         navDest = new Vector3(patrolPt.x, 0, patrolPt.z);
@@ -308,8 +325,55 @@ public class EnemyScript : MonoBehaviour{
         currState = EvilState.Patrolling;
         queuedCommand = null;
 
+        animator.Play(moveHash);
+
         agent.SetDestination(navDest);
     }
+
+    //slist sticks to the ceiling by disabling navmesh and moving 
+    //important bones in line with the angle of the face directly above...
+    //DOESNT WORK...
+    private void transitionToAmbush() {
+
+        animator.enabled = false;
+        agent.enabled = false;
+
+        currState = EvilState.Ambush;
+
+        transform.Rotate(new Vector3(90,0,0));
+        transform.position += Vector3.up;
+
+        int i;
+
+        Transform animRoot = transform.Find("Armature").Find("Root"), curr;
+
+        ArrayList angles = new ArrayList(), points = new ArrayList();
+
+        Physics.Raycast(animRoot.position, Vector3.up, out caster, 20);
+        angles.Add(caster.normal);
+        points.Add(caster.point);
+
+
+        for (i = 0; i < animRoot.transform.childCount; i++) {
+
+            curr = animRoot.transform.GetChild(i);
+
+            if (curr.name != "HeadCollider"){
+                Physics.Raycast(animRoot.transform.GetChild(i).position, Vector3.up, out caster, 20);
+                angles.Add(caster.normal);
+                points.Add(caster.point);
+            }
+        }
+
+        //root must go first
+        animRoot.SetPositionAndRotation((Vector3) points[0], Quaternion.LookRotation((Vector3)angles[0]));
+
+        //then do thighs and chest
+        for (i = 1; i < animRoot.transform.childCount; i++) {
+            animRoot.transform.GetChild(i).SetPositionAndRotation((Vector3)points[i], Quaternion.LookRotation((Vector3)angles[i]));
+        }
+    }
+
 
     //uses sight range public var to determine if player could possibly be seen
     private bool withinRange() {
@@ -322,9 +386,8 @@ public class EnemyScript : MonoBehaviour{
     //if player is at too far an angle, they cant see (this should be changed...)
     //if not, raycast to see if theyre in sight...
     private bool checkSight() {
-
         if (angleToPlayer < 30){
-            if (Physics.Raycast(transform.position, toPlayer, out caster, sightRange)){
+            if (Physics.Raycast(myHead.transform.position, toPlayer, out caster, sightRange)){
                 if (caster.collider.CompareTag("Player")){
                     return true;
                 }
@@ -348,15 +411,10 @@ public class EnemyScript : MonoBehaviour{
 
 
 
-
-
-
     //step (this works)
     public void Step(){
         float vol = 1 - Vector3.Magnitude(transform.position - player.transform.position) / maxDistAudio;
         one.PlayOneShot(stepSound, vol);
         two.PlayOneShot(stepSound, vol);
     }
-
-
 }

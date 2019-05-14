@@ -2,20 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AIBrain : MonoBehaviour
-{
-    public bool allChase = false;
-    private bool seen;
-    private float time = 10.0f;
-    //public GameObject player; 
+public class AIBrain : MonoBehaviour{
 
     GameObject[] enemyInitList;
     EnemyScript[] enemyList;
 
-
-    void Start()
-    {
-        seen = false;
+    void Start(){
         enemyInitList = GameObject.FindGameObjectsWithTag("Enemy");
         enemyList = new EnemyScript[enemyInitList.Length];
 
@@ -25,24 +17,13 @@ public class AIBrain : MonoBehaviour
     }
 
 
-    // Update is called once per frame
-    void Update(){
-
-    } 
-
-    void countDown(float t) {
-        time = time - Time.deltaTime;
-    }
-
-
-    public void notifyFound(Vector3 playerLoc){
-
+    public void notifyFound(Vector3 playerLoc,  int id){
         foreach (EnemyScript enemy in enemyList){
-
-            enemy.processCommand(playerLoc, EvilState.Searching);
+            if (enemy.id != id)
+            {
+                enemy.processCommand(playerLoc, EvilState.Seeking);
+            }
         }
     }
-
-
 
 }

@@ -275,11 +275,14 @@ public class AudioPlanner : MonoBehaviour {
 
     ArrayList requests = new ArrayList(), constants = new ArrayList();
 
+    GameObject brain;
+
 
 
     public void Start(){
         initAudioGraph(AudioNode.AudioNodeFromObj(GameObject.Find("seg_four").transform.GetChild(1).gameObject));
-    }
+        brain = GameObject.Find("AIBrain");
+        }
 
 
 
@@ -297,7 +300,14 @@ public class AudioPlanner : MonoBehaviour {
                 if (datum.freq == 1){
                     toPrint = true;
                 }
-                searchResult = audioSearch(position(datum.source.transform.position), toPrint);
+
+                AudioNode curr = position(datum.source.transform.position + .1f*Vector3.forward + .1f*Vector3.right);
+
+                if (curr == null){
+                    brain.transform.position = datum.source.transform.position + 10 * Vector3.up + 3 * Vector3.right;
+                }
+
+                searchResult = audioSearch(curr, toPrint);
 
                 if (searchResult[0] != Vector3.zero){
                     datum.audio1.transform.position = searchResult[0];
@@ -347,17 +357,26 @@ public class AudioPlanner : MonoBehaviour {
 
     public Vector3[] audioSearch(AudioNode source, bool print){
 
-
         Vector3[] result = new Vector3[2];
         AudioNode dest = position(gameObject.transform.position), curr = null;
+
+        if (source == null)
+        {
+            Debug.Log("source null");
+        }
+
+        if (dest == null)
+        {
+            Debug.Log("dest null");
+        }
+
 
         if (source.location.Equals(dest.location)){
             result[0] = source.location;
             return result;
         }
 
-        if (Vector3.Magnitude(source.location - dest.location) >= dieDist)
-        {
+        if (Vector3.Magnitude(source.location - dest.location) >= dieDist){
             return result;
         }
 
@@ -403,8 +422,7 @@ public class AudioPlanner : MonoBehaviour {
                     }
                 }
             }
-            else
-            {
+            else{
                // Debug.Log("Agent out of range...");
             }
         }
@@ -442,7 +460,6 @@ public class AudioPlanner : MonoBehaviour {
             node.source = false;
             node.strength = 0;
             node.visited = false;
-
         }
         nodes.Clear();
     }
