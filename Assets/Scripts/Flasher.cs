@@ -27,19 +27,27 @@ public class Flasher : MonoBehaviour{
     private float time = 5.0f;
     private float transparency = 0.0f;
     private float power = 100.0f;
-    public Text victoryText;
+
 
 
     private CharacterController control;
 
+    public Text victoryText;
+    public Text powerText;
+    public Text objectiveText; 
     public GameObject crumb;
-    public GameObject key;
+    private GameObject key;
     public Image img;
 
 
     // Start is called before the first frame update
     void Start(){
+
+        objectiveText.text = "Find the key";
+
         door = GameObject.Find("Door");
+        key = GameObject.Find("key");  
+
         var copyCol = img.color;
         copyCol.a = 0.0f;
         img.color = copyCol; 
@@ -58,7 +66,9 @@ public class Flasher : MonoBehaviour{
     void Update(){
 
         setMouseParams();
-        setMovementParams(); 
+        setMovementParams();
+
+        powerText.text = "Power: " + power; 
 
         GameObject [] batteryList  = GameObject.FindGameObjectsWithTag("Battery"); 
 
@@ -70,8 +80,9 @@ public class Flasher : MonoBehaviour{
         }
 
         if (GameObject.FindGameObjectsWithTag("Key").Length != 0) {
-            if (Vector3.Magnitude(transform.position - key.transform.position) < 2)
+            if (Vector3.Magnitude(transform.position - key.transform.position) < 1.5)
             {
+                objectiveText.text = "Get back to the start!";
                 Destroy(key);
             }
         }
@@ -81,8 +92,7 @@ public class Flasher : MonoBehaviour{
                 win = true;
                 setInfoText();
                 countdown();
-                //call countdown 5 seconds dim screen 
-                //SceneManager.LoadScene("MainMenu");
+
             }
         }  
 
