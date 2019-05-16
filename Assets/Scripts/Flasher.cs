@@ -70,6 +70,14 @@ public class Flasher : MonoBehaviour{
 
         powerText.text = "Power: " + power; 
 
+        if (win) {
+            countdown();
+        } 
+
+        if (dead) {
+            countdown();
+        }
+
         GameObject [] batteryList  = GameObject.FindGameObjectsWithTag("Battery"); 
 
         for (int a = 0; a < batteryList.Length; a++) { 
@@ -91,7 +99,7 @@ public class Flasher : MonoBehaviour{
             if (Vector3.Magnitude(transform.position - door.transform.position) < 2) { 
                 win = true;
                 setInfoText();
-                countdown();
+                //countdown();
 
             }
         }  
@@ -183,7 +191,7 @@ public class Flasher : MonoBehaviour{
 
 
     public void dropBread(){
-        Vector3 v = new Vector3(transform.position.x, transform.position.y - .1f,
+        Vector3 v = new Vector3(transform.position.x, transform.position.y - .3f,
                                     transform.position.z);
         GameObject b = Instantiate(crumb, v, transform.rotation);
     } 
