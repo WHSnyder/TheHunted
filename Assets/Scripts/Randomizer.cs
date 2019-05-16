@@ -16,11 +16,11 @@ public class Randomizer : MonoBehaviour
     private int random;
     private int random2;
     private int random3;
-    private Vector3 loc1 = new Vector3(75.0f, 0.0f, 15.0f);
-    private Vector3 loc2 = new Vector3(116.0f, 0.0f, -15.0f);
+    private Vector3 loc1 = new Vector3(-186.0f, 0.0f, -42.0f);
+    private Vector3 loc2 = new Vector3(-123.0f, 0.0f, 57.0f);
     private Vector3 loc3 = new Vector3(-64.0f, 0.0f, 57.0f);
-    private Vector3 loc4 = new Vector3(-123.0f, 0.0f, 57.0f);
-    private Vector3 loc5 = new Vector3(-186.0f, 0.0f, -42.0f);
+    private Vector3 loc4 = new Vector3(75.0f, 0.0f, 15.0f);
+    private Vector3 loc5 = new Vector3(116.0f, 0.0f, -15.0f);
     private Vector3 banished = new Vector3(0.0f, -100.0f, 0.0f);
 
 
@@ -34,31 +34,42 @@ public class Randomizer : MonoBehaviour
         i3 = GameObject.Find("item_room3");
         i4 = GameObject.Find("item_room4");
         i5 = GameObject.Find("item_room5");
-        //key = GameObject.Find("key_room"); 
+        key = GameObject.Find("key_room_locked"); 
 
         random = Random.Range(1, 6);
         Debug.Log(random);
         if (random == 1) {
             i1.transform.position = banished; 
-            //key.transform.position = loc1; 
+            key.transform.position = loc1;
+            key.transform.eulerAngles = new Vector3(key.transform.eulerAngles.x,
+                                                    key.transform.eulerAngles.y + 90,
+                                                    key.transform.eulerAngles.z);
         } 
         else if (random == 2){
             i2.transform.position = banished;
-            //key.transform.position = loc2; 
+            key.transform.position = loc2;
+            key.transform.eulerAngles = new Vector3(key.transform.eulerAngles.x,
+                                                    key.transform.eulerAngles.y + 270,
+                                                    key.transform.eulerAngles.z);
         }
         else if (random == 3)
         {
             i3.transform.position = banished;
-            //key.transform.position = loc3; 
+            key.transform.position = loc3; 
         }
         else if (random == 4)
         {
             i4.transform.position = banished;
-            //key.transform.position = loc4; 
+            key.transform.position = loc4;
+            i2.transform.position = banished;
+            key.transform.position = loc4;
+            key.transform.eulerAngles = new Vector3(key.transform.eulerAngles.x,
+                                                    key.transform.eulerAngles.y + 270,
+                                                    key.transform.eulerAngles.z);
         } 
         else {
             i5.transform.position = banished;
-            //key.transform.position = loc5; 
+            key.transform.position = loc5; 
         }
 
 
