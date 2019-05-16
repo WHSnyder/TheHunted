@@ -1,27 +1,33 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
-public class FLSource : MonoBehaviour{
+public class FLSource : MonoBehaviour
+{
 
     private VolumetricLight source;
     private Light bounce;
     private bool on = false;
-    private float power = 100f;
+    private float power = 100.0f;
     private bool hasPower = true;
+    private int batteryCount;
+    private int tempCount; 
+    public Text powerText; 
+
 
     int layerMask;
 
     Vector3 shot, reflection;
     RaycastHit hit;
 
-    public int drain;
-
 
     // Start is called before the first frame update
     void Start()
     {
+
+        batteryCount = GameObject.FindGameObjectsWithTag("Battery").Length; 
         layerMask = 1 << 8;
         layerMask = ~layerMask;
 
@@ -38,7 +44,15 @@ public class FLSource : MonoBehaviour{
     // Update is called once per frame
     void Update(){
 
-        updatePower();
+        //battery pickup 
+        tempCount = GameObject.FindGameObjectsWithTag("Battery").Length; 
+        if (tempCount < batteryCount) {
+            power += 25; 
+        }
+        batteryCount = tempCount;
+
+        //change the text 
+        setPowerText();
 
         if (Input.GetKeyDown(KeyCode.F)){
             source.enabled = !source.enabled;
@@ -46,13 +60,20 @@ public class FLSource : MonoBehaviour{
             on = !on;
         }
 
-
-        if (on){
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 30)){
-                if (hit.collider.gameObject.CompareTag("Head")){
+        if ((on) && (power > 0.0f))
+        {
+            power -= 1.0f;
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 30))
+            {
+                if (hit.collider.gameObject.CompareTag("Head"))
+                {
                     //hit.collider.gameObject
                 }
             }
+        } 
+
+        void setPowerText() {
+            powerText.text = "Power: " + power;
         }
 
 
@@ -103,18 +124,5 @@ public class FLSource : MonoBehaviour{
         //}
         //    }
         //}
-    }
-
-    void updatePower(){
-
-        if (power > 0){
-            power = -Time.deltaTime * drain;
-        }
-
-        if (power <= 0){
-            hasPower = false;
-        }
-
-        else hasPower = true;
     }
 }
