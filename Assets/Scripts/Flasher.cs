@@ -22,11 +22,15 @@ public class Flasher : MonoBehaviour{
 
     //Dan adds 5/12
     private GameObject door;
+    private GameObject[] teleporters; 
     private bool win = false;
-    private bool dead = false; 
+    private bool dead = false;
+    private bool canTeleport = false;
+    private bool hasKey = false; 
     private float time = 5.0f;
     private float transparency = 0.0f;
     private float power = 100.0f;
+    private Vector3 keyLoc; 
 
 
 
@@ -47,13 +51,13 @@ public class Flasher : MonoBehaviour{
 
         door = GameObject.Find("Door");
         key = GameObject.Find("key");
+        keyLoc = key.transform.position; 
 
         var copyCol = img.color;
         copyCol.a = 0.0f;
         img.color = copyCol; 
 
         control = GetComponent<CharacterController>();
-        //acrumb = Resources.Load("BreadCrumb") as GameObject;
 
         Vector3 cameraSpawn = this.transform.position + .1f * Vector3.forward;
         GameObject.Find("Main Camera").gameObject.transform.SetPositionAndRotation(cameraSpawn, Quaternion.identity);
@@ -64,6 +68,8 @@ public class Flasher : MonoBehaviour{
 
     // Update is called once per frame
     void Update(){
+
+        Debug.Log(canTeleport);
 
         setMouseParams();
         setMovementParams();
@@ -78,18 +84,29 @@ public class Flasher : MonoBehaviour{
             countdown();
         }
 
-        GameObject [] batteryList  = GameObject.FindGameObjectsWithTag("Battery"); 
+        GameObject [] batteryList  = GameObject.FindGameObjectsWithTag("Battery");
+        teleporters = GameObject.FindGameObjectsWithTag("Teleporter");
+
 
         for (int a = 0; a < batteryList.Length; a++) { 
             if (Vector3.Magnitude(transform.position - batteryList[a].transform.position) < 1) {
                 Destroy(batteryList[a]);
                 power += 25.0f;
             }
-        }
+        } 
+
+        for (int b = 0; b < teleporters.Length; b++) { 
+            if (Vector3.Magnitude(transform.position - teleporters[b].transform.position) < 2)
+            {
+                Destroy(teleporters[b]);
+                canTeleport = true;  
+            }
+        } 
 
         if (GameObject.FindGameObjectsWithTag("Key").Length != 0) {
             if (Vector3.Magnitude(transform.position - key.transform.position) < 1.5)
             {
+                hasKey = true; 
                 objectiveText.text = "Get back to the start!";
                 Destroy(key);
             }
@@ -104,6 +121,8 @@ public class Flasher : MonoBehaviour{
             }
         }  
 
+        
+
         if (!win) {
             GameObject[] enemyList = GameObject.FindGameObjectsWithTag("Enemy");
             for (int z = 0; z < enemyList.Length; z++) { 
@@ -113,6 +132,26 @@ public class Flasher : MonoBehaviour{
                     win = false; 
                     setInfoText();
                 }
+            }
+        } 
+
+        if (canTeleport) { 
+            for (int d = 0; d < teleporters.Length; d++) {
+                Destroy(teleporters[d]);
+            }
+        }
+
+        if ((canTeleport) && (Input.GetKeyDown("z")))
+        {
+            Debug.Log("hello");
+            canTeleport = false;
+            if (hasKey)
+            {
+                transform.position = keyLoc;
+            }
+            else
+            {
+                transform.position = Vector3.zero;
             }
         }
     }
@@ -155,6 +194,8 @@ public class Flasher : MonoBehaviour{
 
             moveDirectionUp.y = jump;
         }
+
+
 
         if (ButtonCooler > 0.0f) ButtonCooler -= 1.0f * Time.deltaTime;
         else ButtonCount = 0;
