@@ -131,6 +131,7 @@ public class EnemyScript : MonoBehaviour{
 
 
     public void Update() {
+        Debug.Log(this.currState);
     
         //set important vectors and quantities we often need
         toPlayer = playerTransform.position - myHead.transform.position;
