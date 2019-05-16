@@ -31,7 +31,8 @@ public class Flasher : MonoBehaviour{
     private float transparency = 0.0f;
     private float power = 100.0f;
     private Vector3 keyLoc;
-    private FLSource lit; 
+
+    private FLSource lit;
 
 
 
@@ -73,7 +74,9 @@ public class Flasher : MonoBehaviour{
 
         flashlight = GameObject.Find("FlashLight").gameObject;
          flashlight.transform.SetPositionAndRotation(lightPos, Quaternion.Euler(0, 0, 0));         flashlight.transform.parent = GameObject.Find("Main Camera").gameObject.transform; 
-        lit = flashlight.GetComponent<FLSource>(); 
+
+        lit = flashlight.GetComponent<FLSource>();
+
         /*         GameObject.Find("Flashlight2").gameObject.transform.SetPositionAndRotation(this.transform.position + .7f * Vector3.forward         + .2f * Vector3.right - .15f * Vector3.up, Quaternion.Euler(90, 0, 0));         GameObject.Find("Flashlight2").gameObject.transform.parent = GameObject.Find("Main Camera").gameObject.transform;
             */
    }
@@ -177,9 +180,14 @@ public class Flasher : MonoBehaviour{
 
     private bool EnemyStun()
     {
-        if ((!lit.source.enabled) || (!lit.bounce.enabled)) {
+
+
+        if (!lit.source.enabled || !lit.bounce.enabled)
+        {
             return false;
         }
+
+
         if (Physics.Raycast(flashlight.transform.position, flashlight.transform.forward*20, out caster, 30))
         {
             Debug.Log("Hit: " + caster.collider.gameObject.name);
