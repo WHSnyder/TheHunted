@@ -46,7 +46,7 @@ public class Flasher : MonoBehaviour{
         objectiveText.text = "Find the key";
 
         door = GameObject.Find("Door");
-        key = GameObject.Find("key");  
+        key = GameObject.Find("key");
 
         var copyCol = img.color;
         copyCol.a = 0.0f;
@@ -59,8 +59,10 @@ public class Flasher : MonoBehaviour{
         GameObject.Find("Main Camera").gameObject.transform.SetPositionAndRotation(cameraSpawn, Quaternion.identity);
         GameObject.Find("Main Camera").gameObject.transform.parent = this.transform;
 
-        Vector3 lightPos = this.transform.position + .25f * Vector3.right + .25f * Vector3.forward;         GameObject.Find("FlashLight").gameObject.transform.SetPositionAndRotation(lightPos, Quaternion.Euler(0, 0, 0));         GameObject.Find("FlashLight").gameObject.transform.parent = GameObject.Find("Main Camera").gameObject.transform;          GameObject.Find("Flashlight2").gameObject.transform.SetPositionAndRotation(this.transform.position + .7f * Vector3.forward         + .2f * Vector3.right - .15f * Vector3.up, Quaternion.Euler(90, 0, 0));         GameObject.Find("Flashlight2").gameObject.transform.parent = GameObject.Find("Main Camera").gameObject.transform;
-    }
+        Vector3 lightPos = this.transform.position + .25f * Vector3.right + .25f * Vector3.forward;         GameObject.Find("FlashLight").gameObject.transform.SetPositionAndRotation(lightPos, Quaternion.Euler(0, 0, 0));         GameObject.Find("FlashLight").gameObject.transform.parent = GameObject.Find("Main Camera").gameObject.transform; 
+        /*         GameObject.Find("Flashlight2").gameObject.transform.SetPositionAndRotation(this.transform.position + .7f * Vector3.forward         + .2f * Vector3.right - .15f * Vector3.up, Quaternion.Euler(90, 0, 0));         GameObject.Find("Flashlight2").gameObject.transform.parent = GameObject.Find("Main Camera").gameObject.transform;
+            */
+   }
 
     // Update is called once per frame
     void Update(){
@@ -69,6 +71,14 @@ public class Flasher : MonoBehaviour{
         setMovementParams();
 
         powerText.text = "Power: " + power; 
+
+        if (win) {
+            countdown();
+        } 
+
+        if (dead) {
+            countdown();
+        }
 
         GameObject [] batteryList  = GameObject.FindGameObjectsWithTag("Battery"); 
 
@@ -93,7 +103,7 @@ public class Flasher : MonoBehaviour{
             if (Vector3.Magnitude(transform.position - door.transform.position) < 2) { 
                 win = true;
                 setInfoText();
-                countdown();
+                //countdown();
 
             }
         }  
@@ -185,7 +195,7 @@ public class Flasher : MonoBehaviour{
 
 
     public void dropBread(){
-        Vector3 v = new Vector3(transform.position.x, transform.position.y - .1f,
+        Vector3 v = new Vector3(transform.position.x, transform.position.y - .3f,
                                     transform.position.z);
         GameObject b = Instantiate(crumb, v, transform.rotation);
     } 
