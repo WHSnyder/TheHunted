@@ -168,6 +168,11 @@ public class EnemyScript : MonoBehaviour{
                         transitionToAttacking();
                     }
                 }
+
+                if (Vector3.Magnitude(toNavDest) < 1){
+                    transitionToLooking();
+                }
+                
                 break;
 
 
