@@ -338,44 +338,65 @@ public class EnemyScript : MonoBehaviour{
     //slist sticks to the ceiling by disabling navmesh and moving 
     //important bones in line with the angle of the face directly above...
     //DOESNT WORK...
-    private void transitionToAmbush() {
+    private void transitionToAmbush(){
 
+        //animator.WriteDefaultValues();
         animator.enabled = false;
         agent.enabled = false;
 
         currState = EvilState.Ambush;
 
-        transform.Rotate(new Vector3(90,0,0));
+        //straighten out
+        transform.Rotate(new Vector3(90, 0, 0));
         transform.position += Vector3.up;
 
-        int i;
+        int i = 0;
+        int mask = ~(1 << 9);
 
-        Transform animRoot = transform.Find("Armature").Find("Root"), curr;
+        float boneAngle;
 
-        ArrayList angles = new ArrayList(), points = new ArrayList();
+        Transform animRoot = transform.Find("Armature").Find("Root");
 
-        Physics.Raycast(animRoot.position, Vector3.up, out caster, 20);
-        angles.Add(caster.normal);
-        points.Add(caster.point);
+        ArrayList angles = new ArrayList(), points = new ArrayList(), bones;
 
+        Queue<Transform> animQ = new Queue<Transform>();
+        animQ.Enqueue(animRoot);
+        bones = traverseAnimTree(animQ);
 
-        for (i = 0; i < animRoot.transform.childCount; i++) {
+        Vector3 crossProd;
 
-            curr = animRoot.transform.GetChild(i);
-
-            if (curr.name != "HeadCollider"){
-                Physics.Raycast(animRoot.transform.GetChild(i).position, Vector3.up, out caster, 20);
-                angles.Add(caster.normal);
-                points.Add(caster.point);
-            }
+        foreach (Transform bone in bones){
+        
+            Physics.Raycast(bone.position, Vector3.up, out caster, 20, mask);
+            angles.Add(caster.normal);
+            points.Add(caster.point);
         }
 
-        //root must go first
-        animRoot.SetPositionAndRotation((Vector3) points[0], Quaternion.LookRotation((Vector3)angles[0]));
 
-        //then do thighs and chest
-        for (i = 1; i < animRoot.transform.childCount; i++) {
-            animRoot.transform.GetChild(i).SetPositionAndRotation((Vector3)points[i], Quaternion.LookRotation((Vector3)angles[i]));
+        foreach (Transform bone in bones){
+
+            Debug.Log("transforming bone: " + bone.gameObject.name);
+
+            bone.position = (Vector3) points[i];
+            crossProd = Vector3.Cross((Vector3) angles[i], bone.forward);
+
+            boneAngle = Vector3.SignedAngle(bone.forward, (Vector3) angles[i], crossProd);
+
+            if (bone.gameObject.name.Equals("Thigh.R")){
+                Debug.DrawRay(bone.position, 2 * bone.forward, Color.blue, 160);
+                Debug.DrawRay(bone.position, 2 * crossProd, Color.red, 160);
+                Debug.DrawRay(bone.position, 2 * (Vector3)angles[i], Color.green, 160);
+            }
+
+            //curr.rotation = Quaternion.LookRotation((Vector3)angles[i]);
+
+            bone.Rotate(crossProd, boneAngle, Space.World);
+
+            if (bone.gameObject.name.Equals("Thigh.R")){
+                Debug.DrawRay(bone.position, 2 * bone.forward, Color.yellow, 160);
+            }
+
+            ++i;
         }
     }
 
@@ -421,5 +442,31 @@ public class EnemyScript : MonoBehaviour{
         float vol = 1 - Vector3.Magnitude(transform.position - player.transform.position) / maxDistAudio;
         one.PlayOneShot(stepSound, vol);
         two.PlayOneShot(stepSound, vol);
+    }
+
+
+    //for setting up the abmush pose
+    private ArrayList traverseAnimTree(Queue<Transform> queue) {
+
+        ArrayList result = new ArrayList();
+        int g = 0;
+
+        while (queue.Count > 0){
+
+
+            Transform curr = queue.Dequeue();
+
+            string boneName = curr.gameObject.name;
+
+            if (!boneName.Contains("end")){
+
+                result.Add(curr);
+
+                for (int i = 0; i < curr.childCount; i++){
+                    queue.Enqueue(curr.GetChild(i));
+                }
+            }
+        }
+        return result;
     }
 }
