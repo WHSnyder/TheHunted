@@ -25,6 +25,7 @@ TagManager:
   - Key
   - Lock
   - Battery
+  - Teleporter
   layers:
   - Default
   - TransparentFX
