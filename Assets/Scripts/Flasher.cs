@@ -63,8 +63,10 @@ public class Flasher : MonoBehaviour{
         GameObject.Find("Main Camera").gameObject.transform.SetPositionAndRotation(cameraSpawn, Quaternion.identity);
         GameObject.Find("Main Camera").gameObject.transform.parent = this.transform;
 
-        Vector3 lightPos = this.transform.position + .25f * Vector3.right + .25f * Vector3.forward;         GameObject.Find("FlashLight").gameObject.transform.SetPositionAndRotation(lightPos, Quaternion.Euler(0, 0, 0));         GameObject.Find("FlashLight").gameObject.transform.parent = GameObject.Find("Main Camera").gameObject.transform;          GameObject.Find("Flashlight2").gameObject.transform.SetPositionAndRotation(this.transform.position + .7f * Vector3.forward         + .2f * Vector3.right - .15f * Vector3.up, Quaternion.Euler(90, 0, 0));         GameObject.Find("Flashlight2").gameObject.transform.parent = GameObject.Find("Main Camera").gameObject.transform;
-    }
+        Vector3 lightPos = this.transform.position + .25f * Vector3.right + .25f * Vector3.forward;         GameObject.Find("FlashLight").gameObject.transform.SetPositionAndRotation(lightPos, Quaternion.Euler(0, 0, 0));         GameObject.Find("FlashLight").gameObject.transform.parent = GameObject.Find("Main Camera").gameObject.transform; 
+        /*         GameObject.Find("Flashlight2").gameObject.transform.SetPositionAndRotation(this.transform.position + .7f * Vector3.forward         + .2f * Vector3.right - .15f * Vector3.up, Quaternion.Euler(90, 0, 0));         GameObject.Find("Flashlight2").gameObject.transform.parent = GameObject.Find("Main Camera").gameObject.transform;
+            */
+   }
 
     // Update is called once per frame
     void Update(){
@@ -86,6 +88,8 @@ public class Flasher : MonoBehaviour{
 
         GameObject [] batteryList  = GameObject.FindGameObjectsWithTag("Battery");
         teleporters = GameObject.FindGameObjectsWithTag("Teleporter");
+
+
 
 
         for (int a = 0; a < batteryList.Length; a++) { 
