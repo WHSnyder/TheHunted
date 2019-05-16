@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class FLSource : MonoBehaviour
-{
+public class FLSource : MonoBehaviour{
 
     private VolumetricLight source;
     private Light bounce;
     private bool on = false;
-    private float power = 10.0f;
+    private float power = 100f;
     private bool hasPower = true;
 
     int layerMask;
 
     Vector3 shot, reflection;
     RaycastHit hit;
+
+    public int drain;
 
 
     // Start is called before the first frame update
@@ -43,16 +44,14 @@ public class FLSource : MonoBehaviour
             on = !on;
         }
 
-        if (on)
-        {
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 30))
-            {
-                if (hit.collider.gameObject.CompareTag("Head"))
-                {
+        if (on){
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 30)){
+                if (hit.collider.gameObject.CompareTag("Head")){
                     //hit.collider.gameObject
                 }
             }
         }
+
 
 
 
@@ -101,5 +100,17 @@ public class FLSource : MonoBehaviour
         //}
         //    }
         //}
+    }
+
+    void updatePower(){
+
+        if (power > 0){
+            power = -Time.deltaTime * drain;
+        }
+
+        if (power <= 0){
+            hasPower = false;
+        }
+        else hasPower = true;
     }
 }

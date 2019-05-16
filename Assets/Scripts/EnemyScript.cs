@@ -135,7 +135,7 @@ public class EnemyScript : MonoBehaviour{
 
 
     public void Update() {
-        Debug.Log(this.currState);
+
     
         //set important vectors and quantities we often need
         toPlayer = playerTransform.position - myHead.transform.position;
@@ -258,6 +258,7 @@ public class EnemyScript : MonoBehaviour{
             case EvilState.Ambush:
 
                 //nada for now
+
                 break;
         }
     }
@@ -311,6 +312,9 @@ public class EnemyScript : MonoBehaviour{
 
     //no idea how to animate/do physics for this yet..
     private void transitionToAttacking() {
+
+
+
         currState = EvilState.Attacking;
         queuedCommand = null;
         agent.SetDestination(playerTransform.position);
@@ -411,6 +415,7 @@ public class EnemyScript : MonoBehaviour{
         else return false;
     }
 
+
     //if player is at too far an angle, they cant see (this should be changed...)
     //if not, raycast to see if theyre in sight...
     private bool checkForPlayer() {
@@ -431,13 +436,13 @@ public class EnemyScript : MonoBehaviour{
 
     //takes a command from the brain OR the player
     //does not directly set the transition, but the queued 
-    public void processCommand(Vector3 loc, EvilState state){
+    public void processCommand(Vector3 loc, EvilState order){
 
-        if (currState == EvilState.Attacking && state != EvilState.Stunned){
+        if (currState == EvilState.Attacking && order != EvilState.Stunned){
             //do nothing, ignores everything when attacking EXCEPT when player stuns them
             return;
         }
-        else queuedCommand = new Command(loc, state);
+        else queuedCommand = new Command(loc, order);
     }
 
 
