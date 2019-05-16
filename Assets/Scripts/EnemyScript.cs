@@ -87,13 +87,13 @@ public class EnemyScript : MonoBehaviour{
     //Timers for each state, can be set in editor for performance tweaks
     //the time far stays as is, the timer vars change...
     public static float stunTime = 5;
-    private float stunTimer;
+    private float stunTimer = stunTime;
 
     public static float lookTime = 4;
-    private float lookTimer;
+    private float lookTimer = lookTime;
 
     public static float trackingTime = 10;
-    private float trackingTimer;
+    private float trackingTimer = trackingTime;
 
     private int ambushOrPatrol; 
 
@@ -170,6 +170,7 @@ public class EnemyScript : MonoBehaviour{
 
                 if (queuedCommand != null){
                     transitionFromCommand(queuedCommand);
+                    Debug.Log("tranning");
                     return;
                 }
 
@@ -222,7 +223,11 @@ public class EnemyScript : MonoBehaviour{
             //if nothing on queue, they look around
             case EvilState.Stunned:
 
+                Debug.Log("yes here..");
+
                 if (stunTimer < 0) {
+
+                    Debug.Log("unstunned");
                     stunTimer = stunTime;//reset timer
 
                     if (queuedCommand != null){
@@ -257,6 +262,14 @@ public class EnemyScript : MonoBehaviour{
             case EvilState.Attacking:
 
                 //play some anim
+                if (queuedCommand != null && queuedCommand.action == EvilState.Stunned)
+                {
+                    transitionToStunned();
+                    queuedCommand = null;
+                    return;
+                }
+
+
                 agent.SetDestination(playerTransform.position);
                 break;
 
@@ -288,6 +301,12 @@ public class EnemyScript : MonoBehaviour{
 
             case EvilState.Patrolling:
                 transitionToPatrolling();
+                break;
+
+            case EvilState.Stunned:
+                Debug.Log("in router...");
+
+                transitionToStunned();
                 break;
         }
         queuedCommand = null;
@@ -329,8 +348,12 @@ public class EnemyScript : MonoBehaviour{
 
     //he/she/it/they/Jabba's gender go through stunned stage and will look around afterwards
     private void transitionToStunned() {
+        Debug.Log("Worked!!");
         currState = EvilState.Stunned;
         queuedCommand = new Command(Vector3.zero, EvilState.Looking);
+
+        agent.enabled = false;
+        animator.Play(stunHash);
     }
 
 
@@ -444,6 +467,7 @@ public class EnemyScript : MonoBehaviour{
 
         if (currState == EvilState.Attacking && state != EvilState.Stunned){
             //do nothing, ignores everything when attacking EXCEPT when player stuns them
+
             return;
         }
         else queuedCommand = new Command(loc, state);
