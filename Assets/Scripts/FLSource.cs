@@ -37,7 +37,7 @@ public class FLSource : MonoBehaviour
     // Update is called once per frame
     void Update(){
 
-        if (Input.GetKeyDown(KeyCode.F)){
+        if (Input.GetKeyDown(KeyCode.F) && hasPower){
             source.enabled = !source.enabled;
             bounce.enabled = !bounce.enabled;
             on = !on;
