@@ -11,9 +11,11 @@ public class Randomizer : MonoBehaviour
     private GameObject i4;
     private GameObject i5;
     private GameObject key;
-    private GameObject[] batteryList; 
+    private GameObject[] batteryList;
+    private GameObject[] teleporterList;
     private int random;
-    private int random2; 
+    private int random2;
+    private int random3;
     private Vector3 loc1 = new Vector3(75.0f, 0.0f, 15.0f);
     private Vector3 loc2 = new Vector3(116.0f, 0.0f, -15.0f);
     private Vector3 loc3 = new Vector3(-64.0f, 0.0f, 57.0f);
@@ -69,7 +71,18 @@ public class Randomizer : MonoBehaviour
             if (random2 < 3) {
                 Destroy(batteryList[x]); 
             } 
-            
+
+        }
+
+        teleporterList = GameObject.FindGameObjectsWithTag("Teleporter");
+        for (int x = 0; x < teleporterList.Length; x++)
+        {
+            random3 = Random.Range(1, 5);
+            if (random3 < 3)
+            {
+                Destroy(teleporterList[x]);
+            }
+
         }
     }
 }
