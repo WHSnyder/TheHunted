@@ -95,6 +95,8 @@ public class EnemyScript : MonoBehaviour{
     public static float trackingTime = 10;
     private float trackingTimer = trackingTime;
 
+    private int ambushOrPatrol; 
+
 
 
 
@@ -130,12 +132,14 @@ public class EnemyScript : MonoBehaviour{
         patrolPoints = GameObject.FindGameObjectsWithTag("PatrolPoint");
 
         Random.InitState(System.DateTime.Now.Millisecond);
+        ambushOrPatrol = Random.Range(1, 3); 
+
     }
 
 
 
     public void Update() {
-        Debug.Log(this.currState);
+
     
         //set important vectors and quantities we often need
         toPlayer = playerTransform.position - myHead.transform.position;
@@ -143,11 +147,13 @@ public class EnemyScript : MonoBehaviour{
         angleToPlayer = Vector3.Angle(myHead.transform.forward, toPlayer);
         magToPlayer = Vector3.Magnitude(toPlayer);
 
-        //testing the ambush state...
-        if (Input.GetKeyDown("t")){
-            transitionToAmbush();
-        }
 
+        // if in 20 to 25 distance randomly go into ambush or keep patrolling
+        if ((magToPlayer >20) && (magToPlayer < 25) && (currState == EvilState.Patrolling)) {
+            if (ambushOrPatrol == 1) {
+                transitionToAmbush();
+            } 
+        }
 
         switch (currState) {
 
@@ -198,7 +204,7 @@ public class EnemyScript : MonoBehaviour{
                 }
 
                 if (withinRange()) {//no need to do raycast if out of range
-                    //Debug.Log("ohhhh shit");
+
                     if (checkForPlayer()) {
                         //Debug.Log("found!");
                         brain.notifyFound(player.transform.position, id);
@@ -268,8 +274,12 @@ public class EnemyScript : MonoBehaviour{
                 break;
 
             case EvilState.Ambush:
+                if (magToPlayer < 8) {
+                    agent.enabled = true;
+                    animator.enabled = true;
+                    transitionToAttacking();
+                }
 
-                //nada for now
                 break;
         }
     }
