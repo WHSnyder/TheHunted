@@ -38,7 +38,8 @@ public class Flasher : MonoBehaviour{
 
     public Text victoryText;
     public Text powerText;
-    public Text objectiveText; 
+    public Text objectiveText;
+    public Text directionText;
     public GameObject crumb;
     private GameObject key;
     public Image img;
@@ -71,7 +72,7 @@ public class Flasher : MonoBehaviour{
     // Update is called once per frame
     void Update(){
 
-        Debug.Log(canTeleport);
+        //Debug.Log(canTeleport);
 
         setMouseParams();
         setMovementParams();
@@ -103,7 +104,8 @@ public class Flasher : MonoBehaviour{
             if (Vector3.Magnitude(transform.position - teleporters[b].transform.position) < 2)
             {
                 Destroy(teleporters[b]);
-                canTeleport = true;  
+                canTeleport = true;
+                setInfoText();
             }
         } 
 
@@ -147,7 +149,7 @@ public class Flasher : MonoBehaviour{
 
         if ((canTeleport) && (Input.GetKeyDown("z")))
         {
-            Debug.Log("hello");
+            //Debug.Log("hello");
             canTeleport = false;
             if (hasKey)
             {
@@ -253,7 +255,12 @@ public class Flasher : MonoBehaviour{
             victoryText.color = Color.red;
             victoryText.text = "You're Dead";
             countdown();
+        } 
+
+        if (canTeleport) {
+            directionText.text = directionText.text + "\n" + "-Press z to teleport";
         }
+
     } 
 
     void countdown() {
