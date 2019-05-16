@@ -7,8 +7,8 @@ using UnityEngine.UI;
 public class FLSource : MonoBehaviour
 {
 
-    private VolumetricLight source;
-    private Light bounce;
+    public VolumetricLight source;
+    public Light bounce;
     private bool on = false;
     private float power = 100.0f;
     private bool hasPower = true;
@@ -58,6 +58,11 @@ public class FLSource : MonoBehaviour
             source.enabled = !source.enabled;
             bounce.enabled = !bounce.enabled;
             on = !on;
+        }
+
+        if (power < 1.0f) {
+            source.enabled = false;
+            bounce.enabled = false;
         }
 
         if ((on) && (power > 0.0f))
