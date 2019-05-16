@@ -62,6 +62,8 @@ public class Flasher : MonoBehaviour{
 
         GameObject [] batteryList  = GameObject.FindGameObjectsWithTag("Battery"); 
 
+
+
         for (int a = 0; a < batteryList.Length; a++) { 
             if (Vector3.Magnitude(transform.position - batteryList[a].transform.position) < 1) {
                 Destroy(batteryList[a]);
