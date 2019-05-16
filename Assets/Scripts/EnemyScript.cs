@@ -88,8 +88,12 @@ public class EnemyScript : MonoBehaviour{
     //the time far stays as is, the timer vars change...
     public static float stunTime = 5;
     private float stunTimer;
+
     public static float lookTime = 4;
     private float lookTimer;
+
+    public static float trackingTime = 10;
+    private float trackingTimer;
 
 
 
@@ -163,7 +167,7 @@ public class EnemyScript : MonoBehaviour{
                 }
 
                 if (withinRange()) {
-                    if (checkSight()){
+                    if (checkForPlayer()){
                         brain.notifyFound(player.transform.position, id);
                         transitionToAttacking();
                     }
@@ -192,9 +196,9 @@ public class EnemyScript : MonoBehaviour{
                 }
 
                 if (withinRange()) {//no need to do raycast if out of range
-                    Debug.Log("ohhhh shit");
-                    if (checkSight()) {
-                        Debug.Log("found!");
+                    //Debug.Log("ohhhh shit");
+                    if (checkForPlayer()) {
+                        //Debug.Log("found!");
                         brain.notifyFound(player.transform.position, id);
                         transitionToAttacking();
                         return;
@@ -252,8 +256,6 @@ public class EnemyScript : MonoBehaviour{
             case EvilState.Ambush:
 
                 //nada for now
-
-
                 break;
         }
     }
@@ -387,9 +389,7 @@ public class EnemyScript : MonoBehaviour{
                 Debug.DrawRay(bone.position, 2 * crossProd, Color.red, 160);
                 Debug.DrawRay(bone.position, 2 * (Vector3)angles[i], Color.green, 160);
             }
-
-            //curr.rotation = Quaternion.LookRotation((Vector3)angles[i]);
-
+            
             bone.Rotate(crossProd, boneAngle, Space.World);
 
             if (bone.gameObject.name.Equals("Thigh.R")){
@@ -411,16 +411,19 @@ public class EnemyScript : MonoBehaviour{
 
     //if player is at too far an angle, they cant see (this should be changed...)
     //if not, raycast to see if theyre in sight...
-    private bool checkSight() {
-        if (angleToPlayer < 30){
-            if (Physics.Raycast(myHead.transform.position, toPlayer, out caster, sightRange)){
-                if (caster.collider.CompareTag("Player")){
-                    return true;
-                }
+    private bool checkForPlayer() {
+        if (Physics.Raycast(myHead.transform.position, toPlayer, out caster, sightRange) && (angleToPlayer < 30))
+        {
+            if (caster.collider.CompareTag("Player"))
+            {
+                return true;
             }
             else return false;
         }
-        return false;
+        else if (magToPlayer < 5 && angleToPlayer > 90){
+            return true;
+        }
+        else return false;
     }
 
 
@@ -452,7 +455,6 @@ public class EnemyScript : MonoBehaviour{
         int g = 0;
 
         while (queue.Count > 0){
-
 
             Transform curr = queue.Dequeue();
 
