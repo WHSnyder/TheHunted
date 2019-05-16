@@ -46,7 +46,7 @@ public class Flasher : MonoBehaviour{
         objectiveText.text = "Find the key";
 
         door = GameObject.Find("Door");
-        key = GameObject.Find("key");  
+        key = GameObject.Find("key");
 
         var copyCol = img.color;
         copyCol.a = 0.0f;
