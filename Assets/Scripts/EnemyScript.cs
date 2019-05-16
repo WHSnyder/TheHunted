@@ -320,6 +320,7 @@ public class EnemyScript : MonoBehaviour{
         else{
             currState = EvilState.Seeking;
             navDest = loc;
+            agent.enabled = true;
             agent.SetDestination(loc);
             animator.Play(moveHash);
 
@@ -339,12 +340,11 @@ public class EnemyScript : MonoBehaviour{
     //no idea how to animate/do physics for this yet..
     private void transitionToAttacking() {
 
-
-
         currState = EvilState.Attacking;
         queuedCommand = null;
+        agent.enabled = true;
         agent.SetDestination(playerTransform.position);
-        agent.speed = agent.speed * .5f;
+        agent.speed = agent.speed * 2f;
     }
 
 
@@ -370,12 +370,12 @@ public class EnemyScript : MonoBehaviour{
 
         animator.Play(moveHash);
 
+        agent.enabled = true;
         agent.SetDestination(navDest);
     }
 
     //slist sticks to the ceiling by disabling navmesh and moving 
     //important bones in line with the angle of the face directly above...
-    //DOESNT WORK...
     private void transitionToAmbush(){
 
         //animator.WriteDefaultValues();
