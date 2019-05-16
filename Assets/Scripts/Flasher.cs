@@ -76,16 +76,20 @@ public class Flasher : MonoBehaviour{
 
         setMouseParams();
         setMovementParams();
+        Debug.DrawRay(GameObject.Find("Main Camera").transform.position, GameObject.Find("Main Camera").transform.forward * 20, Color.red);
+        EnemyStun();
 
         powerText.text = "Power: " + power; 
 
-        if (win) {
-            countdown();
-        } 
+        //if (win) {
+        //    countdown();
+        //} 
 
-        if (dead) {
-            countdown();
-        }
+        //if (dead) {
+        //    countdown();
+        //}
+
+     
 
         GameObject [] batteryList  = GameObject.FindGameObjectsWithTag("Battery");
         teleporters = GameObject.FindGameObjectsWithTag("Teleporter");
@@ -160,6 +164,26 @@ public class Flasher : MonoBehaviour{
                 transform.position = Vector3.zero;
             }
         }
+    }
+
+    RaycastHit caster;
+
+    private bool EnemyStun()
+    {
+        if (Physics.Raycast(GameObject.Find("Main Camera").transform.position, GameObject.Find("Main Camera").transform.forward*20, out caster, 30))
+        {
+            Debug.Log("Hit!!!!");
+
+            if (caster.collider.gameObject.name.Equals("HeadCollider"))
+            {
+                Debug.Log("Hit Head");
+                GameObject head = caster.collider.gameObject;
+                head.GetComponent<HeadRef>().slist.GetComponent<EnemyScript>().processCommand(Vector3.zero, EvilState.Stunned);
+                return true;
+            }
+            else return false;
+        }
+        return false;
     }
 
 
@@ -244,7 +268,9 @@ public class Flasher : MonoBehaviour{
     } 
 
     public void setInfoText() { 
+
         if (win) {
+
 
             victoryText.color = Color.green;
             victoryText.text = "You Escaped!";
