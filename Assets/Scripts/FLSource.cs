@@ -38,11 +38,14 @@ public class FLSource : MonoBehaviour{
     // Update is called once per frame
     void Update(){
 
-        if (Input.GetKeyDown(KeyCode.F) && hasPower){
+        updatePower();
+
+        if (Input.GetKeyDown(KeyCode.F)){
             source.enabled = !source.enabled;
             bounce.enabled = !bounce.enabled;
             on = !on;
         }
+
 
         if (on){
             if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 30)){
@@ -111,6 +114,7 @@ public class FLSource : MonoBehaviour{
         if (power <= 0){
             hasPower = false;
         }
+
         else hasPower = true;
     }
 }

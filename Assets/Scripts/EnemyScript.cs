@@ -67,7 +67,7 @@ public class EnemyScript : MonoBehaviour{
     Animator animator;
     int moveHash = Animator.StringToHash("Base Layer.Running");
     int lookHash = Animator.StringToHash("Base Layer.Looking");
-    int stunHash = Animator.StringToHash("Base Layer.Stunning");
+    int stunHash = Animator.StringToHash("Base Layer.Stun");
 
 
     //audio params
@@ -87,13 +87,15 @@ public class EnemyScript : MonoBehaviour{
     //Timers for each state, can be set in editor for performance tweaks
     //the time far stays as is, the timer vars change...
     public static float stunTime = 5;
-    private float stunTimer;
+    private float stunTimer = stunTime;
 
     public static float lookTime = 4;
-    private float lookTimer;
+    private float lookTimer = lookTime;
 
     public static float trackingTime = 10;
-    private float trackingTimer;
+    private float trackingTimer = trackingTime;
+
+    private int ambushOrPatrol; 
 
 
 
@@ -130,6 +132,8 @@ public class EnemyScript : MonoBehaviour{
         patrolPoints = GameObject.FindGameObjectsWithTag("PatrolPoint");
 
         Random.InitState(System.DateTime.Now.Millisecond);
+        ambushOrPatrol = Random.Range(1, 3); 
+
     }
 
 
@@ -143,11 +147,12 @@ public class EnemyScript : MonoBehaviour{
         angleToPlayer = Vector3.Angle(myHead.transform.forward, toPlayer);
         magToPlayer = Vector3.Magnitude(toPlayer);
 
-        //testing the ambush state...
-        if (Input.GetKeyDown("t")){
-            transitionToAmbush();
+        // if in 20 to 25 distance randomly go into ambush or keep patrolling
+        if ((magToPlayer >20) && (magToPlayer < 25) && (currState == EvilState.Patrolling)) {
+            if (ambushOrPatrol == 1) {
+                transitionToAmbush();
+            } 
         }
-
 
         switch (currState) {
 
@@ -164,6 +169,7 @@ public class EnemyScript : MonoBehaviour{
 
                 if (queuedCommand != null){
                     transitionFromCommand(queuedCommand);
+                    Debug.Log("tranning");
                     return;
                 }
 
@@ -198,7 +204,7 @@ public class EnemyScript : MonoBehaviour{
                 }
 
                 if (withinRange()) {//no need to do raycast if out of range
-                    //Debug.Log("ohhhh shit");
+
                     if (checkForPlayer()) {
                         //Debug.Log("found!");
                         brain.notifyFound(player.transform.position, id);
@@ -217,7 +223,11 @@ public class EnemyScript : MonoBehaviour{
             //if nothing on queue, they look around
             case EvilState.Stunned:
 
+                Debug.Log("yes here..");
+
                 if (stunTimer < 0) {
+
+                    Debug.Log("unstunned");
                     stunTimer = stunTime;//reset timer
 
                     if (queuedCommand != null){
@@ -252,13 +262,23 @@ public class EnemyScript : MonoBehaviour{
             case EvilState.Attacking:
 
                 //play some anim
+                if (queuedCommand != null && queuedCommand.action == EvilState.Stunned)
+                {
+                    transitionToStunned();
+                    queuedCommand = null;
+                    return;
+                }
+
+
                 agent.SetDestination(playerTransform.position);
                 break;
 
             case EvilState.Ambush:
-
-                //nada for now
-
+                if (magToPlayer < 8) {
+                    agent.enabled = true;
+                    animator.enabled = true;
+                    transitionToAttacking();
+                }
                 break;
         }
     }
@@ -280,6 +300,12 @@ public class EnemyScript : MonoBehaviour{
 
             case EvilState.Patrolling:
                 transitionToPatrolling();
+                break;
+
+            case EvilState.Stunned:
+                Debug.Log("in router...");
+
+                transitionToStunned();
                 break;
         }
         queuedCommand = null;
@@ -318,14 +344,18 @@ public class EnemyScript : MonoBehaviour{
         currState = EvilState.Attacking;
         queuedCommand = null;
         agent.SetDestination(playerTransform.position);
-        agent.speed = agent.speed * 2;
+        agent.speed = agent.speed * .5f;
     }
 
 
     //he/she/it/they/Jabba's gender go through stunned stage and will look around afterwards
     private void transitionToStunned() {
+        Debug.Log("Worked!!");
         currState = EvilState.Stunned;
         queuedCommand = new Command(Vector3.zero, EvilState.Looking);
+
+        agent.enabled = false;
+        animator.Play(stunHash);
     }
 
 
@@ -440,6 +470,7 @@ public class EnemyScript : MonoBehaviour{
 
         if (currState == EvilState.Attacking && order != EvilState.Stunned){
             //do nothing, ignores everything when attacking EXCEPT when player stuns them
+
             return;
         }
         else queuedCommand = new Command(loc, order);
