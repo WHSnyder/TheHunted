@@ -24,8 +24,7 @@ public class FLSource : MonoBehaviour
 
 
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start(){
 
         batteryCount = GameObject.FindGameObjectsWithTag("Battery").Length; 
         layerMask = 1 << 8;
