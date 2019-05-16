@@ -37,7 +37,7 @@ public class Flasher : MonoBehaviour{
     private CharacterController control;
 
     public Text victoryText;
-    public Text powerText;
+    //public Text powerText;
     public Text objectiveText;
     public Text directionText;
     public GameObject crumb;
@@ -86,7 +86,7 @@ public class Flasher : MonoBehaviour{
         Debug.DrawRay(GameObject.Find("Main Camera").transform.position, GameObject.Find("Main Camera").transform.forward * 20, Color.red);
         EnemyStun();
 
-        powerText.text = "Power: " + power; 
+        //powerText.text = "Power: " + power; 
 
         if (win) {
             countdown();
