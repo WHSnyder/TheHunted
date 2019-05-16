@@ -38,9 +38,12 @@ public class Flasher : MonoBehaviour{
 
     public Text victoryText;
     public Text powerText;
-    public Text objectiveText; 
+    public Text objectiveText;
+    public Text directionText;
     public GameObject crumb;
     private GameObject key;
+    private GameObject cmera;
+    private GameObject flashlight;
     public Image img;
 
 
@@ -59,11 +62,16 @@ public class Flasher : MonoBehaviour{
 
         control = GetComponent<CharacterController>();
 
-        Vector3 cameraSpawn = this.transform.position + .1f * Vector3.forward;
-        GameObject.Find("Main Camera").gameObject.transform.SetPositionAndRotation(cameraSpawn, Quaternion.identity);
-        GameObject.Find("Main Camera").gameObject.transform.parent = this.transform;
+        cmera = GameObject.Find("Main Camera");
 
-        Vector3 lightPos = this.transform.position + .25f * Vector3.right + .25f * Vector3.forward;         GameObject.Find("FlashLight").gameObject.transform.SetPositionAndRotation(lightPos, Quaternion.Euler(0, 0, 0));         GameObject.Find("FlashLight").gameObject.transform.parent = GameObject.Find("Main Camera").gameObject.transform; 
+        Vector3 cameraSpawn = this.transform.position + .1f * Vector3.forward;
+        cmera.transform.SetPositionAndRotation(cameraSpawn, Quaternion.identity);
+        cmera.transform.parent = this.transform;
+
+        Vector3 lightPos = this.transform.position + .25f * Vector3.right + .25f * Vector3.forward;
+
+        flashlight = GameObject.Find("FlashLight").gameObject;
+         flashlight.transform.SetPositionAndRotation(lightPos, Quaternion.Euler(0, 0, 0));         flashlight.transform.parent = GameObject.Find("Main Camera").gameObject.transform; 
         /*         GameObject.Find("Flashlight2").gameObject.transform.SetPositionAndRotation(this.transform.position + .7f * Vector3.forward         + .2f * Vector3.right - .15f * Vector3.up, Quaternion.Euler(90, 0, 0));         GameObject.Find("Flashlight2").gameObject.transform.parent = GameObject.Find("Main Camera").gameObject.transform;
             */
    }
@@ -71,10 +79,12 @@ public class Flasher : MonoBehaviour{
     // Update is called once per frame
     void Update(){
 
-        Debug.Log(canTeleport);
+        //Debug.Log(canTeleport);
 
         setMouseParams();
         setMovementParams();
+        Debug.DrawRay(GameObject.Find("Main Camera").transform.position, GameObject.Find("Main Camera").transform.forward * 20, Color.red);
+        EnemyStun();
 
         powerText.text = "Power: " + power; 
 
@@ -85,6 +95,8 @@ public class Flasher : MonoBehaviour{
         if (dead) {
             countdown();
         }
+
+     
 
         GameObject [] batteryList  = GameObject.FindGameObjectsWithTag("Battery");
         teleporters = GameObject.FindGameObjectsWithTag("Teleporter");
@@ -103,7 +115,8 @@ public class Flasher : MonoBehaviour{
             if (Vector3.Magnitude(transform.position - teleporters[b].transform.position) < 2)
             {
                 Destroy(teleporters[b]);
-                canTeleport = true;  
+                canTeleport = true;
+                setInfoText();
             }
         } 
 
@@ -145,7 +158,7 @@ public class Flasher : MonoBehaviour{
 
         if ((canTeleport) && (Input.GetKeyDown("z")))
         {
-            Debug.Log("hello");
+            //Debug.Log("hello");
             canTeleport = false;
             if (hasKey)
             {
@@ -156,6 +169,26 @@ public class Flasher : MonoBehaviour{
                 transform.position = Vector3.zero;
             }
         }
+    }
+
+    RaycastHit caster;
+
+    private bool EnemyStun()
+    {
+        if (Physics.Raycast(flashlight.transform.position, flashlight.transform.forward*20, out caster, 30))
+        {
+            Debug.Log("Hit: " + caster.collider.gameObject.name);
+
+            if (caster.collider.gameObject.name.Equals("HeadCollider"))
+            {
+                Debug.Log("Hit Head");
+                GameObject head = caster.collider.gameObject;
+                head.GetComponent<HeadRef>().slist.GetComponent<EnemyScript>().processCommand(Vector3.zero, EvilState.Stunned);
+                return true;
+            }
+            else return false;
+        }
+        return false;
     }
 
 
@@ -240,7 +273,9 @@ public class Flasher : MonoBehaviour{
     } 
 
     public void setInfoText() { 
+
         if (win) {
+
 
             victoryText.color = Color.green;
             victoryText.text = "You Escaped!";
@@ -251,7 +286,12 @@ public class Flasher : MonoBehaviour{
             victoryText.color = Color.red;
             victoryText.text = "You're Dead";
             countdown();
+        } 
+
+        if (canTeleport) {
+            directionText.text = directionText.text + "\n" + "-Press z to teleport";
         }
+
     } 
 
     void countdown() {
