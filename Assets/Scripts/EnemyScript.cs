@@ -171,6 +171,7 @@ public class EnemyScript : MonoBehaviour{
                     if (checkForPlayer()){
                         brain.notifyFound(player.transform.position, id);
                         transitionToAttacking();
+                        return;
                     }
                 }
 
