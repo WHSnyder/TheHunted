@@ -56,7 +56,7 @@ public class EnemyScript : MonoBehaviour{
 
 
     //basic dummy state
-    private EvilState currState = EvilState.Init;
+    public EvilState currState = EvilState.Init;
 
     //this var represents a command the slist has yet to process, they can 
     //be sent from the player (when stunning) or from the brain..
