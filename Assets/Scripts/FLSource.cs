@@ -46,7 +46,7 @@ public class FLSource : MonoBehaviour
         //battery pickup 
         tempCount = GameObject.FindGameObjectsWithTag("Battery").Length; 
         if (tempCount < batteryCount) {
-            power += 25; 
+            power += 100; 
         }
         batteryCount = tempCount;
 
