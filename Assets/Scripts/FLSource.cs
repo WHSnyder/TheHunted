@@ -10,7 +10,7 @@ public class FLSource : MonoBehaviour
     public VolumetricLight source;
     public Light bounce;
     private bool on = false;
-    private float power = 100.0f;
+    private float power = 200.0f;
     private bool hasPower = true;
     private int batteryCount;
     private int tempCount; 
@@ -42,7 +42,7 @@ public class FLSource : MonoBehaviour
 
     // Update is called once per frame
     void Update(){
-
+        Debug.Log(power);
         //battery pickup 
         tempCount = GameObject.FindGameObjectsWithTag("Battery").Length; 
         if (tempCount < batteryCount) {
@@ -59,7 +59,7 @@ public class FLSource : MonoBehaviour
             on = !on;
         }
 
-        if (power < 1f){
+        if (power <= 0.0f){
             source.enabled = false;
             bounce.enabled = false;
             on = false;
@@ -68,7 +68,7 @@ public class FLSource : MonoBehaviour
 
         if ((on) && (power > 0.0f))
         {
-            //power -= 1.0f;
+            power -= 1.0f;
             if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 30))
             {
                 if (hit.collider.gameObject.CompareTag("Head"))
