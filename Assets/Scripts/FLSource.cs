@@ -67,7 +67,7 @@ public class FLSource : MonoBehaviour
 
         if ((on) && (power > 0.0f))
         {
-            power -= 1.0f;
+            //power -= 1.0f;
             if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 30))
             {
                 if (hit.collider.gameObject.CompareTag("Head"))
