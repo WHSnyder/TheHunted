@@ -197,7 +197,7 @@ public class Flasher : MonoBehaviour{
 
         if (Physics.Raycast(flashlight.transform.position, flashlight.transform.forward*20, out caster, 30))
         {
-            Debug.Log("Hit: " + caster.collider.gameObject.name);
+            //Debug.Log("Hit: " + caster.collider.gameObject.name);
 
             if (caster.collider.gameObject.name.Equals("HeadCollider"))
             {
