@@ -62,6 +62,7 @@ public class FLSource : MonoBehaviour
         if (power < 1f){
             source.enabled = false;
             bounce.enabled = false;
+            on = false;
         }
 
 
