@@ -332,6 +332,7 @@ public class EnemyScript : MonoBehaviour{
     //no queued command specified, they will look around then patrol by default,
     //unless the brain or player sends a command
     private void transitionToLooking() {
+
         currState = EvilState.Looking;
         animator.Play(lookHash);
     }
