@@ -274,14 +274,14 @@ public class Flasher : MonoBehaviour{
             if ((dead) || (win)) {
                 return 0;
             }
-            return 4;}
+            return 3;}
         else{
             ButtonCooler = 0.5f;
             ButtonCount += 1; 
             if ((dead) || (win)) {
                 return 0;
             }
-            return 2;
+            return 1;
         }
     }
 
