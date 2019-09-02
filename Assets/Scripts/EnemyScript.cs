@@ -86,7 +86,7 @@ public class EnemyScript : MonoBehaviour{
 
     //Timers for each state, can be set in editor for performance tweaks
     //the time far stays as is, the timer vars change...
-    public static float stunTime = 5;
+    public static float stunTime = 10;
     private float stunTimer = stunTime;
 
     public static float lookTime = 4;
@@ -95,7 +95,12 @@ public class EnemyScript : MonoBehaviour{
     public static float trackingTime = 10;
     private float trackingTimer = trackingTime;
 
-    private int ambushOrPatrol; 
+    public static float ambushTime = 15;
+    private float ambushTimer = ambushTime;
+
+    private int ambushOrPatrol;
+
+    private bool ambshing = false;
 
 
 
@@ -148,11 +153,24 @@ public class EnemyScript : MonoBehaviour{
         magToPlayer = Vector3.Magnitude(toPlayer);
 
         // if in 20 to 25 distance randomly go into ambush or keep patrolling
-        if ((magToPlayer >20) && (magToPlayer < 25) && (currState == EvilState.Patrolling)) {
+        if ((magToPlayer >20) && (magToPlayer < 25) && (currState == EvilState.Patrolling) && (id % 2 == 0)) {
             if (ambushOrPatrol == 1) {
-                transitionToAmbush();
+                //transitionToAmbush();
             } 
         }
+
+        if (Input.GetKeyDown("t")){
+
+            if (ambshing){
+                transitionToPatrolling();
+            }
+            else{
+                transitionToAmbush();
+            }
+            ambshing = !ambshing;
+        }
+
+
 
         switch (currState) {
 
@@ -278,7 +296,18 @@ public class EnemyScript : MonoBehaviour{
                     agent.enabled = true;
                     animator.enabled = true;
                     transitionToAttacking();
+                    ambushTimer = ambushTime;
+                    return;
                 }
+
+                if (ambushTimer < 0){
+                    transitionToPatrolling();
+                    ambushTimer = ambushTime;
+                }
+                else{
+                    ambushTimer -= Time.deltaTime;
+                }
+
                 break;
         }
     }
@@ -299,11 +328,11 @@ public class EnemyScript : MonoBehaviour{
                 break;
 
             case EvilState.Patrolling:
+
                 transitionToPatrolling();
                 break;
 
             case EvilState.Stunned:
-                Debug.Log("in router...");
 
                 transitionToStunned();
                 break;
@@ -345,7 +374,7 @@ public class EnemyScript : MonoBehaviour{
         queuedCommand = null;
         agent.enabled = true;
         agent.SetDestination(playerTransform.position);
-        agent.speed = agent.speed * 2f;
+        agent.speed = agent.speed * 3f;
     }
 
 
@@ -369,6 +398,7 @@ public class EnemyScript : MonoBehaviour{
         currState = EvilState.Patrolling;
         queuedCommand = null;
 
+        animator.enabled = true;
         animator.Play(moveHash);
 
         agent.enabled = true;
@@ -377,7 +407,7 @@ public class EnemyScript : MonoBehaviour{
 
     //slist sticks to the ceiling by disabling navmesh and moving 
     //important bones in line with the angle of the face directly above...
-    private void transitionToAmbush(){
+    /*private void transitionToAmbush(){
 
         //animator.WriteDefaultValues();
         animator.enabled = false;
@@ -435,6 +465,97 @@ public class EnemyScript : MonoBehaviour{
 
             ++i;
         }
+    }*/
+
+
+
+
+    //slist sticks to the ceiling by disabling navmesh and moving 
+    //important bones in line with the angle of the face directly above...
+    private void transitionToAmbush()
+    {
+
+        //animator.WriteDefaultValues();
+        animator.enabled = false;
+        agent.enabled = false;
+
+        currState = EvilState.Ambush;
+
+        //straighten out
+        transform.localEulerAngles = new Vector3(90, 0, 0);
+        transform.position += .2f*Vector3.up;
+
+        int i = 0;
+        int mask = ~(1 << 9);
+
+        float boneAngle;
+
+        Transform animRoot = transform.Find("Armature").Find("Root");
+
+        ArrayList angles = new ArrayList(), points = new ArrayList(), bones;
+
+        Queue<Transform> animQ = new Queue<Transform>();
+        animQ.Enqueue(animRoot);
+        bones = traverseAnimTree(animQ);
+
+        Vector3 crossProd;
+
+        Vector3 boneFwd;
+
+        foreach (Transform bone in bones)
+        {
+
+            Physics.Raycast(bone.position, Vector3.up, out caster, 20, mask);
+            angles.Add(caster.normal);
+            points.Add(caster.point);
+        }
+
+
+        foreach (Transform bone in bones)
+        {
+
+            Debug.Log("transforming bone: " + bone.gameObject.name);
+
+            bone.position = (Vector3)points[i];
+
+
+
+            if (bone.gameObject.name.Contains("nkle"))
+            {
+                boneFwd = bone.up;
+            }
+            else if (bone.gameObject.name.Contains("iddle") ||
+                     bone.gameObject.name.Contains("hin"))
+            {
+                boneFwd = bone.right;
+            }
+            else
+            {
+                boneFwd = bone.forward;
+            }
+
+
+
+            crossProd = Vector3.Cross((Vector3)angles[i], boneFwd);
+
+            boneAngle = Vector3.SignedAngle(boneFwd, (Vector3)angles[i], crossProd);
+
+            if (bone.gameObject.name.Contains("iddle"))
+            {
+                Debug.DrawRay(bone.position, 2 * bone.forward, Color.blue, 160);
+                Debug.DrawRay(bone.position, 2 * crossProd, Color.red, 160);
+                Debug.DrawRay(bone.position, 2 * (Vector3)angles[i], Color.green, 160);
+            }
+
+            bone.Rotate(crossProd, boneAngle, Space.World);
+
+            if (bone.gameObject.name.Contains("iddle"))
+            {
+                Debug.DrawRay(bone.position, 2 * boneFwd, Color.yellow, 160);
+            }
+
+            ++i;
+        }
     }
 
 
@@ -450,10 +571,8 @@ public class EnemyScript : MonoBehaviour{
     //if player is at too far an angle, they cant see (this should be changed...)
     //if not, raycast to see if theyre in sight...
     private bool checkForPlayer() {
-        if (Physics.Raycast(myHead.transform.position, toPlayer, out caster, sightRange) && (angleToPlayer < 30))
-        {
-            if (caster.collider.CompareTag("Player"))
-            {
+        if (Physics.Raycast(myHead.transform.position, toPlayer, out caster, sightRange) && (angleToPlayer < 30)){
+            if (caster.collider.CompareTag("Player")){
                 return true;
             }
             else return false;
@@ -488,22 +607,25 @@ public class EnemyScript : MonoBehaviour{
 
 
     //for setting up the abmush pose
-    private ArrayList traverseAnimTree(Queue<Transform> queue) {
+    private ArrayList traverseAnimTree(Queue<Transform> queue)
+    {
 
         ArrayList result = new ArrayList();
-        int g = 0;
 
-        while (queue.Count > 0){
+        while (queue.Count > 0)
+        {
 
             Transform curr = queue.Dequeue();
 
             string boneName = curr.gameObject.name;
 
-            if (!boneName.Contains("end")){
+            if (!boneName.Contains("end"))
+            {
 
                 result.Add(curr);
 
-                for (int i = 0; i < curr.childCount; i++){
+                for (int i = 0; i < curr.childCount; i++)
+                {
                     queue.Enqueue(curr.GetChild(i));
                 }
             }

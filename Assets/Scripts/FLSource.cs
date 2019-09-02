@@ -4,11 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class FLSource : MonoBehaviour
-{
+public class FLSource : MonoBehaviour{
 
-    public VolumetricLight source;
-    public Light bounce;
+    //public VolumetricLight source;
+    public Light source;
     private bool on = false;
     private float power = 200.0f;
     private bool hasPower = true;
@@ -16,9 +15,7 @@ public class FLSource : MonoBehaviour
     private int tempCount; 
     public Text powerText; 
 
-
-    int layerMask;
-
+    
     Vector3 shot, reflection;
     RaycastHit hit;
 
@@ -27,14 +24,12 @@ public class FLSource : MonoBehaviour
     void Start(){
 
         batteryCount = GameObject.FindGameObjectsWithTag("Battery").Length; 
-        layerMask = 1 << 8;
-        layerMask = ~layerMask;
 
-        source = GetComponent<VolumetricLight>();
-        bounce = GetComponent<Light>();
-        bounce = transform.GetChild(1).gameObject.GetComponent<Light>();
+
+        source = GetComponent<Light>(); 
+        //bounce = transform.GetChild(1).gameObject.GetComponent<Light>();
         
-        bounce.enabled = false;
+        //bounce.enabled = false;
         source.enabled = false;
     }
 
@@ -42,8 +37,7 @@ public class FLSource : MonoBehaviour
 
     // Update is called once per frame
     void Update(){
-        Debug.Log(power);
-        //battery pickup 
+
         tempCount = GameObject.FindGameObjectsWithTag("Battery").Length; 
         if (tempCount < batteryCount) {
             power += 100; 
@@ -55,27 +49,19 @@ public class FLSource : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F)){
             source.enabled = !source.enabled;
-            bounce.enabled = !bounce.enabled;
+            //bounce.enabled = !bounce.enabled;
             on = !on;
         }
 
         if (power <= 0.0f){
             source.enabled = false;
-            bounce.enabled = false;
+            //bounce.enabled = false;
             on = false;
         }
 
 
-        if ((on) && (power > 0.0f))
-        {
-            power -= 1.0f;
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 30))
-            {
-                if (hit.collider.gameObject.CompareTag("Head"))
-                {
-                    //hit.collider.gameObject
-                }
-            }
+        if (on && (power > 0.0f)){
+            power -= 0.05f;
         } 
 
         void setPowerText() {

@@ -26,6 +26,7 @@ TagManager:
   - Lock
   - Battery
   - Head
+  - Teleporter
   layers:
   - Default
   - TransparentFX
@@ -37,7 +38,7 @@ TagManager:
   - 
   - PostProcessing
   - AudioIgnore
-  - 
+  - Heads
   - 
   - 
   - 

@@ -35,6 +35,8 @@ public class Flasher : MonoBehaviour{
     private FLSource lit;
 
 
+    private float lightDist, lightAngle;
+
 
     private CharacterController control;
 
@@ -47,6 +49,15 @@ public class Flasher : MonoBehaviour{
     private GameObject cmera;
     private GameObject flashlight;
     public Image img;
+
+    Vector3 flBottom, flUR, flUL;
+
+    private RaycastHit caster;
+    
+
+    //int layerMask = 1 << 10;
+
+    float spotAngle;
 
 
     // Start is called before the first frame update
@@ -79,20 +90,30 @@ public class Flasher : MonoBehaviour{
 
         /*         GameObject.Find("Flashlight2").gameObject.transform.SetPositionAndRotation(this.transform.position + .7f * Vector3.forward         + .2f * Vector3.right - .15f * Vector3.up, Quaternion.Euler(90, 0, 0));         GameObject.Find("Flashlight2").gameObject.transform.parent = GameObject.Find("Main Camera").gameObject.transform;
             */
-   }
+
+        spotAngle = flashlight.GetComponent<Light>().spotAngle/2;
+
+        Vector3 help = Quaternion.Euler(new Vector3(60, 0, 0)) * flashlight.transform.forward;
+
+        flBottom = help;
+        flUL = Quaternion.Euler(0, 0, 60) * help;
+        flUR = Quaternion.Euler(0, 0, 60) * flUL;
+
+        Debug.DrawRay(flashlight.transform.position, 2 * flBottom, Color.yellow, 15);
+        Debug.DrawRay(flashlight.transform.position, 2 * flUR, Color.green, 15);
+        Debug.DrawRay(flashlight.transform.position, 2 * flUL, Color.blue, 15);
+
+
+    }
 
     // Update is called once per frame
     void Update(){
-
-        //Debug.Log(canTeleport);
-
+    
         setMouseParams();
         setMovementParams();
-        Debug.DrawRay(GameObject.Find("Main Camera").transform.position, GameObject.Find("Main Camera").transform.forward * 20, Color.red);
+        Debug.DrawRay(flashlight.transform.position, flashlight.transform.forward * 20, Color.red);
         EnemyStun();
-
-        //powerText.text = "Power: " + power; 
-
+        
         if (win) {
             countdown();
         } 
@@ -101,12 +122,21 @@ public class Flasher : MonoBehaviour{
             countdown();
         }
 
-     
+
+        if (Input.GetKeyDown("m")) {
+
+            transform.position = GameObject.Find("key_room_locked").transform.position + .1f*Vector3.up;
+         
+        }
+
+        if (Input.GetKeyDown("l"))
+        {
+            transform.position = GameObject.Find("Door").transform.position + 2 * GameObject.Find("Door").transform.up;
+        }
+
 
         GameObject [] batteryList  = GameObject.FindGameObjectsWithTag("Battery");
         teleporters = GameObject.FindGameObjectsWithTag("Teleporter");
-
-
 
 
         for (int a = 0; a < batteryList.Length; a++) { 
@@ -130,6 +160,10 @@ public class Flasher : MonoBehaviour{
             {
                 hasKey = true; 
                 objectiveText.text = "Get back to the start!";
+
+                GameObject.Find("AIBrain").GetComponent<AIBrain>().notifyFound(this.transform.position, 20);
+
+
                 Destroy(key);
             }
         }
@@ -183,27 +217,37 @@ public class Flasher : MonoBehaviour{
         }
     }
 
-    RaycastHit caster;
-
-    private bool EnemyStun()
-    {
 
 
-        if (!lit.source.enabled || !lit.bounce.enabled)
-        {
+
+
+
+    private bool EnemyStun() {
+
+        if (!lit.source.enabled) {
             return false;
         }
+        /*
+        Vector3 help = Quaternion.AngleAxis(spotAngle,flashlight.transform.right) * flashlight.transform.forward;
 
+        flBottom = help;
+        flUL = Quaternion.AngleAxis(60, flashlight.transform.forward) * help;
+        flUR = Quaternion.AngleAxis(60, flashlight.transform.forward) * flUL;
 
-        if (Physics.Raycast(flashlight.transform.position, flashlight.transform.forward*20, out caster, 30))
-        {
-            //Debug.Log("Hit: " + caster.collider.gameObject.name);
+        Debug.DrawRay(flashlight.transform.position, 10 * flBottom, Color.yellow, .1f);
+        Debug.DrawRay(flashlight.transform.position, 10 * flUR, Color.green, .1f);
+        Debug.DrawRay(flashlight.transform.position, 10 * flUL, Color.blue, .1f);*/
 
-            if (caster.collider.gameObject.name.Equals("HeadCollider"))
+        if (Physics.Raycast(flashlight.transform.position, flashlight.transform.forward, out caster, 30)) { 
+        //Physics.Raycast(flashlight.transform.position, flUR, out caster, 30, layerMask) ||
+        //Physics.Raycast(flashlight.transform.position, flBottom, out caster, 30, layerMask)){
+
+        if (caster.collider.gameObject.CompareTag("Enemy"))
             {
                 Debug.Log("Hit Head");
                 GameObject head = caster.collider.gameObject;
-                head.GetComponent<HeadRef>().slist.GetComponent<EnemyScript>().processCommand(Vector3.zero, EvilState.Stunned);
+                //head.GetComponent<HeadRef>().slist.GetComponent<EnemyScript>().processCommand(Vector3.zero, EvilState.Stunned);
+                head.gameObject.GetComponent<EnemyScript>().processCommand(Vector3.zero, EvilState.Stunned);
                 return true;
             }
             else return false;

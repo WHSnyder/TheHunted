@@ -25,6 +25,7 @@ public class Randomizer : MonoBehaviour
 
 
     // Start is called before the first frame update
+    /*
     void Start()
     {
         //room stuff 
@@ -95,5 +96,5 @@ public class Randomizer : MonoBehaviour
             }
 
         }
-    }
+    }*/
 }

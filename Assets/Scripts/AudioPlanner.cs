@@ -265,11 +265,13 @@ public class AudioPlanner : MonoBehaviour {
     Queue<AudioNode> queue = new Queue<AudioNode>();
     
     RaycastHit hit, hit1, hit2;
-    int layerMask = ~(1 << 9);
+    int layerMask = ~((1 << 9) + (1 << 10));
 
     float timer = 0;
 
     Vector3[] searchResult;
+
+    Vector3 toPlayer;
 
     public int dieDist, decayRate, startStrength;
 
@@ -291,7 +293,7 @@ public class AudioPlanner : MonoBehaviour {
         timer += Time.deltaTime;
         bool toPrint = false; ;
 
-        if (timer > .2) {
+        if (timer > .3) {
 
             timer = 0;
 
@@ -304,7 +306,7 @@ public class AudioPlanner : MonoBehaviour {
                 AudioNode curr = position(datum.source.transform.position + .1f*Vector3.forward + .1f*Vector3.right);
 
                 if (curr == null){
-                    brain.transform.position = datum.source.transform.position + 10 * Vector3.up + 3 * Vector3.right;
+                    continue;
                 }
 
                 searchResult = audioSearch(curr, toPrint);
@@ -360,13 +362,11 @@ public class AudioPlanner : MonoBehaviour {
         Vector3[] result = new Vector3[2];
         AudioNode dest = position(gameObject.transform.position), curr = null;
 
-        if (source == null)
-        {
+        if (source == null){
             Debug.Log("source null");
         }
 
-        if (dest == null)
-        {
+        if (dest == null){
             Debug.Log("dest null");
         }
 
@@ -418,7 +418,7 @@ public class AudioPlanner : MonoBehaviour {
                     else {
                        // Debug.Log("Adding to result"); 
                         result[index++] = curr.location;
-                        if (index == 2) { stop = true; break; }
+                        stop = true;
                     }
                 }
             }
