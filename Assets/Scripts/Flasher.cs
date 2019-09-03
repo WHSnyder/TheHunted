@@ -340,7 +340,6 @@ public class Flasher : MonoBehaviour{
 
         if (win) {
 
-
             victoryText.color = Color.green;
             victoryText.text = "You Escaped!";
             countdown();

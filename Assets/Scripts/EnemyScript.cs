@@ -187,7 +187,7 @@ public class EnemyScript : MonoBehaviour{
 
                 if (queuedCommand != null){
                     transitionFromCommand(queuedCommand);
-                    Debug.Log("tranning");
+                    //Debug.Log("tranning");
                     return;
                 }
 
