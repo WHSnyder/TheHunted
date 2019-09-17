@@ -10,7 +10,7 @@ public class MainMenu : MonoBehaviour
 {
     public void Play()
     {
-        SceneManager.LoadScene("NetworkTest");
+        SceneManager.LoadScene("Main");
     }
 
     public void About()
