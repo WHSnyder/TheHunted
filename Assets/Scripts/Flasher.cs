@@ -22,14 +22,12 @@ public class Flasher : MonoBehaviour{
 
     //Dan adds 5/12
     private GameObject door;
-    private GameObject[] teleporters; 
-    private bool win = false;
-    private bool dead = false;
-    private bool canTeleport = false;
-    private bool hasKey = false; 
-    private float time = 5.0f;
-    private float transparency = 0.0f;
-    private float power = 100.0f;
+    private GameObject[] teleporters;
+
+    private bool win = false, dead = false, canTeleport = false, hasKey = false;
+
+    private float time = 5.0f, transparency = 0.0f;
+
     private Vector3 keyLoc;
 
     private FLSource lit;
@@ -40,22 +38,15 @@ public class Flasher : MonoBehaviour{
 
     private CharacterController control;
 
-    public Text victoryText;
-    //public Text powerText;
-    public Text objectiveText;
-    public Text directionText;
-    public GameObject crumb;
-    private GameObject key;
-    private GameObject cmera;
-    private GameObject flashlight;
+    public Text victoryText, objectiveText, directionText;
+    public GameObject crumb, key;
+    private GameObject cam, flashlight;
     public Image img;
 
     Vector3 flBottom, flUR, flUL;
 
     private RaycastHit caster;
     
-
-    //int layerMask = 1 << 10;
 
     float spotAngle;
 
@@ -75,21 +66,19 @@ public class Flasher : MonoBehaviour{
 
         control = GetComponent<CharacterController>();
 
-        cmera = GameObject.Find("Main Camera");
+        //Find camera and set position/parent
+        cam = GameObject.Find("Main Camera");
 
-        Vector3 cameraSpawn = this.transform.position + .1f * Vector3.forward;
-        cmera.transform.SetPositionAndRotation(cameraSpawn, Quaternion.identity);
-        cmera.transform.parent = this.transform;
+        Vector3 cameraSpawn = transform.position + .2f * Vector3.forward;
+        cam.transform.SetPositionAndRotation(cameraSpawn, Quaternion.identity);
+        cam.transform.parent = transform;
 
-        Vector3 lightPos = this.transform.position + .25f * Vector3.right + .25f * Vector3.forward;
+        Vector3 lightPos = this.transform.position + .25f * Vector3.right + .65f * Vector3.forward + .15f*Vector3.down;
 
-        flashlight = GameObject.Find("FlashLight").gameObject;
+        flashlight = GameObject.Find("flashlight_withcone").gameObject;
          flashlight.transform.SetPositionAndRotation(lightPos, Quaternion.Euler(0, 0, 0));         flashlight.transform.parent = GameObject.Find("Main Camera").gameObject.transform; 
 
         lit = flashlight.GetComponent<FLSource>();
-
-        /*         GameObject.Find("Flashlight2").gameObject.transform.SetPositionAndRotation(this.transform.position + .7f * Vector3.forward         + .2f * Vector3.right - .15f * Vector3.up, Quaternion.Euler(90, 0, 0));         GameObject.Find("Flashlight2").gameObject.transform.parent = GameObject.Find("Main Camera").gameObject.transform;
-            */
 
         spotAngle = flashlight.GetComponent<Light>().spotAngle/2;
 
@@ -111,7 +100,7 @@ public class Flasher : MonoBehaviour{
     
         setMouseParams();
         setMovementParams();
-        Debug.DrawRay(flashlight.transform.position, flashlight.transform.forward * 20, Color.red);
+        //Debug.DrawRay(flashlight.transform.position, flashlight.transform.forward * 20, Color.red);
         EnemyStun();
         
         if (win) {
@@ -142,7 +131,7 @@ public class Flasher : MonoBehaviour{
         for (int a = 0; a < batteryList.Length; a++) { 
             if (Vector3.Magnitude(transform.position - batteryList[a].transform.position) < 1) {
                 Destroy(batteryList[a]);
-                power += 25.0f;
+                //power += 25.0f;
             }
         } 
 

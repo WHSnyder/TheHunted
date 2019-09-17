@@ -38,14 +38,15 @@ public class FLSource : MonoBehaviour{
     // Update is called once per frame
     void Update(){
 
-        tempCount = GameObject.FindGameObjectsWithTag("Battery").Length; 
+        //tempCount = GameObject.FindGameObjectsWithTag("Battery").Length;
+        tempCount = 10;
         if (tempCount < batteryCount) {
             power += 100; 
         }
         batteryCount = tempCount;
 
         //change the text 
-        setPowerText();
+        //setPowerText();
 
         if (Input.GetKeyDown(KeyCode.F)){
             source.enabled = !source.enabled;
@@ -64,57 +65,8 @@ public class FLSource : MonoBehaviour{
             power -= 0.05f;
         } 
 
-        void setPowerText() {
-            powerText.text = "Power: " + power;
-        }
-
-
-
-
-
-
-        // else
-        //{
-        //    source.enabled = false;
-        //    bounce.enabled = false;
-        //    on = false;
-        //}
-
-        // if (Input.GetKey(KeyCode.F)){
-        //  source.enabled = false;
-        //    bounce.enabled = false;
-        //     on = false;
-        // }
-
-        //if ((on) && (hasPower)){
-        // Does the ray intersect any objects excluding the player layer
-        //if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity,layerMask)){
-
-        //    //print("Shot");
-
-        //    Vector3 forward = transform.TransformDirection(Vector3.forward) * 10;
-        //    Debug.DrawRay(transform.position, forward, Color.green);
-
-        //    shot = hit.point - this.transform.position;
-        //    reflection = Vector3.Reflect(shot, hit.normal);
-
-        //    bounce.transform.SetPositionAndRotation(hit.point, Quaternion.LookRotation(reflection));
-        //    //bounce.enabled = true;
-
-        //    Debug.DrawRay(hit.point, reflection*10, Color.red);
-
-        //    power -= 1f; 
-        //    if (power < 0) {
-        //        hasPower = false;
-        //    }
-        //    else {
-        //        hasPower = true;
-        //    }
-        //   // Debug.Log(power);
-
-
-        //}
-        //    }
+        //void setPowerText() {
+        //    powerText.text = "Power: " + power;
         //}
     }
 }

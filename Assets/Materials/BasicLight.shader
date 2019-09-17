@@ -1,4 +1,6 @@
-﻿Shader "Custom/BasicLight" {
+﻿//Simplified lightshaft shader cut out from https://medium.com/@avseoul/unity3d-how-to-create-fake-volumetric-light-using-shader-and-geometry-cf3885991720
+
+Shader "Custom/BasicLight" {
     Properties {
         _Fresnel("Fresnel", Range (0., 10.)) = 1.
         _AlphaOffset("Alpha Offset", Range(0., 1.)) = 1.
