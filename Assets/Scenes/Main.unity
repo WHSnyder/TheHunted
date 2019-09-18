@@ -3439,7 +3439,7 @@ PrefabInstance:
     - target: {fileID: 1180406227656104349, guid: 48469daeee5104bc6b5b7012fc493536,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.582
+      value: 0.451
       objectReference: {fileID: 0}
     - target: {fileID: 1180406227656104349, guid: 48469daeee5104bc6b5b7012fc493536,
         type: 3}
@@ -3500,6 +3500,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3813240441330197878, guid: 48469daeee5104bc6b5b7012fc493536,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3231209548298703274, guid: 48469daeee5104bc6b5b7012fc493536,
         type: 3}
@@ -4207,12 +4212,12 @@ Light:
   m_GameObject: {fileID: 1061232508}
   m_Enabled: 1
   serializedVersion: 9
-  m_Type: 1
+  m_Type: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: 5
   m_Range: 10
-  m_SpotAngle: 30
-  m_InnerSpotAngle: 21.80208
+  m_SpotAngle: 6.396862
+  m_InnerSpotAngle: 3.3029294
   m_CookieSize: 10
   m_Shadows:
     m_Type: 0
@@ -4271,6 +4276,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   source: {fileID: 0}
+  beam: {fileID: 0}
   powerText: {fileID: 0}
 --- !u!1001 &1093795600
 PrefabInstance:

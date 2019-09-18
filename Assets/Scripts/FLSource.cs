@@ -6,13 +6,17 @@ using UnityEngine.UI;
 
 public class FLSource : MonoBehaviour{
 
-    //public VolumetricLight source;
     public Light source;
-    private bool on = false;
+    public GameObject beam;
+
+    private bool on = false, hasPower = true;
+
     private float power = 200.0f;
-    private bool hasPower = true;
+
+
     private int batteryCount;
-    private int tempCount; 
+    private int tempCount;
+
     public Text powerText; 
 
     
@@ -23,14 +27,15 @@ public class FLSource : MonoBehaviour{
     // Start is called before the first frame update
     void Start(){
 
-        batteryCount = GameObject.FindGameObjectsWithTag("Battery").Length; 
-
+        batteryCount = GameObject.FindGameObjectsWithTag("Battery").Length;
+        beam = GameObject.Find("light_cone");
 
         source = GetComponent<Light>(); 
         //bounce = transform.GetChild(1).gameObject.GetComponent<Light>();
         
         //bounce.enabled = false;
         source.enabled = false;
+        beam.SetActive(false);
     }
 
 
@@ -50,14 +55,17 @@ public class FLSource : MonoBehaviour{
 
         if (Input.GetKeyDown(KeyCode.F)){
             source.enabled = !source.enabled;
+            beam.SetActive(true);
             //bounce.enabled = !bounce.enabled;
             on = !on;
         }
 
         if (power <= 0.0f){
             source.enabled = false;
+            beam.SetActive(false);
             //bounce.enabled = false;
             on = false;
+
         }
 
 
