@@ -282,13 +282,16 @@ public class AudioPlanner : MonoBehaviour {
 
 
     public void Start(){
+
         initAudioGraph(AudioNode.AudioNodeFromObj(GameObject.Find("seg_four").transform.GetChild(1).gameObject));
         brain = GameObject.Find("AIBrain");
-        }
+
+        StartCoroutine("ExecuteAudio");
+    }
 
 
 
-    public void Update(){
+    /*public void Update(){
 
         timer += Time.deltaTime;
         bool toPrint = false; ;
@@ -321,6 +324,47 @@ public class AudioPlanner : MonoBehaviour {
                 toPrint = false;
             }
         }
+    }*/
+
+    IEnumerator ExecuteAudio(){
+
+        bool toPrint = false;
+
+        while (true)
+        {
+
+            foreach (AudioData datum in requests)
+            {
+
+                if (datum.freq == 1)
+                {
+                    toPrint = true;
+                }
+
+                AudioNode curr = position(datum.source.transform.position + .1f * Vector3.forward + .1f * Vector3.right);
+
+                if (curr == null)
+                {
+                    continue;
+                }
+
+                searchResult = audioSearch(curr, toPrint);
+
+                if (searchResult[0] != Vector3.zero)
+                {
+                    datum.audio1.transform.position = searchResult[0];
+                }
+
+                if (searchResult[1] != Vector3.zero)
+                {
+                    datum.audio1.transform.position = searchResult[1];
+                }
+                toPrint = false;
+            }
+
+            yield return new WaitForSeconds(2.0f);
+        }
+
     }
 
 

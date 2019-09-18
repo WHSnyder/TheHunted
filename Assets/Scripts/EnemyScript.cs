@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 using UnityEngine.AI;
 
 
@@ -73,7 +72,8 @@ public class EnemyScript : MonoBehaviour{
     //audio params
     private AudioPlanner planner;
     private GameObject sourceOne, sourceTwo;
-    public AudioClip stepSound;
+    public AudioClip crank;
+
     private AudioSource one, two;
     private int freq = 0;
     public int maxDistAudio = 30;
@@ -137,7 +137,10 @@ public class EnemyScript : MonoBehaviour{
         patrolPoints = GameObject.FindGameObjectsWithTag("PatrolPoint");
 
         Random.InitState(System.DateTime.Now.Millisecond);
-        ambushOrPatrol = Random.Range(1, 3); 
+        ambushOrPatrol = Random.Range(1, 3);
+
+
+        StartCoroutine("crankSound");
 
     }
 
@@ -600,9 +603,18 @@ public class EnemyScript : MonoBehaviour{
 
     //step (this works)
     public void Step(){
+        //float vol = 1 - Vector3.Magnitude(transform.position - player.transform.position) / maxDistAudio;
+        //one.PlayOneShot(stepSound, vol);
+        //two.PlayOneShot(stepSound, vol);
+    }
+
+    public IEnumerator crankSound()
+    {
         float vol = 1 - Vector3.Magnitude(transform.position - player.transform.position) / maxDistAudio;
-        one.PlayOneShot(stepSound, vol);
-        two.PlayOneShot(stepSound, vol);
+        one.PlayOneShot(crank, vol);
+        two.PlayOneShot(crank, vol);
+
+        yield return new WaitForSeconds(Random.Range(4.5f, 7.5f));
     }
 
 
