@@ -80,7 +80,7 @@ public class Flasher : MonoBehaviour{
 
         lit = flashlight.GetComponent<FLSource>();
 
-        spotAngle = flashlight.GetComponent<Light>().spotAngle/2;
+        //spotAngle = lit.source.spotAngle / 2; //flashlight.GetComponent<Light>().spotAngle/2;
 
         Vector3 help = Quaternion.Euler(new Vector3(60, 0, 0)) * flashlight.transform.forward;
 
@@ -88,11 +88,9 @@ public class Flasher : MonoBehaviour{
         flUL = Quaternion.Euler(0, 0, 60) * help;
         flUR = Quaternion.Euler(0, 0, 60) * flUL;
 
-        Debug.DrawRay(flashlight.transform.position, 2 * flBottom, Color.yellow, 15);
+        /*Debug.DrawRay(flashlight.transform.position, 2 * flBottom, Color.yellow, 15);
         Debug.DrawRay(flashlight.transform.position, 2 * flUR, Color.green, 15);
-        Debug.DrawRay(flashlight.transform.position, 2 * flUL, Color.blue, 15);
-
-
+        Debug.DrawRay(flashlight.transform.position, 2 * flUL, Color.blue, 15);*/
     }
 
     // Update is called once per frame

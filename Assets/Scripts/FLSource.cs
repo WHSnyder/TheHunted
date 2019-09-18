@@ -30,11 +30,12 @@ public class FLSource : MonoBehaviour{
         batteryCount = GameObject.FindGameObjectsWithTag("Battery").Length;
         beam = GameObject.Find("light_cone");
 
-        source = GetComponent<Light>(); 
+        source = GameObject.Find("light").GetComponent<Light>(); 
         //bounce = transform.GetChild(1).gameObject.GetComponent<Light>();
         
         //bounce.enabled = false;
         source.enabled = false;
+        source.intensity = 0;
         beam.SetActive(false);
     }
 
@@ -55,9 +56,14 @@ public class FLSource : MonoBehaviour{
 
         if (Input.GetKeyDown(KeyCode.F)){
             source.enabled = !source.enabled;
-            beam.SetActive(true);
             //bounce.enabled = !bounce.enabled;
             on = !on;
+            beam.SetActive(on);
+            source.intensity = 0;
+            if (on)
+            {
+                source.intensity = 10;
+            }
         }
 
         if (power <= 0.0f){
