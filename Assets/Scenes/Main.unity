@@ -3933,9 +3933,9 @@ Light:
   m_GameObject: {fileID: 956880759}
   m_Enabled: 1
   serializedVersion: 9
-  m_Type: 0
+  m_Type: 2
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 20
+  m_Intensity: 5
   m_Range: 10
   m_SpotAngle: 9.650326
   m_InnerSpotAngle: 1
@@ -6107,6 +6107,11 @@ PrefabInstance:
     - target: {fileID: 5156022651822126867, guid: 293ca8d5290004e778079df3fe80592a,
         type: 3}
       propertyPath: m_RenderMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5156022651822126867, guid: 293ca8d5290004e778079df3fe80592a,
+        type: 3}
+      propertyPath: m_DrawHalo
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
