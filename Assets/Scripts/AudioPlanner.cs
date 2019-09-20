@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * Basic linked list node class containing an AudioNode and its fscore.
+ */
 
 public class LLNode{
 
@@ -18,7 +21,9 @@ public class LLNode{
 }
 
 
-
+/*
+ * Basic queue wrapping a linked list.
+ */
 
 public class LLQueue {
 
@@ -96,9 +101,15 @@ public class AudioData{
         freq = _freq;
         source = _source;
         audio1 = _audio1;
-        audio2 = _audio2;
+        audio2 = _audio2; //Not used unless double audiopath tracing is enabled...
     }
 }
+
+/*
+ * Class for representing the level as a graph.  The graph is used primarily for
+ * tracing the path of sounds, thus encapsulating relvent metadata, but could also
+ * be used for special AI abilities...
+ */
 
 public class AudioNode {
 
@@ -128,6 +139,8 @@ public class AudioNode {
         closed = false;
 
         id = counter++;
+
+        //Costs are hardcoded and will eventually be used in place of gscore calculation...
 
         switch (_type){
 
@@ -173,7 +186,9 @@ public class AudioNode {
         }
     }
     
-
+    /*
+     * Returns list of locations of possible neighboring nodes for each node type.
+     */
 
     public ArrayList searchPositions(){
 
@@ -251,8 +266,12 @@ public class AudioNode {
         return result;
     }
 
-    public static AudioNode AudioNodeFromObj(GameObject obj)
-    {
+
+    /*
+     * Return an AudioNode derived from a segment of tunnel or room.
+     */
+
+    public static AudioNode AudioNodeFromObj(GameObject obj){
         if (obj.CompareTag("segOne")){
             return new AudioNode(nodeType.OneSeg, obj.transform.position, obj.transform.right);
         }
@@ -288,11 +307,10 @@ public class AudioNode {
         else if (obj.CompareTag("PumpRoom")){
             return new AudioNode(nodeType.Pump, obj.transform.position, obj.transform.right);
         }
-
         else return null;
     }
 
-    //returns an array list of neighbors and adds the neighbors to the objects list
+    //Returns an array list of neighbors and adds the neighbors to the objects list
     public ArrayList addNeighbors(Dictionary<Vector3, AudioNode> map){
 
         ArrayList result = new ArrayList(), positions = searchPositions();
@@ -309,6 +327,10 @@ public class AudioNode {
         return result;
     }
 
+
+    /*
+     * Casts a ray to find a neighboring level segment.
+     */
 
     private AudioNode castDetect(Dictionary<Vector3, AudioNode> map, Vector3 pos){
         RaycastHit hit;
@@ -336,6 +358,11 @@ public class AudioNode {
 }
 
 
+/*
+ * Monobehaviour responsible for tracing the path of a sound from source to
+ * player via a star search.  Uses the classes above extensivley;
+ */
+
 public class AudioPlanner : MonoBehaviour {
 
     Dictionary<Vector3, AudioNode> hashMap = new Dictionary<Vector3, AudioNode>();
@@ -362,7 +389,10 @@ public class AudioPlanner : MonoBehaviour {
 
     public void Start(){
 
+        //Init audio graph from random node.
         initAudioGraph(AudioNode.AudioNodeFromObj(GameObject.Find("seg_four").transform.GetChild(1).gameObject));
+
+        //Obselete soon
         brain = GameObject.Find("AIBrain");
 
         StartCoroutine("ExecuteAudio");
