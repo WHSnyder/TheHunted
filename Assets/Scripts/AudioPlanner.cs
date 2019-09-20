@@ -100,13 +100,15 @@ public class AudioData{
     }
 }
 
-public class AudioNode{
+public class AudioNode {
+
+    public static int counter;
 
     public nodeType type;
     public ArrayList neighbors;
     public Vector3 location, forwards;
     public bool dest, source, visited, closed;
-    public int cost;
+    public int cost, id;
     public float strength;
 
 
@@ -124,6 +126,8 @@ public class AudioNode{
         source = false;
         visited = false;
         closed = false;
+
+        id = counter++;
 
         switch (_type){
 
@@ -451,9 +455,28 @@ public class AudioPlanner : MonoBehaviour {
 
         LLQueue q = new LLQueue();
 
-        AudioNode curr = source;
+        bool[] flags = new bool[AudioNode.counter];
+        int[] gscore = new int[AudioNode.counter];
+        int[] fscore = new int[AudioNode.counter];
 
-        for (Au)
+        AudioNode prev,curr = source;
+
+
+        foreach (AudioNode node in curr.neighbors){
+            flags[node.id] = true;
+            q.insert(node, Vector3.Magnitude(curr.location - node.location) + Vector3.Magnitude(dest.location - node.location));
+
+        }
+
+
+
+
+
+
+
+
+
+
     }
 
 
