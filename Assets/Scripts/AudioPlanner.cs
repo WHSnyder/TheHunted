@@ -369,38 +369,31 @@ public class AudioPlanner : MonoBehaviour {
     }
 
 
-    IEnumerator ExecuteAudio()
-    {
+    IEnumerator ExecuteAudio(){
 
         bool toPrint = false;
 
-        while (true)
-        {
+        while (true){
 
-            foreach (AudioData datum in requests)
-            {
+            foreach (AudioData datum in requests){
 
-                if (datum.freq == 1)
-                {
+                if (datum.freq == 1){
                     toPrint = true;
                 }
 
                 AudioNode curr = position(datum.source.transform.position + .1f * Vector3.forward + .1f * Vector3.right);
 
-                if (curr == null)
-                {
+                if (curr == null){
                     continue;
                 }
 
                 searchResult = audioSearch(curr, toPrint);
 
-                if (searchResult[0] != Vector3.zero)
-                {
+                if (searchResult[0] != Vector3.zero){
                     datum.audio1.transform.position = searchResult[0];
                 }
 
-                if (searchResult[1] != Vector3.zero)
-                {
+                if (searchResult[1] != Vector3.zero){
                     datum.audio1.transform.position = searchResult[1];
                 }
                 toPrint = false;
@@ -413,7 +406,12 @@ public class AudioPlanner : MonoBehaviour {
 
 
 
-    //
+    /*
+     * Build the graph by populating each node's neighbors array with nearby
+     * tunneling.  Done by ray casting method initially chosen when level
+     * was to have multiple floors. 
+     */
+
     private void initAudioGraph(AudioNode first) {
 
         AudioNode curr;
@@ -448,25 +446,51 @@ public class AudioPlanner : MonoBehaviour {
 
 
     /*
-    Execute an a* search through the audio graph.  Returns the location of the
-    node adjacent to the player.
-    */
+     * Execute an a* search through the audio graph.  Returns the location of the
+     * node adjacent to the player.  Should be optimized in a C++ library to allow
+     * for multiple traces.  Cache locality also not optimized here.
+     */
+
     public Vector3 audio_astar(AudioNode source, AudioNode dest){
 
         LLQueue q = new LLQueue();
 
+        float fscore, gscore;
+
         bool[] flags = new bool[AudioNode.counter];
-        int[] gscore = new int[AudioNode.counter];
-        int[] fscore = new int[AudioNode.counter];
+        float[] gscores = new float[AudioNode.counter];
+        int[] preds = new int[AudioNode.counter];
 
-        AudioNode prev,curr = source;
+        AudioNode next,prev,curr = source;
 
 
-        foreach (AudioNode node in curr.neighbors){
-            flags[node.id] = true;
-            q.insert(node, Vector3.Magnitude(curr.location - node.location) + Vector3.Magnitude(dest.location - node.location));
+        while (curr != null){
 
+            foreach (AudioNode node in curr.neighbors){
+
+                flags[node.id] = true;
+
+                gscore = Vector3.Magnitude(curr.location - node.location);
+                gscores[node.id] = gscore;
+
+
+
+                q.insert(node, +Vector3.Magnitude(dest.location - node.location));
+            }
+
+
+
+            next = q.dequeue().node;
+
+            if (next == dest){
+                return curr.location;
+            }
+
+            curr = next;
         }
+
+
+      
 
 
 
