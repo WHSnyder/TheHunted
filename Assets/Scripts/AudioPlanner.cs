@@ -1,7 +1,82 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
+
+
+public class LLNode{
+
+    public LLNode next;
+    public AudioNode node;
+    public float distance;
+
+    public LLNode(AudioNode _node, float _distance){
+
+        next = null;
+        node = _node;
+        distance = _distance;
+    }
+}
+
+
+
+
+public class LLQueue {
+
+    public LLNode head;
+
+    public LLQueue(LLNode start){
+        head = start;
+    }
+
+    public LLQueue(){
+        head = null;
+    }
+
+    public LLQueue(AudioNode start, float dist){
+        head = new LLNode(start, dist);
+    }
+
+
+    public void insert(AudioNode nodein, float dist){
+
+        LLNode curr = head, new_node = new LLNode(nodein, dist);
+
+        if (head == null){
+            head = new_node;
+            return;
+        }
+
+        if (curr.distance > dist) {
+            new_node.next = curr;
+            head = new_node;
+            return;
+        }
+
+        while (curr.next != null) {
+
+            if (curr.next.distance > dist) {
+                new_node.next = curr.next;
+                curr.next = new_node;
+                return;
+            }
+            curr = curr.next;
+        }
+
+        curr.next = new_node;
+    }
+
+
+    public LLNode dequeue(){
+        LLNode ret = head;
+        if (head != null){
+            head = head.next;
+        }
+        return ret;
+    }
+
+}
+
+
 
 
 public enum nodeType {
@@ -290,43 +365,8 @@ public class AudioPlanner : MonoBehaviour {
     }
 
 
-
-    /*public void Update(){
-
-        timer += Time.deltaTime;
-        bool toPrint = false; ;
-
-        if (timer > .3) {
-
-            timer = 0;
-
-            foreach (AudioData datum in requests) {
-
-                if (datum.freq == 1){
-                    toPrint = true;
-                }
-
-                AudioNode curr = position(datum.source.transform.position + .1f*Vector3.forward + .1f*Vector3.right);
-
-                if (curr == null){
-                    continue;
-                }
-
-                searchResult = audioSearch(curr, toPrint);
-
-                if (searchResult[0] != Vector3.zero){
-                    datum.audio1.transform.position = searchResult[0];
-                }
-
-                if (searchResult[1] != Vector3.zero){
-                    datum.audio1.transform.position = searchResult[1];
-                }
-                toPrint = false;
-            }
-        }
-    }*/
-
-    IEnumerator ExecuteAudio(){
+    IEnumerator ExecuteAudio()
+    {
 
         bool toPrint = false;
 
@@ -368,6 +408,8 @@ public class AudioPlanner : MonoBehaviour {
     }
 
 
+
+    //
     private void initAudioGraph(AudioNode first) {
 
         AudioNode curr;
@@ -398,6 +440,20 @@ public class AudioPlanner : MonoBehaviour {
         }
         queue.Clear();
         clearNodes(_toClear);
+    }
+
+
+    /*
+    Execute an a* search through the audio graph.  Returns the location of the
+    node adjacent to the player.
+    */
+    public Vector3 audio_astar(AudioNode source, AudioNode dest){
+
+        LLQueue q = new LLQueue();
+
+        AudioNode curr = source;
+
+        for (Au)
     }
 
 
@@ -460,7 +516,7 @@ public class AudioPlanner : MonoBehaviour {
                         queue.Enqueue(node);
                     }   
                     else {
-                       // Debug.Log("Adding to result"); 
+                        //Debug.Log("Adding to result"); 
                         result[index++] = curr.location;
                         stop = true;
                     }
