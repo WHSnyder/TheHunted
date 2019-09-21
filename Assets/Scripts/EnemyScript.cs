@@ -17,7 +17,8 @@ public enum EvilState
 };
 
 
-/* commands can be sent from brain (to search), from the player (to stun),
+/*
+ * commands can be sent from brain (to search), from the player (to stun),
  * or from the slist itself (to queue an obvious state transition)
  */
 
@@ -149,18 +150,20 @@ public class EnemyScript : MonoBehaviour{
 
     //Test method...
     IEnumerator crankSound(){
-        float vol = 1 - Vector3.Magnitude(transform.position - player.transform.position) / maxDistAudio;
-        one.PlayOneShot(crank, vol);
-        //two.PlayOneShot(crank, vol);
 
-        yield return new WaitForSeconds(.5f);
+        while (true){
+            //float vol = 1 - Vector3.Magnitude(transform.position - player.transform.position) / maxDistAudio;
+            one.PlayOneShot(crank, .5f);
+            //two.PlayOneShot(crank, vol);
+
+            yield return new WaitForSeconds(7.0f);
+        }
     }
 
 
 
     public void Update() {
 
-    
         //set important vectors and quantities we often need
         toPlayer = playerTransform.position - myHead.transform.position;
         toNavDest = myTransform.position - navDest;
@@ -186,7 +189,6 @@ public class EnemyScript : MonoBehaviour{
         }
 
 
-
         switch (currState) {
 
             //start state that always patrols...
@@ -195,7 +197,8 @@ public class EnemyScript : MonoBehaviour{
                 break;
 
 
-            /* if player is seen they will be attacked and brain notified of position
+            /*
+             * if player is seen they will be attacked and brain notified of position
              * no matter what, a searching slist will follow orders eg; if brain
              * says the player is somewhere, they go, if the player says to get stunned
              * the slist stuns...
@@ -224,7 +227,8 @@ public class EnemyScript : MonoBehaviour{
                 break;
 
 
-            /* no matter what, if the patrolling slist is commanded, it stops
+            /*
+             * no matter what, if the patrolling slist is commanded, it stops
              * patrolling and follows orders
              *
              * if the player is within range and can be seen directly, slist attacks
@@ -259,7 +263,8 @@ public class EnemyScript : MonoBehaviour{
                 break;
 
 
-            /* remains stunned for timer countdown, does whatever is queued the queue afterwards
+            /*
+             * remains stunned for timer countdown, does whatever is queued the queue afterwards
              * if nothing on queue, they look around
              */
 
@@ -282,7 +287,8 @@ public class EnemyScript : MonoBehaviour{
                 break;
 
 
-            /* plays through slist look-around anim once (still needs sight checking!!! from the head bone..)
+            /*
+             * plays through slist look-around anim once (still needs sight checking!!! from the head bone..)
              * IF there is a command queued, the slist will stop looking around and follow the order
              * the order can be from the player or brain
              */

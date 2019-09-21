@@ -28,7 +28,7 @@ public class LLNode<T> {
 public class LLQueue<T> {
 
     public LLNode<T> head;
-    public static float counter;
+    public int counter = 0;
 
     public LLQueue(LLNode<T> start){
         head = start;
@@ -43,7 +43,7 @@ public class LLQueue<T> {
     }
 
 
-    public void insert(T nodein, float dist){
+    public void enqueue(T nodein, float dist){
 
         LLNode<T> curr = head, new_node = new LLNode<T>(nodein, dist);
 
@@ -79,7 +79,6 @@ public class LLQueue<T> {
         }
         return ret;
     }
-
 }
 
 
@@ -105,6 +104,7 @@ public class AudioData{
         //audio2 = _audio2; Not used unless double audiopath tracing is enabled...
     }
 }
+
 
 /*
  * Class for representing the level as a graph.  The graph is used primarily for
@@ -383,9 +383,12 @@ public class AudioPlanner : MonoBehaviour {
 
     public int dieDist, decayRate, startStrength;
 
-    ArrayList requests = new ArrayList(), constants = new ArrayList();
+    ArrayList constants = new ArrayList();
 
-    GameObject brain;
+    LLQueue<AudioNode> requests;
+
+    GameObject brain,player;
+
 
 
     public void Start(){
@@ -396,7 +399,11 @@ public class AudioPlanner : MonoBehaviour {
         //Obselete soon
         brain = GameObject.Find("AIBrain");
 
-        StartCoroutine("ExecuteAudio");
+        player = GameObject.Find("Player");
+
+        requests = new LLQueue<AudioNode>();
+
+        //StartCoroutine("ExecuteAudio");
     }
 
 
@@ -404,47 +411,29 @@ public class AudioPlanner : MonoBehaviour {
      * Coroutine for executing searches on the audiograph. Executes a search
      * every frame, unless the queue of search requests is empty.
      */
-
+    
     IEnumerator ExecuteAudio(){
 
-        bool toPrint = false;
+        LLNode<AudioNode> curr;
 
         while (true){
 
-            foreach (AudioData datum in requests){
+            curr = requests.dequeue();
 
-                if (datum.freq == 1){
-                    toPrint = true;
-                }
+            if (curr != null){
 
-                AudioNode curr = position(datum.source.transform.position + .1f * Vector3.forward + .1f * Vector3.right);
-
-                if (curr == null){
-                    continue;
-                }
-
-                searchResult = audioSearch(curr, toPrint);
-
-                if (searchResult[0] != Vector3.zero){
-                    datum.audio1.transform.position = searchResult[0];
-                }
-
-                if (searchResult[1] != Vector3.zero){
-                    datum.audio1.transform.position = searchResult[1];
-                }
-                toPrint = false;
+                
             }
-
-            yield return new WaitForSeconds(2.0f);
+            
+            yield return null;
         }
-
     }
 
 
     /*
      * Build the graph by populating each node's neighbors array with nearby
      * tunneling.  Done by ray casting method initially chosen when level
-     * was to have multiple floors. 
+     * was to have multiple floors. Uses obselete dijsktra...
      */
 
     private void initAudioGraph(AudioNode first) {
@@ -529,7 +518,7 @@ public class AudioPlanner : MonoBehaviour {
                     gscores[neigh_id] = temp_gscore;
 
                     if (!flags[neigh_id]) {
-                        q.insert(node, temp_gscore + Vector3.Magnitude(dest.location - node.location));
+                        q.enqueue(node, temp_gscore + Vector3.Magnitude(dest.location - node.location));
                     }
                 }
             }
@@ -635,7 +624,7 @@ public class AudioPlanner : MonoBehaviour {
 
 
     public void requestSearch(AudioData req){
-        requests.Add(req);
+        requests.insert(req,requests.counter++);
     }
 
 
