@@ -101,7 +101,7 @@ public class AudioData{
         freq = _freq;
         source = _source;
         audio1 = _audio1;
-        audio2 = _audio2; //Not used unless double audiopath tracing is enabled...
+        //audio2 = _audio2; Not used unless double audiopath tracing is enabled...
     }
 }
 
@@ -399,6 +399,11 @@ public class AudioPlanner : MonoBehaviour {
     }
 
 
+    /*
+     * Coroutine for executing searches on the audiograph. Executes a search
+     * every frame, unless the queue of search requests is empty.
+     */
+
     IEnumerator ExecuteAudio(){
 
         bool toPrint = false;
@@ -478,9 +483,11 @@ public class AudioPlanner : MonoBehaviour {
      * Execute an a* search through the audio graph.  Returns the location of the
      * node adjacent to the player.  Should be optimized in a C++ library to allow
      * for multiple traces.  Cache locality also not optimized here.
+     *
+     * ~~Needs update for early sound dieout.
      */
 
-    public Vector3 audio_astar(AudioNode source, AudioNode dest){
+    public Vector3 audio_astar(AudioNode source, AudioNode dest, out float dist){
 
         LLQueue q = new LLQueue();
 
@@ -530,6 +537,7 @@ public class AudioPlanner : MonoBehaviour {
             next = q.dequeue().node;
 
             if (next == dest){
+                dist = gscores[id];
                 return curr.location;
             }
 
@@ -537,6 +545,7 @@ public class AudioPlanner : MonoBehaviour {
             curr = next;
         }
 
+        dist = -1;
         return Vector3.zero;
     }
 
@@ -630,12 +639,11 @@ public class AudioPlanner : MonoBehaviour {
     }
 
 
-
     public void Ray(Vector3 pos, Color color){
         Debug.DrawRay(pos + Vector3.up * 10, 1000 * Vector3.down, color, 3);
     }
 
-
+    //No longer used...
     public void clearNodes(ArrayList nodes) { 
 
         foreach (AudioNode node in nodes){
