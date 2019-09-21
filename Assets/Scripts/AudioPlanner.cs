@@ -6,13 +6,13 @@ using UnityEngine;
  * Basic linked list node class containing an AudioNode and its fscore.
  */
 
-public class LLNode{
+public class LLNode<T> {
 
-    public LLNode next;
-    public AudioNode node;
+    public LLNode<T> next;
+    public T node;
     public float distance;
 
-    public LLNode(AudioNode _node, float _distance){
+    public LLNode(T _node, float _distance){
 
         next = null;
         node = _node;
@@ -25,11 +25,12 @@ public class LLNode{
  * Basic queue wrapping a linked list.
  */
 
-public class LLQueue {
+public class LLQueue<T> {
 
-    public LLNode head;
+    public LLNode<T> head;
+    public static float counter;
 
-    public LLQueue(LLNode start){
+    public LLQueue(LLNode<T> start){
         head = start;
     }
 
@@ -37,14 +38,14 @@ public class LLQueue {
         head = null;
     }
 
-    public LLQueue(AudioNode start, float dist){
-        head = new LLNode(start, dist);
+    public LLQueue(T start, float dist){
+        head = new LLNode<T>(start, dist);
     }
 
 
-    public void insert(AudioNode nodein, float dist){
+    public void insert(T nodein, float dist){
 
-        LLNode curr = head, new_node = new LLNode(nodein, dist);
+        LLNode<T> curr = head, new_node = new LLNode<T>(nodein, dist);
 
         if (head == null){
             head = new_node;
@@ -71,8 +72,8 @@ public class LLQueue {
     }
 
 
-    public LLNode dequeue(){
-        LLNode ret = head;
+    public LLNode<T> dequeue(){
+        LLNode<T> ret = head;
         if (head != null){
             head = head.next;
         }
@@ -310,7 +311,9 @@ public class AudioNode {
         else return null;
     }
 
+
     //Returns an array list of neighbors and adds the neighbors to the objects list
+
     public ArrayList addNeighbors(Dictionary<Vector3, AudioNode> map){
 
         ArrayList result = new ArrayList(), positions = searchPositions();
@@ -327,15 +330,15 @@ public class AudioNode {
         return result;
     }
 
-
+    
     /*
      * Casts a ray to find a neighboring level segment.
      */
 
     private AudioNode castDetect(Dictionary<Vector3, AudioNode> map, Vector3 pos){
+
         RaycastHit hit;
-        AudioNode anuda1;
-        AudioNode result;
+        AudioNode anuda1, result;
 
         if (Physics.Raycast(pos, Vector3.down, out hit, 10000)){
 
@@ -347,7 +350,6 @@ public class AudioNode {
                 map.Add(hit.collider.gameObject.transform.position, anuda1);
             }
             else{
-                //Debug.Log("found existing....");
                 result = map[anuda1.location];
             }
         }
@@ -384,7 +386,6 @@ public class AudioPlanner : MonoBehaviour {
     ArrayList requests = new ArrayList(), constants = new ArrayList();
 
     GameObject brain;
-
 
 
     public void Start(){
@@ -489,7 +490,7 @@ public class AudioPlanner : MonoBehaviour {
 
     public Vector3 audio_astar(AudioNode source, AudioNode dest, out float dist){
 
-        LLQueue q = new LLQueue();
+        LLQueue<AudioNode> q = new LLQueue<AudioNode>();
 
         AudioNode next, curr = source;
 
