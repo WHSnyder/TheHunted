@@ -435,7 +435,6 @@ public class AudioPlanner : MonoBehaviour {
     }
 
 
-
     /*
      * Build the graph by populating each node's neighbors array with nearby
      * tunneling.  Done by ray casting method initially chosen when level
@@ -485,30 +484,48 @@ public class AudioPlanner : MonoBehaviour {
 
         LLQueue q = new LLQueue();
 
-        float fscore, gscore;
+        AudioNode next, curr = source;
+
+        float gscore, d, temp_gscore, neighbor_gscore;
+
+        int id, neigh_id;
 
         bool[] flags = new bool[AudioNode.counter];
         float[] gscores = new float[AudioNode.counter];
         int[] preds = new int[AudioNode.counter];
 
-        AudioNode next,prev,curr = source;
+
+        for (int i = 0; i < AudioNode.counter; i++){
+            gscores[i] = 100000000000.0f;
+        }
 
 
         while (curr != null){
 
+            id = curr.id;
+            gscore = gscores[id];
+
             foreach (AudioNode node in curr.neighbors){
 
-                flags[node.id] = true;
+                neigh_id = node.id;
 
-                gscore = Vector3.Magnitude(curr.location - node.location);
-                gscores[node.id] = gscore;
+                if (!flags[neigh_id]) { continue; }
 
+                d = Vector3.Magnitude(curr.location - node.location);
 
+                temp_gscore = gscore + d;
+                neighbor_gscore = gscores[neigh_id];
 
-                q.insert(node, +Vector3.Magnitude(dest.location - node.location));
+                if (temp_gscore < neighbor_gscore) {
+
+                    preds[neigh_id] = id;
+                    gscores[neigh_id] = temp_gscore;
+
+                    if (!flags[neigh_id]) {
+                        q.insert(node, temp_gscore + Vector3.Magnitude(dest.location - node.location));
+                    }
+                }
             }
-
-
 
             next = q.dequeue().node;
 
@@ -516,24 +533,14 @@ public class AudioPlanner : MonoBehaviour {
                 return curr.location;
             }
 
+            flags[curr.id] = true;
             curr = next;
         }
 
-
-      
-
-
-
-
-
-
-
-
-
-
+        return Vector3.zero;
     }
 
-
+    /*
     public Vector3[] audioSearch(AudioNode source, bool print){
 
         Vector3[] result = new Vector3[2];
@@ -607,7 +614,7 @@ public class AudioPlanner : MonoBehaviour {
         queue.Clear();
         clearNodes(toClear);
         return result;
-    }
+    }*/
 
 
     private AudioNode position(Vector3 pos){
