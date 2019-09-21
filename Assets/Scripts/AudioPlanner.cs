@@ -495,7 +495,6 @@ public class AudioPlanner : MonoBehaviour {
         AudioNode next, curr = source;
 
         float gscore, d, temp_gscore, neighbor_gscore;
-
         int id, neigh_id;
 
         bool[] flags = new bool[AudioNode.counter];

@@ -4,17 +4,23 @@ using UnityEngine;
 using UnityEngine.AI;
 
 
-//looking is when the slist ARRIVES at a PATROL POINT and looks around
-//searching is when the PLAYERS LOCATION is KNOWN
-//patrolling is moving to randomly selected patrol point 
-//will add ambush if have time...
+/*
+ * looking is when the slist ARRIVES at a PATROL POINT and looks around
+ * searching is when the PLAYERS LOCATION is KNOWN
+ * patrolling is moving to randomly selected patrol point 
+ * will add ambush if have time...
+ */
+
 public enum EvilState
 {
     Patrolling, Looking, Attacking, Seeking, Ambush, Stunned, Init 
 };
 
-//commands can be sent from brain (to search), from the player (to stun),
-//or from the slist itself (to queue an obvious state transition)
+
+/* commands can be sent from brain (to search), from the player (to stun),
+ * or from the slist itself (to queue an obvious state transition)
+ */
+
 public class Command
 {
     public Vector3 loc;
@@ -25,6 +31,7 @@ public class Command
         action = paction;
     }
 }
+
 
 
 
@@ -79,7 +86,7 @@ public class EnemyScript : MonoBehaviour{
     public int maxDistAudio = 30;
 
 
-    //PUBLIC vars to be set in editor for tweaking behavior (myhead is head collider, prolly fine as is)
+    //Public vars to be set in editor for tweaking behavior (myhead is head collider, prolly fine as is)
     public GameObject myHead;
     public static int sightRange = 15; 
 
@@ -99,10 +106,7 @@ public class EnemyScript : MonoBehaviour{
     private float ambushTimer = ambushTime;
 
     private int ambushOrPatrol;
-
     private bool ambshing = false;
-
-
 
 
 
@@ -139,9 +143,17 @@ public class EnemyScript : MonoBehaviour{
         Random.InitState(System.DateTime.Now.Millisecond);
         ambushOrPatrol = Random.Range(1, 3);
 
-
         StartCoroutine("crankSound");
+    }
 
+
+    //Test method...
+    IEnumerator crankSound(){
+        float vol = 1 - Vector3.Magnitude(transform.position - player.transform.position) / maxDistAudio;
+        one.PlayOneShot(crank, vol);
+        //two.PlayOneShot(crank, vol);
+
+        yield return new WaitForSeconds(.5f);
     }
 
 
@@ -167,7 +179,7 @@ public class EnemyScript : MonoBehaviour{
             if (ambshing){
                 transitionToPatrolling();
             }
-            else{
+            else {
                 transitionToAmbush();
             }
             ambshing = !ambshing;
@@ -182,10 +194,13 @@ public class EnemyScript : MonoBehaviour{
                 transitionToPatrolling();
                 break;
 
-            //if player is seen they will be attacked and brain notified of position
-            // no matter what, a searching slist will follow orders eg; if brain
-            //says the player is somewhere, they go, if the player says to get stunned
-            //the slist stuns...
+
+            /* if player is seen they will be attacked and brain notified of position
+             * no matter what, a searching slist will follow orders eg; if brain
+             * says the player is somewhere, they go, if the player says to get stunned
+             * the slist stuns...
+             */
+
             case EvilState.Seeking:
 
                 if (queuedCommand != null){
@@ -209,12 +224,16 @@ public class EnemyScript : MonoBehaviour{
                 break;
 
 
-            //no matter what, if the patrolling slist is commanded, it stops patrolling and follows orders
-            //
-            //if the player is within range and can be seen directly, slist attacks
-            //
-            //if slist is within one of navdest, the transition to looking
-            //they will patrol again once the looking state ends, unless the are commanded otherwise
+            /* no matter what, if the patrolling slist is commanded, it stops
+             * patrolling and follows orders
+             *
+             * if the player is within range and can be seen directly, slist attacks
+             *
+             * if slist is within one of navdest, the transition to looking
+             * they will patrol again once the looking state ends, unless they
+             * are commanded otherwise...
+             */
+
             case EvilState.Patrolling:
 
                 //Debug.Log("in patrol...");
@@ -224,7 +243,7 @@ public class EnemyScript : MonoBehaviour{
                     return;
                 }
 
-                if (withinRange()) {//no need to do raycast if out of range
+                if (withinRange()) { //no need to do raycast if out of range
 
                     if (checkForPlayer()) {
                         //Debug.Log("found!");
@@ -240,8 +259,10 @@ public class EnemyScript : MonoBehaviour{
                 break;
 
 
-            //bastard remains stunned for timer countdown, does whatever is queued the queue afterwards
-            //if nothing on queue, they look around
+            /* remains stunned for timer countdown, does whatever is queued the queue afterwards
+             * if nothing on queue, they look around
+             */
+
             case EvilState.Stunned:
 
                 Debug.Log("yes here..");
@@ -261,9 +282,11 @@ public class EnemyScript : MonoBehaviour{
                 break;
 
 
-            //plays through slist look-around anim once (still needs sight checking!!! from the head bone..)
-            //IF there is a command queued, the slist will stop looking around and follow the order
-            //the order can be from the player or brain
+            /* plays through slist look-around anim once (still needs sight checking!!! from the head bone..)
+             * IF there is a command queued, the slist will stop looking around and follow the order
+             * the order can be from the player or brain
+             */
+
             case EvilState.Looking:
 
                 if (queuedCommand != null){
@@ -283,17 +306,16 @@ public class EnemyScript : MonoBehaviour{
             case EvilState.Attacking:
 
                 //play some anim
-                if (queuedCommand != null && queuedCommand.action == EvilState.Stunned)
-                {
+                if (queuedCommand != null && queuedCommand.action == EvilState.Stunned){
                     transitionToStunned();
                     queuedCommand = null;
                     return;
                 }
 
-
                 agent.SetDestination(playerTransform.position);
                 break;
 
+            //stick slist to ceiling and wait...
             case EvilState.Ambush:
                 if (magToPlayer < 8) {
                     agent.enabled = true;
@@ -343,6 +365,7 @@ public class EnemyScript : MonoBehaviour{
         queuedCommand = null;
     }
 
+
     //if slist stunned, she will search when wake up, else they move to that location
     private void transitionToSeeking(Vector3 loc) {
 
@@ -360,9 +383,13 @@ public class EnemyScript : MonoBehaviour{
         }
     }
 
-    //used after slist stunned, she looks around for a bit (dk if should)
-    //no queued command specified, they will look around then patrol by default,
-    //unless the brain or player sends a command
+
+    /*
+     * used after slist stunned, she looks around for a bit (dk if should)
+     * no queued command specified, they will look around then patrol by default,
+     * unless the brain or player sends a command
+     */
+
     private void transitionToLooking() {
 
         currState = EvilState.Looking;
@@ -381,7 +408,7 @@ public class EnemyScript : MonoBehaviour{
     }
 
 
-    //he/she/it/they/Jabba's gender go through stunned stage and will look around afterwards
+    //go through stunned stage and will look around afterwards
     private void transitionToStunned() {
         Debug.Log("Worked!!");
         currState = EvilState.Stunned;
@@ -407,6 +434,7 @@ public class EnemyScript : MonoBehaviour{
         agent.enabled = true;
         agent.SetDestination(navDest);
     }
+
 
     //slist sticks to the ceiling by disabling navmesh and moving 
     //important bones in line with the angle of the face directly above...
@@ -471,12 +499,9 @@ public class EnemyScript : MonoBehaviour{
     }*/
 
 
-
-
     //slist sticks to the ceiling by disabling navmesh and moving 
     //important bones in line with the angle of the face directly above...
-    private void transitionToAmbush()
-    {
+    private void transitionToAmbush(){
 
         //animator.WriteDefaultValues();
         animator.enabled = false;
@@ -505,8 +530,7 @@ public class EnemyScript : MonoBehaviour{
 
         Vector3 boneFwd;
 
-        foreach (Transform bone in bones)
-        {
+        foreach (Transform bone in bones){
 
             Physics.Raycast(bone.position, Vector3.up, out caster, 20, mask);
             angles.Add(caster.normal);
@@ -514,8 +538,7 @@ public class EnemyScript : MonoBehaviour{
         }
 
 
-        foreach (Transform bone in bones)
-        {
+        foreach (Transform bone in bones){
 
             Debug.Log("transforming bone: " + bone.gameObject.name);
 
@@ -523,17 +546,14 @@ public class EnemyScript : MonoBehaviour{
 
 
 
-            if (bone.gameObject.name.Contains("nkle"))
-            {
+            if (bone.gameObject.name.Contains("nkle")){
                 boneFwd = bone.up;
             }
             else if (bone.gameObject.name.Contains("iddle") ||
-                     bone.gameObject.name.Contains("hin"))
-            {
+                     bone.gameObject.name.Contains("hin")){
                 boneFwd = bone.right;
             }
-            else
-            {
+            else{
                 boneFwd = bone.forward;
             }
 
@@ -543,8 +563,7 @@ public class EnemyScript : MonoBehaviour{
 
             boneAngle = Vector3.SignedAngle(boneFwd, (Vector3)angles[i], crossProd);
 
-            if (bone.gameObject.name.Contains("iddle"))
-            {
+            if (bone.gameObject.name.Contains("iddle")){
                 Debug.DrawRay(bone.position, 2 * bone.forward, Color.blue, 160);
                 Debug.DrawRay(bone.position, 2 * crossProd, Color.red, 160);
                 Debug.DrawRay(bone.position, 2 * (Vector3)angles[i], Color.green, 160);
@@ -552,8 +571,7 @@ public class EnemyScript : MonoBehaviour{
 
             bone.Rotate(crossProd, boneAngle, Space.World);
 
-            if (bone.gameObject.name.Contains("iddle"))
-            {
+            if (bone.gameObject.name.Contains("iddle")){
                 Debug.DrawRay(bone.position, 2 * boneFwd, Color.yellow, 160);
             }
 
@@ -600,7 +618,6 @@ public class EnemyScript : MonoBehaviour{
     }
 
 
-
     //step (this works)
     public void Step(){
         //float vol = 1 - Vector3.Magnitude(transform.position - player.transform.position) / maxDistAudio;
@@ -608,36 +625,23 @@ public class EnemyScript : MonoBehaviour{
         //two.PlayOneShot(stepSound, vol);
     }
 
-    public IEnumerator crankSound()
-    {
-        float vol = 1 - Vector3.Magnitude(transform.position - player.transform.position) / maxDistAudio;
-        one.PlayOneShot(crank, vol);
-        two.PlayOneShot(crank, vol);
-
-        yield return new WaitForSeconds(Random.Range(4.5f, 7.5f));
-    }
-
 
     //for setting up the abmush pose
-    private ArrayList traverseAnimTree(Queue<Transform> queue)
-    {
+    private ArrayList traverseAnimTree(Queue<Transform> queue) {
 
         ArrayList result = new ArrayList();
 
-        while (queue.Count > 0)
-        {
+        while (queue.Count > 0){
 
             Transform curr = queue.Dequeue();
 
             string boneName = curr.gameObject.name;
 
-            if (!boneName.Contains("end"))
-            {
+            if (!boneName.Contains("end")){
 
                 result.Add(curr);
 
-                for (int i = 0; i < curr.childCount; i++)
-                {
+                for (int i = 0; i < curr.childCount; i++){
                     queue.Enqueue(curr.GetChild(i));
                 }
             }
