@@ -6,10 +6,9 @@ using UnityEngine.UI;
 
 public class Flasher : MonoBehaviour{
 
-
-    Vector3 mousePos;
-
     Vector2 mDir;
+
+    private Vector3 keyLoc;
 
     float ButtonCooler = 0.0f;
     int ButtonCount = 0;
@@ -17,38 +16,28 @@ public class Flasher : MonoBehaviour{
 
     private Vector3 moveDirectionUp = Vector3.zero;
 
-    private float jump = 5.0f;
-    private float gravity = 9.8f;
+    private float jump = 5.0f, gravity = 9.8f;
 
     //Dan adds 5/12
     private GameObject door;
     private GameObject[] teleporters;
 
-    private bool win = false, dead = false, canTeleport = false, hasKey = false;
-
-    private float time = 5.0f, transparency = 0.0f;
-
-    private Vector3 keyLoc;
+    private bool win, dead, canTeleport, hasKey;
 
     private FLSource lit;
-
-
-    private float lightDist, lightAngle;
-
+    private float lightDist, lightAngle, spotAngle, time = 5.0f, transparency;
 
     private CharacterController control;
 
     public Text victoryText, objectiveText, directionText;
-    public GameObject crumb, key;
-    private GameObject cam, flashlight;
+    public GameObject crumb, key, cam, flashlight;
+
     public Image img;
 
     Vector3 flBottom, flUR, flUL;
 
     private RaycastHit caster;
     
-
-    float spotAngle;
 
 
     // Start is called before the first frame update
@@ -68,16 +57,13 @@ public class Flasher : MonoBehaviour{
 
         //Find camera and set position/parent
         cam = GameObject.Find("Main Camera");
-
         Vector3 cameraSpawn = transform.position + .2f * Vector3.forward;
         cam.transform.SetPositionAndRotation(cameraSpawn, Quaternion.identity);
         cam.transform.parent = transform;
 
         Vector3 lightPos = this.transform.position + .25f * Vector3.right + .65f * Vector3.forward + .15f*Vector3.down;
 
-        flashlight = GameObject.Find("flashlight_withcone").gameObject;
-         flashlight.transform.SetPositionAndRotation(lightPos, Quaternion.Euler(0, 0, 0));         flashlight.transform.parent = GameObject.Find("Main Camera").gameObject.transform; 
-
+        flashlight = GameObject.Find("flashlight_withcone").gameObject;         flashlight.transform.SetPositionAndRotation(lightPos, Quaternion.Euler(0, 0, 0));         flashlight.transform.parent = GameObject.Find("Main Camera").gameObject.transform; 
         lit = flashlight.GetComponent<FLSource>();
 
         //spotAngle = lit.source.spotAngle / 2; //flashlight.GetComponent<Light>().spotAngle/2;
@@ -88,9 +74,11 @@ public class Flasher : MonoBehaviour{
         flUL = Quaternion.Euler(0, 0, 60) * help;
         flUR = Quaternion.Euler(0, 0, 60) * flUL;
 
-        /*Debug.DrawRay(flashlight.transform.position, 2 * flBottom, Color.yellow, 15);
+        /*
+        Debug.DrawRay(flashlight.transform.position, 2 * flBottom, Color.yellow, 15);
         Debug.DrawRay(flashlight.transform.position, 2 * flUR, Color.green, 15);
-        Debug.DrawRay(flashlight.transform.position, 2 * flUL, Color.blue, 15);*/
+        Debug.DrawRay(flashlight.transform.position, 2 * flUL, Color.blue, 15);
+        */
     }
 
     // Update is called once per frame
