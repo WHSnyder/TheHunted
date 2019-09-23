@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class AIBrain : MonoBehaviour{
 
@@ -8,6 +6,7 @@ public class AIBrain : MonoBehaviour{
     EnemyScript[] enemyList;
 
     void Start(){
+
         enemyInitList = GameObject.FindGameObjectsWithTag("Enemy");
         enemyList = new EnemyScript[enemyInitList.Length];
 
@@ -18,12 +17,12 @@ public class AIBrain : MonoBehaviour{
 
 
     public void notifyFound(Vector3 playerLoc,  int id){
+
         foreach (EnemyScript enemy in enemyList){
-            if (enemy.id != id)
-            {
+
+            if (enemy.id != id){
                 enemy.processCommand(playerLoc, EvilState.Seeking);
             }
         }
     }
-
 }

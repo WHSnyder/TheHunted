@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class Flasher : MonoBehaviour{
 
-    Vector2 mDir;
+    Vector2 mDir,mousePos;
 
     private Vector3 keyLoc;
 
@@ -99,20 +99,16 @@ public class Flasher : MonoBehaviour{
 
 
         if (Input.GetKeyDown("m")) {
-
             transform.position = GameObject.Find("key_room_locked").transform.position + .1f*Vector3.up;
          
         }
 
-        if (Input.GetKeyDown("l"))
-        {
+        if (Input.GetKeyDown("l")){
             transform.position = GameObject.Find("Door").transform.position + 2 * GameObject.Find("Door").transform.up;
         }
 
-
         GameObject [] batteryList  = GameObject.FindGameObjectsWithTag("Battery");
         teleporters = GameObject.FindGameObjectsWithTag("Teleporter");
-
 
         for (int a = 0; a < batteryList.Length; a++) { 
             if (Vector3.Magnitude(transform.position - batteryList[a].transform.position) < 1) {
@@ -122,8 +118,7 @@ public class Flasher : MonoBehaviour{
         } 
 
         for (int b = 0; b < teleporters.Length; b++) { 
-            if (Vector3.Magnitude(transform.position - teleporters[b].transform.position) < 2)
-            {
+            if (Vector3.Magnitude(transform.position - teleporters[b].transform.position) < 2){
                 Destroy(teleporters[b]);
                 canTeleport = true;
                 setInfoText();
@@ -131,13 +126,11 @@ public class Flasher : MonoBehaviour{
         } 
 
         if (GameObject.FindGameObjectsWithTag("Key").Length != 0) {
-            if (Vector3.Magnitude(transform.position - key.transform.position) < 1.5)
-            {
+            if (Vector3.Magnitude(transform.position - key.transform.position) < 1.5){
                 hasKey = true; 
                 objectiveText.text = "Get back to the start!";
 
                 GameObject.Find("AIBrain").GetComponent<AIBrain>().notifyFound(this.transform.position, 20);
-
 
                 Destroy(key);
             }
@@ -173,16 +166,13 @@ public class Flasher : MonoBehaviour{
             }
         }
 
-        if ((canTeleport) && (Input.GetKeyDown("z")))
-        {
+        if ((canTeleport) && (Input.GetKeyDown("z"))){
 
             canTeleport = false;
-            if (hasKey)
-            {
+            if (hasKey){
                 transform.position = keyLoc;
             }
-            else
-            {
+            else{
                 transform.position = Vector3.zero;
             }
         } 
@@ -202,30 +192,15 @@ public class Flasher : MonoBehaviour{
         if (!lit.source.enabled) {
             return false;
         }
-        /*
-        Vector3 help = Quaternion.AngleAxis(spotAngle,flashlight.transform.right) * flashlight.transform.forward;
-
-        flBottom = help;
-        flUL = Quaternion.AngleAxis(60, flashlight.transform.forward) * help;
-        flUR = Quaternion.AngleAxis(60, flashlight.transform.forward) * flUL;
-
-        Debug.DrawRay(flashlight.transform.position, 10 * flBottom, Color.yellow, .1f);
-        Debug.DrawRay(flashlight.transform.position, 10 * flUR, Color.green, .1f);
-        Debug.DrawRay(flashlight.transform.position, 10 * flUL, Color.blue, .1f);*/
 
         if (Physics.Raycast(flashlight.transform.position, flashlight.transform.forward, out caster, 30)) { 
-        //Physics.Raycast(flashlight.transform.position, flUR, out caster, 30, layerMask) ||
-        //Physics.Raycast(flashlight.transform.position, flBottom, out caster, 30, layerMask)){
 
-        if (caster.collider.gameObject.CompareTag("Enemy"))
-            {
-                Debug.Log("Hit Head");
+            if (caster.collider.gameObject.CompareTag("Enemy")){
                 GameObject head = caster.collider.gameObject;
-                //head.GetComponent<HeadRef>().slist.GetComponent<EnemyScript>().processCommand(Vector3.zero, EvilState.Stunned);
                 head.gameObject.GetComponent<EnemyScript>().processCommand(Vector3.zero, EvilState.Stunned);
                 return true;
             }
-            else return false;
+            return false;
         }
         return false;
     }
@@ -233,8 +208,7 @@ public class Flasher : MonoBehaviour{
 
     private void setMouseParams(){
 
-        Vector2 mc = new Vector2(Input.GetAxisRaw("Mouse X"),
-            Input.GetAxisRaw("Mouse Y"));
+        Vector2 mc = new Vector2(Input.GetAxisRaw("Mouse X"),Input.GetAxisRaw("Mouse Y"));
 
         // Add new movement to current mouse direction.
         mDir += mc;
@@ -251,8 +225,6 @@ public class Flasher : MonoBehaviour{
             Quaternion.AngleAxis(mDir.x*2, Vector3.up);
 
         mousePos = Input.mousePosition;
-
-        //Debug.Log("Mouse position: " + mousePos);
     }
 
 
@@ -261,6 +233,7 @@ public class Flasher : MonoBehaviour{
         if (Input.GetKeyDown("b")) {
             dropBread();
         }
+
         if (Input.GetKeyDown("w") || (Input.GetKeyDown("s"))) speed = move();
 
         //jump if grounded
@@ -269,14 +242,11 @@ public class Flasher : MonoBehaviour{
             moveDirectionUp.y = jump;
         }
 
-
-
         if (ButtonCooler > 0.0f) ButtonCooler -= 1.0f * Time.deltaTime;
         else ButtonCount = 0;
 
         float x = Input.GetAxis("Horizontal") * Time.deltaTime * 150.0f;
         float ver = Input.GetAxis("Vertical") * Time.deltaTime * speed;
-
 
         transform.Rotate(0, x, 0);
         control.Move(transform.forward * ver*2);
@@ -288,13 +258,15 @@ public class Flasher : MonoBehaviour{
 
 
 
-    private int move() { 
+    private int move() {
+
         if (ButtonCooler > 0.0f && ButtonCount == 1){
             if ((dead) || (win)) {
                 return 0;
             }
-            return 3;}
-        else{
+            return 3;
+        }
+        else {
             ButtonCooler = 0.5f;
             ButtonCount += 1; 
             if ((dead) || (win)) {
@@ -307,19 +279,18 @@ public class Flasher : MonoBehaviour{
 
     public void dropBread(){
         Vector3 v = new Vector3(transform.position.x, transform.position.y - .3f,
-                                    transform.position.z);
-        GameObject b = Instantiate(crumb, v, transform.rotation);
+                                                            transform.position.z);
+        //Instantiate(crumb, v, transform.rotation);
     } 
 
     public void setInfoText() { 
 
         if (win) {
-
             victoryText.color = Color.green;
             victoryText.text = "You Escaped!";
             countdown();
-
         }
+
         if (dead) {
             victoryText.color = Color.red;
             victoryText.text = "You're Dead";
@@ -329,8 +300,8 @@ public class Flasher : MonoBehaviour{
         if (canTeleport) {
             directionText.text = directionText.text + "\n" + "-Press z to teleport";
         }
-
     } 
+
 
     void countdown() {
         if (time >= 0.0f) {
@@ -345,6 +316,3 @@ public class Flasher : MonoBehaviour{
         }
     }
 }
-
-
-

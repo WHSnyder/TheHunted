@@ -111,6 +111,7 @@ public class EnemyScript : MonoBehaviour{
     private int ambushOrPatrol;
     private bool ambshing = false;
 
+    AudioRequest req;
 
 
     // Start is called before the first frame update
@@ -131,9 +132,6 @@ public class EnemyScript : MonoBehaviour{
         stunTimer = stunTime;
         lookTimer = lookTime;
 
-        AudioData data = new AudioData(freq, 1, gameObject, sourceOne, sourceTwo);
-
-        planner.requestSearch(data);
         animator = GetComponent<Animator>();
 
         agent = GetComponent<NavMeshAgent>();
@@ -147,6 +145,8 @@ public class EnemyScript : MonoBehaviour{
         ambushOrPatrol = Random.Range(1, 3);
 
         StartCoroutine("crankSound");
+
+        req = new AudioRequest(Vector3.zero);
     }
 
 
@@ -155,9 +155,19 @@ public class EnemyScript : MonoBehaviour{
 
         while (true) {
 
-            //float vol = 1 - Vector3.Magnitude(transform.position - player.transform.position) / maxDistAudio;
-            one.PlayOneShot(crank, .5f);
-            //two.PlayOneShot(crank, vol);
+            req.location = transform.position;
+
+            planner.requestSearch(ref req);
+
+            while (!req.done){
+                yield return null;
+            }
+
+            if (req.distance > 0){
+                float vol = 1 - req.distance / maxDistAudio;
+                sourceOne.transform.position = req.endspot;
+                one.PlayOneShot(crank, vol);
+            }
 
             yield return new WaitForSeconds(7.0f);
         }
@@ -560,7 +570,7 @@ public class EnemyScript : MonoBehaviour{
                      bone.gameObject.name.Contains("hin")){
                 boneFwd = bone.right;
             }
-            else{
+            else {
                 boneFwd = bone.forward;
             }
 

@@ -12,7 +12,7 @@ public class LLNode<T> {
     public T node;
     public float distance;
 
-    public LLNode(T _node, float _distance){
+    public LLNode(ref T _node, float _distance){
 
         next = null;
         node = _node;
@@ -30,7 +30,7 @@ public class LLQueue<T> {
     public LLNode<T> head;
     public int counter = 0;
 
-    public LLQueue(LLNode<T> start){
+    public LLQueue(ref LLNode<T> start){
         head = start;
     }
 
@@ -38,14 +38,14 @@ public class LLQueue<T> {
         head = null;
     }
 
-    public LLQueue(T start, float dist){
-        head = new LLNode<T>(start, dist);
+    public LLQueue(ref T start, float dist){
+        head = new LLNode<T>(ref start, dist);
     }
 
 
-    public void enqueue(T nodein, float dist){
+    public void enqueue(ref T nodein, float dist){
 
-        LLNode<T> curr = head, new_node = new LLNode<T>(nodein, dist);
+        LLNode<T> curr = head, new_node = new LLNode<T>(ref nodein, dist);
 
         if (head == null){
             head = new_node;
@@ -82,26 +82,20 @@ public class LLQueue<T> {
 }
 
 
-
-
 public enum nodeType {
-
     Quad, STurn, LTurn, OneSeg, TwoSeg, FourSeg, EightSeg, Key, Pump
 };
 
 
-public class AudioData{
+public class AudioRequest{
 
-    public int time, freq;
-    public GameObject source, audio1, audio2;
+    public bool done;
+    public Vector3 location, endspot;
+    public float distance;
 
-    public AudioData(int _freq, int _time, GameObject _source, GameObject _audio1, GameObject _audio2){
+    public AudioRequest(Vector3 loc){
 
-        time = _time;
-        freq = _freq;
-        source = _source;
-        audio1 = _audio1;
-        //audio2 = _audio2; Not used unless double audiopath tracing is enabled...
+        location = loc;
     }
 }
 
@@ -273,6 +267,7 @@ public class AudioNode {
      */
 
     public static AudioNode AudioNodeFromObj(GameObject obj){
+
         if (obj.CompareTag("segOne")){
             return new AudioNode(nodeType.OneSeg, obj.transform.position, obj.transform.right);
         }
@@ -338,19 +333,19 @@ public class AudioNode {
     private AudioNode castDetect(Dictionary<Vector3, AudioNode> map, Vector3 pos){
 
         RaycastHit hit;
-        AudioNode anuda1, result;
+        AudioNode nodehit, result;
 
         if (Physics.Raycast(pos, Vector3.down, out hit, 10000)){
 
-            anuda1 = AudioNodeFromObj(hit.collider.gameObject);
+            nodehit = AudioNodeFromObj(hit.collider.gameObject);
 
             if (!map.ContainsKey(hit.collider.gameObject.transform.position)){
             
-                result = anuda1;
-                map.Add(hit.collider.gameObject.transform.position, anuda1);
+                result = nodehit;
+                map.Add(hit.collider.gameObject.transform.position, nodehit);
             }
             else{
-                result = map[anuda1.location];
+                result = map[nodehit.location];
             }
         }
         else result = null;
@@ -367,6 +362,7 @@ public class AudioNode {
 
 public class AudioPlanner : MonoBehaviour {
 
+    //This somehow works??
     Dictionary<Vector3, AudioNode> hashMap = new Dictionary<Vector3, AudioNode>();
 
     ArrayList check = new ArrayList(), toClear = new ArrayList();
@@ -385,7 +381,7 @@ public class AudioPlanner : MonoBehaviour {
 
     ArrayList constants = new ArrayList();
 
-    LLQueue<AudioData> requests;
+    LLQueue<AudioRequest> requests;
 
     GameObject brain,player;
 
@@ -400,7 +396,7 @@ public class AudioPlanner : MonoBehaviour {
         brain = GameObject.Find("AIBrain");
         player = GameObject.Find("Player");
 
-        requests = new LLQueue<AudioData>();
+        requests = new LLQueue<AudioRequest>();
 
         //StartCoroutine("ExecuteAudio");
     }
@@ -413,7 +409,7 @@ public class AudioPlanner : MonoBehaviour {
     
     IEnumerator ExecuteAudio(){
 
-        LLNode<AudioData> curr;
+        LLNode<AudioRequest> curr;
         AudioNode source, dest;
 
         while (true){
@@ -422,12 +418,14 @@ public class AudioPlanner : MonoBehaviour {
 
             if (curr != null){
 
-                source = position(curr.node.source.transform.position);
+                source = position(curr.node.location);
                 dest = position(player.transform.position);
 
-                float dist;
+                Vector3 adj_loc = audio_astar(source, dest, out float dist);
 
-                Vector3 adj_loc = audio_astar(source, dest, out dist);
+
+
+
             }
             
             yield return null;
@@ -628,8 +626,8 @@ public class AudioPlanner : MonoBehaviour {
     }
 
 
-    public void requestSearch(AudioData req){
-        requests.enqueue(req,requests.counter++);
+    public void requestSearch(ref AudioRequest req){
+        requests.enqueue(ref req,requests.counter++);
     }
 
 

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 
@@ -8,20 +6,15 @@ public class FLSource : MonoBehaviour{
 
     public Light source;
     public GameObject beam;
+    public Text powerText;
 
     private bool on = false, hasPower = true;
-
     private float power = 200.0f;
+    private int batteryCount,tempCount;
 
-
-    private int batteryCount;
-    private int tempCount;
-
-    public Text powerText; 
-
-    
     Vector3 shot, reflection;
     RaycastHit hit;
+
 
 
     // Start is called before the first frame update
@@ -60,8 +53,8 @@ public class FLSource : MonoBehaviour{
             on = !on;
             beam.SetActive(on);
             source.intensity = 0;
-            if (on)
-            {
+
+            if (on){
                 source.intensity = 10;
             }
         }
@@ -71,16 +64,11 @@ public class FLSource : MonoBehaviour{
             beam.SetActive(false);
             //bounce.enabled = false;
             on = false;
-
         }
 
 
         if (on && (power > 0.0f)){
             power -= 0.05f;
         } 
-
-        //void setPowerText() {
-        //    powerText.text = "Power: " + power;
-        //}
     }
 }
