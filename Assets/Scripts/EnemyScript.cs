@@ -144,9 +144,9 @@ public class EnemyScript : MonoBehaviour{
         Random.InitState(System.DateTime.Now.Millisecond);
         ambushOrPatrol = Random.Range(1, 3);
 
-        StartCoroutine("crankSound");
-
         req = new AudioRequest(Vector3.zero);
+
+        StartCoroutine("crankSound");
     }
 
 
@@ -158,11 +158,13 @@ public class EnemyScript : MonoBehaviour{
             req.location = transform.position;
 
             planner.requestSearch(ref req);
+            Debug.Log(this.name + ": Requested search");
 
             while (!req.done){
+                //Debug.Log("hi");
                 yield return null;
             }
-
+            Debug.Log(this.name + ": Search done, distance " + req.distance);
             if (req.distance > 0){
                 float vol = 1 - req.distance / maxDistAudio;
                 sourceOne.transform.position = req.endspot;
@@ -282,11 +284,8 @@ public class EnemyScript : MonoBehaviour{
 
             case EvilState.Stunned:
 
-                Debug.Log("yes here..");
-
                 if (stunTimer < 0) {
 
-                    Debug.Log("unstunned");
                     stunTimer = stunTime;//reset timer
 
                     if (queuedCommand != null){
@@ -428,7 +427,7 @@ public class EnemyScript : MonoBehaviour{
 
     //go through stunned stage and will look around afterwards
     private void transitionToStunned() {
-        Debug.Log("Worked!!");
+
         currState = EvilState.Stunned;
         queuedCommand = new Command(Vector3.zero, EvilState.Looking);
 

@@ -48,6 +48,7 @@ public class LLQueue<T> {
         LLNode<T> curr = head, new_node = new LLNode<T>(ref nodein, dist);
 
         if (head == null){
+            Debug.Log("added as head node");
             head = new_node;
             return;
         }
@@ -73,9 +74,15 @@ public class LLQueue<T> {
 
 
     public LLNode<T> dequeue(){
+        Debug.Log("deqing...");
         LLNode<T> ret = head;
+
         if (head != null){
             head = head.next;
+        }
+
+        if (ret != null){
+            Debug.Log("Deqed a non null...");
         }
         return ret;
     }
@@ -418,16 +425,17 @@ public class AudioPlanner : MonoBehaviour {
 
             if (curr != null){
 
+                Debug.Log("Planner starting search");
+
                 source = position(curr.node.location);
                 dest = position(player.transform.position);
 
                 Vector3 adj_loc = audio_astar(source, dest, out float dist);
 
-
-
-
+                curr.node.distance = dist;
+                curr.node.done = true;
+                curr.node.endspot = adj_loc;
             }
-            
             yield return null;
         }
     }
@@ -484,7 +492,7 @@ public class AudioPlanner : MonoBehaviour {
 
         LLQueue<AudioNode> q = new LLQueue<AudioNode>();
 
-        AudioNode next, curr = source;
+        AudioNode next, curr = source, node;
 
         float gscore, d, temp_gscore, neighbor_gscore;
         int id, neigh_id;
@@ -504,8 +512,9 @@ public class AudioPlanner : MonoBehaviour {
             id = curr.id;
             gscore = gscores[id];
 
-            foreach (AudioNode node in curr.neighbors){
+            for (int i = 0; i < curr.neighbors.Count; i++){
 
+                node = (AudioNode) curr.neighbors[i]; 
                 neigh_id = node.id;
 
                 if (!flags[neigh_id]) { continue; }
@@ -521,7 +530,7 @@ public class AudioPlanner : MonoBehaviour {
                     gscores[neigh_id] = temp_gscore;
 
                     if (!flags[neigh_id]) {
-                        q.enqueue(node, temp_gscore + Vector3.Magnitude(dest.location - node.location));
+                        q.enqueue(ref node, temp_gscore + Vector3.Magnitude(dest.location - node.location));
                     }
                 }
             }
@@ -540,82 +549,6 @@ public class AudioPlanner : MonoBehaviour {
         dist = -1;
         return Vector3.zero;
     }
-
-    /*
-    public Vector3[] audioSearch(AudioNode source, bool print){
-
-        Vector3[] result = new Vector3[2];
-        AudioNode dest = position(gameObject.transform.position), curr = null;
-
-        if (source == null){
-            Debug.Log("source null");
-        }
-
-        if (dest == null){
-            Debug.Log("dest null");
-        }
-
-
-        if (source.location.Equals(dest.location)){
-            result[0] = source.location;
-            return result;
-        }
-
-        if (Vector3.Magnitude(source.location - dest.location) >= dieDist){
-            return result;
-        }
-
-        toClear.Add(source);
-        toClear.Add(dest);
-
-        int index = 0, vol = 0;
-
-        bool stop = false;
-
-        source.source = true; dest.dest = true;
-        source.strength = (int)startStrength;
-
-
-        queue.Enqueue(source);
-
-        while (queue.Count > 0 && stop == false) {
-
-            curr = queue.Dequeue();
-            toClear.Add(curr);
-
-            if (Vector3.Magnitude(curr.location - source.location) < dieDist) {
-
-                //if (print) { Debug.Log("Visiting...."); }
-
-                vol = (int) curr.strength - decayRate * curr.cost;
-
-                foreach (AudioNode node in curr.neighbors) {
-
-                    if (node == null || vol <= node.strength || vol <= 0 || node.closed) { 
-                        continue;
-                    }
-
-                    if (!node.dest) {
-                        //if (print) { Debug.Log("lil more"); }
-                        node.strength = vol;
-                        queue.Enqueue(node);
-                    }   
-                    else {
-                        //Debug.Log("Adding to result"); 
-                        result[index++] = curr.location;
-                        stop = true;
-                    }
-                }
-            }
-            else{
-               // Debug.Log("Agent out of range...");
-            }
-        }
-
-        queue.Clear();
-        clearNodes(toClear);
-        return result;
-    }*/
 
 
     private AudioNode position(Vector3 pos){
