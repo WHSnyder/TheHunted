@@ -45,8 +45,7 @@ public class Flasher : MonoBehaviour{
 
         objectiveText.text = "Find the key";
 
-        door = GameObject.Find("Door");
-        key = GameObject.Find("key");
+        door = GameObject.Find("Door"); key = GameObject.Find("key");
         keyLoc = key.transform.position; 
 
         var copyCol = img.color;
@@ -81,6 +80,8 @@ public class Flasher : MonoBehaviour{
         */
     }
 
+
+
     // Update is called once per frame
     void Update(){
     
@@ -107,23 +108,6 @@ public class Flasher : MonoBehaviour{
             transform.position = GameObject.Find("Door").transform.position + 2 * GameObject.Find("Door").transform.up;
         }
 
-        /*GameObject [] batteryList  = GameObject.FindGameObjectsWithTag("Battery");
-        teleporters = GameObject.FindGameObjectsWithTag("Teleporter");
-
-        for (int a = 0; a < batteryList.Length; a++) { 
-            if (Vector3.Magnitude(transform.position - batteryList[a].transform.position) < 1) {
-                Destroy(batteryList[a]);
-                //power += 25.0f;
-            }
-        } 
-
-        for (int b = 0; b < teleporters.Length; b++) { 
-            if (Vector3.Magnitude(transform.position - teleporters[b].transform.position) < 2){
-                Destroy(teleporters[b]);
-                canTeleport = true;
-                setInfoText();
-            }
-        } */
 
         if (GameObject.FindGameObjectsWithTag("Key").Length != 0) {
             if (Vector3.Magnitude(transform.position - key.transform.position) < 1.5){
@@ -135,6 +119,7 @@ public class Flasher : MonoBehaviour{
                 Destroy(key);
             }
         }
+
 
         if (GameObject.FindGameObjectsWithTag("Lock").Length == 0) { 
             if (Vector3.Magnitude(transform.position - door.transform.position) < 2) { 
@@ -183,10 +168,6 @@ public class Flasher : MonoBehaviour{
     }
 
 
-
-
-
-
     private bool EnemyStun() {
 
         if (!lit.source.enabled) {
@@ -214,15 +195,10 @@ public class Flasher : MonoBehaviour{
         mDir += mc;
 
         // Rotate head up or down.
-        // This rotates the camera on X-axis.
-        GameObject.Find("Main Camera").gameObject.transform.localRotation =
-            Quaternion.AngleAxis(-mDir.y, Vector3.right);
+        cam.transform.localRotation = Quaternion.AngleAxis(-mDir.y, Vector3.right);
 
         // Rotate body left or right.
-        // This rotates the parent body (a capsule), not the camera,
-        // on the Y-axis.
-        gameObject.transform.localRotation =
-            Quaternion.AngleAxis(mDir.x*2, Vector3.up);
+        gameObject.transform.localRotation = Quaternion.AngleAxis(mDir.x*2, Vector3.up);
 
         mousePos = Input.mousePosition;
     }
@@ -230,17 +206,11 @@ public class Flasher : MonoBehaviour{
 
     private void setMovementParams(){
 
-        if (Input.GetKeyDown("b")) {
-            dropBread();
-        }
-
         if (Input.GetKeyDown("w") || (Input.GetKeyDown("s"))) speed = move();
 
         //jump if grounded
-        if (Input.GetKeyDown("space") && (control.isGrounded)){
-
-            moveDirectionUp.y = jump;
-        }
+        if (Input.GetKeyDown("space") && (control.isGrounded)) moveDirectionUp.y = jump;
+        
 
         if (ButtonCooler > 0.0f) ButtonCooler -= 1.0f * Time.deltaTime;
         else ButtonCount = 0;
@@ -276,12 +246,6 @@ public class Flasher : MonoBehaviour{
         }
     }
 
-
-    public void dropBread(){
-        Vector3 v = new Vector3(transform.position.x, transform.position.y - .3f,
-                                                            transform.position.z);
-        //Instantiate(crumb, v, transform.rotation);
-    } 
 
     public void setInfoText() { 
 
