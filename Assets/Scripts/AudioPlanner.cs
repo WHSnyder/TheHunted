@@ -385,7 +385,7 @@ public class AudioPlanner : MonoBehaviour {
 
     ArrayList constants = new ArrayList();
 
-    LLQueue<AudioNode> requests;
+    LLQueue<AudioData> requests;
 
     GameObject brain,player;
 
@@ -398,10 +398,9 @@ public class AudioPlanner : MonoBehaviour {
 
         //Obselete soon
         brain = GameObject.Find("AIBrain");
-
         player = GameObject.Find("Player");
 
-        requests = new LLQueue<AudioNode>();
+        requests = new LLQueue<AudioData>();
 
         //StartCoroutine("ExecuteAudio");
     }
@@ -414,7 +413,8 @@ public class AudioPlanner : MonoBehaviour {
     
     IEnumerator ExecuteAudio(){
 
-        LLNode<AudioNode> curr;
+        LLNode<AudioData> curr;
+        AudioNode source, dest;
 
         while (true){
 
@@ -422,7 +422,12 @@ public class AudioPlanner : MonoBehaviour {
 
             if (curr != null){
 
-                
+                source = position(curr.node.source.transform.position);
+                dest = position(player.transform.position);
+
+                float dist;
+
+                Vector3 adj_loc = audio_astar(source, dest, out dist);
             }
             
             yield return null;
@@ -624,7 +629,7 @@ public class AudioPlanner : MonoBehaviour {
 
 
     public void requestSearch(AudioData req){
-        requests.insert(req,requests.counter++);
+        requests.enqueue(req,requests.counter++);
     }
 
 

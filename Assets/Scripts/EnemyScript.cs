@@ -65,6 +65,7 @@ public class EnemyScript : MonoBehaviour{
     //basic dummy state
     public EvilState currState = EvilState.Init;
 
+
     //this var represents a command the slist has yet to process, they can 
     //be sent from the player (when stunning) or from the brain..
     private Command queuedCommand = null;
@@ -81,6 +82,7 @@ public class EnemyScript : MonoBehaviour{
     private AudioPlanner planner;
     private GameObject sourceOne, sourceTwo;
     public AudioClip crank;
+
 
     private AudioSource one, two;
     private int freq = 0;
@@ -124,7 +126,7 @@ public class EnemyScript : MonoBehaviour{
         one = sourceOne.GetComponent<AudioSource>();
         two = sourceTwo.GetComponent<AudioSource>();
 
-        planner = GameObject.Find("Main Camera").GetComponent<AudioPlanner>();
+        planner = GameObject.Find("AudioPlanner").GetComponent<AudioPlanner>();
 
         stunTimer = stunTime;
         lookTimer = lookTime;
@@ -149,9 +151,10 @@ public class EnemyScript : MonoBehaviour{
 
 
     //Test method...
-    IEnumerator crankSound(){
+    IEnumerator crankSound() {
 
-        while (true){
+        while (true) {
+
             //float vol = 1 - Vector3.Magnitude(transform.position - player.transform.position) / maxDistAudio;
             one.PlayOneShot(crank, .5f);
             //two.PlayOneShot(crank, vol);
@@ -159,7 +162,6 @@ public class EnemyScript : MonoBehaviour{
             yield return new WaitForSeconds(7.0f);
         }
     }
-
 
 
     public void Update() {
@@ -551,7 +553,6 @@ public class EnemyScript : MonoBehaviour{
             bone.position = (Vector3)points[i];
 
 
-
             if (bone.gameObject.name.Contains("nkle")){
                 boneFwd = bone.up;
             }
@@ -563,10 +564,7 @@ public class EnemyScript : MonoBehaviour{
                 boneFwd = bone.forward;
             }
 
-
-
             crossProd = Vector3.Cross((Vector3)angles[i], boneFwd);
-
             boneAngle = Vector3.SignedAngle(boneFwd, (Vector3)angles[i], crossProd);
 
             if (bone.gameObject.name.Contains("iddle")){
@@ -624,7 +622,7 @@ public class EnemyScript : MonoBehaviour{
     }
 
 
-    //step (this works)
+    //step 
     public void Step(){
         //float vol = 1 - Vector3.Magnitude(transform.position - player.transform.position) / maxDistAudio;
         //one.PlayOneShot(stepSound, vol);
