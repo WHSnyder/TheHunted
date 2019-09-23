@@ -28,7 +28,7 @@ public class LLNode<T> {
 public class LLQueue<T> {
 
     public LLNode<T> head;
-    public int counter = 0;
+    public int counter;
 
     public LLQueue(ref LLNode<T> start){
         head = start;
@@ -48,7 +48,6 @@ public class LLQueue<T> {
         LLNode<T> curr = head, new_node = new LLNode<T>(ref nodein, dist);
 
         if (head == null){
-            Debug.Log("added as head node");
             head = new_node;
             return;
         }
@@ -74,15 +73,11 @@ public class LLQueue<T> {
 
 
     public LLNode<T> dequeue(){
-        Debug.Log("deqing...");
+
         LLNode<T> ret = head;
 
         if (head != null){
             head = head.next;
-        }
-
-        if (ret != null){
-            Debug.Log("Deqed a non null...");
         }
         return ret;
     }
@@ -262,7 +257,10 @@ public class AudioNode {
         else return null;
 
         for (int i = 0; i < num; i++){
-            result.Add(pos[i]);
+
+            if (pos[i] != Vector3.zero){
+                result.Add(pos[i]);
+            }
         }
 
         return result;
@@ -405,7 +403,7 @@ public class AudioPlanner : MonoBehaviour {
 
         requests = new LLQueue<AudioRequest>();
 
-        //StartCoroutine("ExecuteAudio");
+        StartCoroutine("ExecuteAudio");
     }
 
 
@@ -430,12 +428,19 @@ public class AudioPlanner : MonoBehaviour {
                 source = position(curr.node.location);
                 dest = position(player.transform.position);
 
+                if (source != null && dest != null){
+                    Debug.Log("Source is " + source.type.ToString());
+                }
+
                 Vector3 adj_loc = audio_astar(source, dest, out float dist);
+
+                Debug.Log("Search terminated");
 
                 curr.node.distance = dist;
                 curr.node.done = true;
                 curr.node.endspot = adj_loc;
             }
+            
             yield return null;
         }
     }
@@ -491,11 +496,12 @@ public class AudioPlanner : MonoBehaviour {
     public Vector3 audio_astar(AudioNode source, AudioNode dest, out float dist){
 
         LLQueue<AudioNode> q = new LLQueue<AudioNode>();
+        LLNode<AudioNode> nextnode;
 
         AudioNode next, curr = source, node;
 
         float gscore, d, temp_gscore, neighbor_gscore;
-        int id, neigh_id;
+        int id, neigh_id, count=0;
 
         bool[] flags = new bool[AudioNode.counter];
         float[] gscores = new float[AudioNode.counter];
@@ -505,6 +511,7 @@ public class AudioPlanner : MonoBehaviour {
         for (int i = 0; i < AudioNode.counter; i++){
             gscores[i] = 100000000000.0f;
         }
+        gscores[curr.id] = 0.0f;
 
 
         while (curr != null){
@@ -514,10 +521,19 @@ public class AudioPlanner : MonoBehaviour {
 
             for (int i = 0; i < curr.neighbors.Count; i++){
 
-                node = (AudioNode) curr.neighbors[i]; 
+                node = (AudioNode) curr.neighbors[i];
+
+                if (node == null){
+                    //Debug.Log("first is null....");
+                    continue;
+                }
+                else{
+                    //Debug.Log("on a non null...");
+                }
+
                 neigh_id = node.id;
 
-                if (!flags[neigh_id]) { continue; }
+                //if (!flags[neigh_id]) { continue; }
 
                 d = Vector3.Magnitude(curr.location - node.location);
 
@@ -535,7 +551,16 @@ public class AudioPlanner : MonoBehaviour {
                 }
             }
 
-            next = q.dequeue().node;
+            Debug.Log("On iter " + count++);
+
+            nextnode = q.dequeue();
+            if (nextnode == null) {
+                Debug.Log("nothing enqueued..");
+                dist = -1;
+                return Vector3.zero;
+            }
+
+            next = nextnode.node;
 
             if (next == dest){
                 dist = gscores[id];
@@ -555,7 +580,7 @@ public class AudioPlanner : MonoBehaviour {
         if (Physics.Raycast(pos, Vector3.down, out hit, 10000, layerMask)){
             return (hashMap[hit.collider.transform.position]);
         }
-        else return null;
+        return null;
     }
 
 

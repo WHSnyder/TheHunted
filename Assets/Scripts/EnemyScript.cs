@@ -166,7 +166,7 @@ public class EnemyScript : MonoBehaviour{
             }
             Debug.Log(this.name + ": Search done, distance " + req.distance);
             if (req.distance > 0){
-                float vol = 1 - req.distance / maxDistAudio;
+                float vol = Mathf.Clamp(1.0f - req.distance/maxDistAudio, 0.0f, 1.0f);
                 sourceOne.transform.position = req.endspot;
                 one.PlayOneShot(crank, vol);
             }

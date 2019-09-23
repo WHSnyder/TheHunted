@@ -1894,7 +1894,7 @@ PrefabInstance:
     - target: {fileID: 1741514272132150388, guid: fdec4413793ff4d14931f39e8a012b31,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1741514272131917844, guid: fdec4413793ff4d14931f39e8a012b31,
         type: 3}
@@ -3896,7 +3896,7 @@ PrefabInstance:
     - target: {fileID: 1741514272132150388, guid: fdec4413793ff4d14931f39e8a012b31,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1741514272131917844, guid: fdec4413793ff4d14931f39e8a012b31,
         type: 3}
@@ -5894,6 +5894,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Slist
+      objectReference: {fileID: 0}
+    - target: {fileID: 1741514272132150388, guid: fdec4413793ff4d14931f39e8a012b31,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1741514272131917844, guid: fdec4413793ff4d14931f39e8a012b31,
         type: 3}
@@ -7898,6 +7903,11 @@ PrefabInstance:
       propertyPath: crank
       value: 
       objectReference: {fileID: 8300000, guid: a9c0318c75ebd4e7da5db94d07d00a5a, type: 3}
+    - target: {fileID: 6935851545378143430, guid: fdec4413793ff4d14931f39e8a012b31,
+        type: 3}
+      propertyPath: maxDistAudio
+      value: 200
+      objectReference: {fileID: 0}
     - target: {fileID: 1741514272131917864, guid: fdec4413793ff4d14931f39e8a012b31,
         type: 3}
       propertyPath: m_LocalPosition.y
