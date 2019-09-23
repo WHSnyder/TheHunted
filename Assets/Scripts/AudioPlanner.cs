@@ -423,18 +423,14 @@ public class AudioPlanner : MonoBehaviour {
 
             if (curr != null){
 
-                Debug.Log("Planner starting search");
+                //Debug.Log("Planner starting search");
 
                 source = position(curr.node.location);
                 dest = position(player.transform.position);
 
-                if (source != null && dest != null){
-                    Debug.Log("Source is " + source.type.ToString());
-                }
-
                 Vector3 adj_loc = audio_astar(source, dest, out float dist);
 
-                Debug.Log("Search terminated");
+                //Debug.Log("Search terminated");
 
                 curr.node.distance = dist;
                 curr.node.done = true;
@@ -551,11 +547,11 @@ public class AudioPlanner : MonoBehaviour {
                 }
             }
 
-            Debug.Log("On iter " + count++);
+            //Debug.Log("On iter " + count++);
 
             nextnode = q.dequeue();
             if (nextnode == null) {
-                Debug.Log("nothing enqueued..");
+                //Debug.Log("nothing enqueued..");
                 dist = -1;
                 return Vector3.zero;
             }

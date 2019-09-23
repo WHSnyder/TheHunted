@@ -87,7 +87,7 @@ public class Flasher : MonoBehaviour{
         setMouseParams();
         setMovementParams();
         //Debug.DrawRay(flashlight.transform.position, flashlight.transform.forward * 20, Color.red);
-        EnemyStun();
+        //EnemyStun();
         
         if (win) {
             countdown();
@@ -107,7 +107,7 @@ public class Flasher : MonoBehaviour{
             transform.position = GameObject.Find("Door").transform.position + 2 * GameObject.Find("Door").transform.up;
         }
 
-        GameObject [] batteryList  = GameObject.FindGameObjectsWithTag("Battery");
+        /*GameObject [] batteryList  = GameObject.FindGameObjectsWithTag("Battery");
         teleporters = GameObject.FindGameObjectsWithTag("Teleporter");
 
         for (int a = 0; a < batteryList.Length; a++) { 
@@ -123,7 +123,7 @@ public class Flasher : MonoBehaviour{
                 canTeleport = true;
                 setInfoText();
             }
-        } 
+        } */
 
         if (GameObject.FindGameObjectsWithTag("Key").Length != 0) {
             if (Vector3.Magnitude(transform.position - key.transform.position) < 1.5){

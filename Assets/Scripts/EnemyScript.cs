@@ -158,13 +158,13 @@ public class EnemyScript : MonoBehaviour{
             req.location = transform.position;
 
             planner.requestSearch(ref req);
-            Debug.Log(this.name + ": Requested search");
+            //Debug.Log(this.name + ": Requested search");
 
             while (!req.done){
                 //Debug.Log("hi");
                 yield return null;
             }
-            Debug.Log(this.name + ": Search done, distance " + req.distance);
+            //Debug.Log(this.name + ": Search done, distance " + req.distance);
             if (req.distance > 0){
                 float vol = Mathf.Clamp(1.0f - req.distance/maxDistAudio, 0.0f, 1.0f);
                 sourceOne.transform.position = req.endspot;

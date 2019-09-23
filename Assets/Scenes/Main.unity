@@ -1894,7 +1894,7 @@ PrefabInstance:
     - target: {fileID: 1741514272132150388, guid: fdec4413793ff4d14931f39e8a012b31,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1741514272131917844, guid: fdec4413793ff4d14931f39e8a012b31,
         type: 3}
@@ -1981,6 +1981,11 @@ PrefabInstance:
       propertyPath: crank
       value: 
       objectReference: {fileID: 8300000, guid: a9c0318c75ebd4e7da5db94d07d00a5a, type: 3}
+    - target: {fileID: 6935851545378143430, guid: fdec4413793ff4d14931f39e8a012b31,
+        type: 3}
+      propertyPath: maxDistAudio
+      value: 100
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fdec4413793ff4d14931f39e8a012b31, type: 3}
 --- !u!1001 &540235365
@@ -3896,7 +3901,7 @@ PrefabInstance:
     - target: {fileID: 1741514272132150388, guid: fdec4413793ff4d14931f39e8a012b31,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1741514272131917844, guid: fdec4413793ff4d14931f39e8a012b31,
         type: 3}
@@ -3983,6 +3988,11 @@ PrefabInstance:
       propertyPath: crank
       value: 
       objectReference: {fileID: 8300000, guid: a9c0318c75ebd4e7da5db94d07d00a5a, type: 3}
+    - target: {fileID: 6935851545378143430, guid: fdec4413793ff4d14931f39e8a012b31,
+        type: 3}
+      propertyPath: maxDistAudio
+      value: 100
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fdec4413793ff4d14931f39e8a012b31, type: 3}
 --- !u!1001 &941802196
@@ -5898,7 +5908,7 @@ PrefabInstance:
     - target: {fileID: 1741514272132150388, guid: fdec4413793ff4d14931f39e8a012b31,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1741514272131917844, guid: fdec4413793ff4d14931f39e8a012b31,
         type: 3}
@@ -5995,6 +6005,11 @@ PrefabInstance:
       propertyPath: crank
       value: 
       objectReference: {fileID: 8300000, guid: a9c0318c75ebd4e7da5db94d07d00a5a, type: 3}
+    - target: {fileID: 6935851545378143430, guid: fdec4413793ff4d14931f39e8a012b31,
+        type: 3}
+      propertyPath: maxDistAudio
+      value: 100
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fdec4413793ff4d14931f39e8a012b31, type: 3}
 --- !u!4 &1411753322 stripped
@@ -7906,7 +7921,7 @@ PrefabInstance:
     - target: {fileID: 6935851545378143430, guid: fdec4413793ff4d14931f39e8a012b31,
         type: 3}
       propertyPath: maxDistAudio
-      value: 200
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1741514272131917864, guid: fdec4413793ff4d14931f39e8a012b31,
         type: 3}
