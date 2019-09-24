@@ -1,16 +1,13 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
 
 public class FLSource : MonoBehaviour{
 
     public Light source;
-    public GameObject beam;
-    public Text powerText;
+    public GameObject beam,bounce;
 
-    private bool on = false, hasPower = true;
+    private bool on;
     private float power = 200.0f;
-    private int batteryCount,tempCount;
 
     Vector3 shot, reflection;
     RaycastHit hit;
@@ -20,32 +17,21 @@ public class FLSource : MonoBehaviour{
     // Start is called before the first frame update
     void Start(){
 
-        batteryCount = GameObject.FindGameObjectsWithTag("Battery").Length;
         beam = GameObject.Find("light_cone");
+        bounce = GameObject.Find("light_cone_bounce");
 
         source = GameObject.Find("light").GetComponent<Light>(); 
-        //bounce = transform.GetChild(1).gameObject.GetComponent<Light>();
-        
-        //bounce.enabled = false;
         source.enabled = false;
         source.intensity = 0;
+
         beam.SetActive(false);
+        bounce.SetActive(false);
     }
 
 
 
     // Update is called once per frame
     void Update(){
-
-        //tempCount = GameObject.FindGameObjectsWithTag("Battery").Length;
-        tempCount = 10;
-        if (tempCount < batteryCount) {
-            power += 100; 
-        }
-        batteryCount = tempCount;
-
-        //change the text 
-        //setPowerText();
 
         if (Input.GetKeyDown(KeyCode.F)){
             source.enabled = !source.enabled;
@@ -65,7 +51,6 @@ public class FLSource : MonoBehaviour{
             //bounce.enabled = false;
             on = false;
         }
-
 
         if (on && (power > 0.0f)){
             power -= 0.05f;

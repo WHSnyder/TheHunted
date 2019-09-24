@@ -27,6 +27,7 @@ TagManager:
   - Battery
   - Head
   - Teleporter
+  - Mirror
   layers:
   - Default
   - TransparentFX

@@ -439,7 +439,6 @@ public class AudioPlanner : MonoBehaviour {
                 curr.visited = true;
 
                 foreach (AudioNode node in neighbors){
-
                     if (node != null && node.visited == false){
                         queue.Enqueue(node);
                     }
@@ -476,6 +475,12 @@ public class AudioPlanner : MonoBehaviour {
         for (int i = 0; i < AudioNode.counter; i++){
             gscores[i] = 100000000000.0f;
         }
+
+        if (curr == null){
+            dist = -1;
+            return Vector3.zero;
+        }
+
         gscores[curr.id] = 0.0f;
 
 

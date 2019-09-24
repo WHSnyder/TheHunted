@@ -10,9 +10,9 @@ public class Flasher : MonoBehaviour{
 
     private Vector3 keyLoc;
 
-    float ButtonCooler = 0.0f;
-    int ButtonCount = 0;
-    int speed = 0;
+    float ButtonCooler;
+    int ButtonCount;
+    int speed;
 
     private Vector3 moveDirectionUp = Vector3.zero;
 
@@ -29,10 +29,8 @@ public class Flasher : MonoBehaviour{
 
     private CharacterController control;
 
-    public Text victoryText, objectiveText, directionText;
     public GameObject crumb, key, cam, flashlight;
 
-    public Image img;
 
     Vector3 flBottom, flUR, flUL;
 
@@ -43,14 +41,8 @@ public class Flasher : MonoBehaviour{
     // Start is called before the first frame update
     void Start(){
 
-        objectiveText.text = "Find the key";
-
         door = GameObject.Find("Door"); key = GameObject.Find("key");
         keyLoc = key.transform.position; 
-
-        var copyCol = img.color;
-        copyCol.a = 0.0f;
-        img.color = copyCol; 
 
         control = GetComponent<CharacterController>();
 
@@ -65,13 +57,11 @@ public class Flasher : MonoBehaviour{
         flashlight = GameObject.Find("flashlight_withcone").gameObject;         flashlight.transform.SetPositionAndRotation(lightPos, Quaternion.Euler(0, 0, 0));         flashlight.transform.parent = GameObject.Find("Main Camera").gameObject.transform; 
         lit = flashlight.GetComponent<FLSource>();
 
-        //spotAngle = lit.source.spotAngle / 2; //flashlight.GetComponent<Light>().spotAngle/2;
-
         Vector3 help = Quaternion.Euler(new Vector3(60, 0, 0)) * flashlight.transform.forward;
 
-        flBottom = help;
+        //flBottom = help;
         flUL = Quaternion.Euler(0, 0, 60) * help;
-        flUR = Quaternion.Euler(0, 0, 60) * flUL;
+        //flUR = Quaternion.Euler(0, 0, 60) * flUL;
 
         /*
         Debug.DrawRay(flashlight.transform.position, 2 * flBottom, Color.yellow, 15);
@@ -90,75 +80,28 @@ public class Flasher : MonoBehaviour{
         //Debug.DrawRay(flashlight.transform.position, flashlight.transform.forward * 20, Color.red);
         //EnemyStun();
         
-        if (win) {
-            countdown();
-        } 
-
-        if (dead) {
-            countdown();
-        }
-
-
+        if (win) countdown();
+        if (dead) countdown();
+        
         if (Input.GetKeyDown("m")) {
             transform.position = GameObject.Find("key_room_locked").transform.position + .1f*Vector3.up;
-         
         }
 
         if (Input.GetKeyDown("l")){
             transform.position = GameObject.Find("Door").transform.position + 2 * GameObject.Find("Door").transform.up;
         }
 
-
-        if (GameObject.FindGameObjectsWithTag("Key").Length != 0) {
-            if (Vector3.Magnitude(transform.position - key.transform.position) < 1.5){
-                hasKey = true; 
-                objectiveText.text = "Get back to the start!";
-
-                GameObject.Find("AIBrain").GetComponent<AIBrain>().notifyFound(this.transform.position, 20);
-
-                Destroy(key);
-            }
-        }
-
-
-        if (GameObject.FindGameObjectsWithTag("Lock").Length == 0) { 
-            if (Vector3.Magnitude(transform.position - door.transform.position) < 2) { 
-                win = true;
-                setInfoText();
-                //countdown();
-            }
-        }  
-
-
         if (!win) {
             GameObject[] enemyList = GameObject.FindGameObjectsWithTag("Enemy");
             for (int z = 0; z < enemyList.Length; z++) { 
                 if ((Vector3.Magnitude(transform.position - enemyList[z].transform.position) < 2)
-                        || (transform.position.y < -10.0f)) { 
-                    if (enemyList[z].GetComponent<EnemyScript>().currState != EvilState.Stunned) {
+                        || (transform.position.y < -10.0f)) {
+                    if (enemyList[z].GetComponent<EnemyScript>().currState != EvilState.Stunned){
                         dead = true;
                         win = false;
-                        setInfoText();
+                        countdown();// setInfoText();
                     }
-
                 }
-            }
-        } 
-
-        if (canTeleport) { 
-            for (int d = 0; d < teleporters.Length; d++) {
-                Destroy(teleporters[d]);
-            }
-        }
-
-        if ((canTeleport) && (Input.GetKeyDown("z"))){
-
-            canTeleport = false;
-            if (hasKey){
-                transform.position = keyLoc;
-            }
-            else{
-                transform.position = Vector3.zero;
             }
         } 
 
@@ -170,10 +113,8 @@ public class Flasher : MonoBehaviour{
 
     private bool EnemyStun() {
 
-        if (!lit.source.enabled) {
-            return false;
-        }
-
+        if (!lit.source.enabled) return false;
+       
         if (Physics.Raycast(flashlight.transform.position, flashlight.transform.forward, out caster, 30)) { 
 
             if (caster.collider.gameObject.CompareTag("Enemy")){
@@ -247,32 +188,12 @@ public class Flasher : MonoBehaviour{
     }
 
 
-    public void setInfoText() { 
-
-        if (win) {
-            victoryText.color = Color.green;
-            victoryText.text = "You Escaped!";
-            countdown();
-        }
-
-        if (dead) {
-            victoryText.color = Color.red;
-            victoryText.text = "You're Dead";
-            countdown();
-        } 
-
-        if (canTeleport) {
-            directionText.text = directionText.text + "\n" + "-Press z to teleport";
-        }
-    } 
-
-
     void countdown() {
         if (time >= 0.0f) {
-            var copyCol2 = img.color;
-            transparency += .005f;
-            copyCol2.a = transparency;
-            img.color = copyCol2;
+            //var copyCol2 = img.color;
+            //transparency += .005f;
+            //copyCol2.a = transparency;
+            //img.color = copyCol2;
             time -= Time.deltaTime; 
         } 
         else {

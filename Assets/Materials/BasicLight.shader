@@ -8,6 +8,7 @@ Shader "Custom/BasicLight" {
         _Intensity("Intensity", Range(0., 1.5)) = .2
         _Fade("Fade", Range(0., 10.)) = 1.
         _Wind("Wind", Range(0., 1.)) = .1
+        _Color("Color", Color) = (1.0,1.0,1.0,1.0)
     }
  
     SubShader {
@@ -44,6 +45,7 @@ Shader "Custom/BasicLight" {
             float _Intensity;
             float _Fade;
             float _Wind;
+            float4 _Color;
              
             f_data vert (v_data v){
                 
@@ -60,7 +62,7 @@ Shader "Custom/BasicLight" {
 
                 half3 viewDir = normalize(UnityWorldSpaceViewDir(i.worldPos));
 
-                float4 col = float4(1.0,1.0,1.0,1.0);
+                float4 col = float4(_Color);//for now
 
                 // get raycast between vertice's dir and normal
                 // discard vertices facing opposite way with view direction 
