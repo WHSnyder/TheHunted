@@ -171,7 +171,7 @@ public class EnemyScript : MonoBehaviour{
                 one.PlayOneShot(crank, vol);
             }
 
-            yield return new WaitForSeconds(7.0f);
+            yield return new WaitForSeconds(2.0f);
         }
     }
 

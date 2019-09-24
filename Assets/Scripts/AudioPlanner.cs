@@ -140,44 +140,28 @@ public class AudioNode {
         //Costs are hardcoded and will eventually be used in place of gscore calculation...
 
         switch (_type){
-
             case nodeType.OneSeg:
-
                 cost = 1;
                 break;
-
             case nodeType.TwoSeg:
-
                 cost = 2;
                 break;
-
             case nodeType.FourSeg:
-
                 cost = 4;
                 break;
-
             case nodeType.EightSeg:
-
                 cost = 8;
                 break;
-
             case nodeType.STurn:
-
                 cost = 4;
                 break;
-
             case nodeType.LTurn:
-
                 cost = 8;
                 break;
-
             case nodeType.Quad:
-
                 cost = 5;
                 break;
-
             case nodeType.Key:
-
                 cost = 1;
                 break;
         }
@@ -345,13 +329,11 @@ public class AudioNode {
             nodehit = AudioNodeFromObj(hit.collider.gameObject);
 
             if (!map.ContainsKey(hit.collider.gameObject.transform.position)){
-            
+
                 result = nodehit;
                 map.Add(hit.collider.gameObject.transform.position, nodehit);
             }
-            else{
-                result = map[nodehit.location];
-            }
+            else result = map[nodehit.location];
         }
         else result = null;
 
@@ -388,7 +370,7 @@ public class AudioPlanner : MonoBehaviour {
 
     LLQueue<AudioRequest> requests;
 
-    GameObject brain,player;
+    GameObject player;
 
 
 
@@ -396,13 +378,8 @@ public class AudioPlanner : MonoBehaviour {
 
         //Init audio graph from random node.
         initAudioGraph(AudioNode.AudioNodeFromObj(GameObject.Find("seg_four").transform.GetChild(1).gameObject));
-
-        //Obselete soon
-        brain = GameObject.Find("AIBrain");
         player = GameObject.Find("Player");
-
         requests = new LLQueue<AudioRequest>();
-
         StartCoroutine("ExecuteAudio");
     }
 
@@ -423,20 +400,15 @@ public class AudioPlanner : MonoBehaviour {
 
             if (curr != null){
 
-                //Debug.Log("Planner starting search");
-
                 source = position(curr.node.location);
                 dest = position(player.transform.position);
 
                 Vector3 adj_loc = audio_astar(source, dest, out float dist);
 
-                //Debug.Log("Search terminated");
-
                 curr.node.distance = dist;
                 curr.node.done = true;
                 curr.node.endspot = adj_loc;
             }
-            
             yield return null;
         }
     }
@@ -444,23 +416,21 @@ public class AudioPlanner : MonoBehaviour {
 
     /*
      * Build the graph by populating each node's neighbors array with nearby
-     * tunneling.  Done by ray casting method initially chosen when level
-     * was to have multiple floors. Uses obselete dijsktra...
+     * tunneling via basic bfs search.  Uses a generic queue class instead of the
+     * custom linked-list based priority queue used in the a* search.
      */
 
     private void initAudioGraph(AudioNode first) {
 
         AudioNode curr;
         hashMap.Add(first.location, first);
-        ArrayList neighbors, _toClear = new ArrayList();
+        ArrayList neighbors;
 
         queue.Enqueue(first);
 
         while (queue.Count > 0){
 
             curr = queue.Dequeue();
-
-            _toClear.Add(curr);
 
             if (curr.visited == false){
 
@@ -477,7 +447,6 @@ public class AudioPlanner : MonoBehaviour {
             }
         }
         queue.Clear();
-        clearNodes(_toClear);
     }
 
 
@@ -497,7 +466,7 @@ public class AudioPlanner : MonoBehaviour {
         AudioNode next, curr = source, node;
 
         float gscore, d, temp_gscore, neighbor_gscore;
-        int id, neigh_id, count=0;
+        int id, neigh_id;
 
         bool[] flags = new bool[AudioNode.counter + 1];
         float[] gscores = new float[AudioNode.counter + 1];
@@ -519,17 +488,9 @@ public class AudioPlanner : MonoBehaviour {
 
                 node = (AudioNode) curr.neighbors[i];
 
-                if (node == null){
-                    //Debug.Log("first is null....");
-                    continue;
-                }
-                else{
-                    //Debug.Log("on a non null...");
-                }
+                if (node == null) continue;
 
                 neigh_id = node.id;
-
-                //if (!flags[neigh_id]) { continue; }
 
                 d = Vector3.Magnitude(curr.location - node.location);
 
@@ -547,11 +508,8 @@ public class AudioPlanner : MonoBehaviour {
                 }
             }
 
-            //Debug.Log("On iter " + count++);
-
             nextnode = q.dequeue();
             if (nextnode == null) {
-                //Debug.Log("nothing enqueued..");
                 dist = -1;
                 return Vector3.zero;
             }
@@ -585,15 +543,9 @@ public class AudioPlanner : MonoBehaviour {
     }
 
 
-    public void Ray(Vector3 pos, Color color){
-        Debug.DrawRay(pos + Vector3.up * 10, 1000 * Vector3.down, color, 3);
-    }
-
     //No longer used...
     public void clearNodes(ArrayList nodes) { 
-
         foreach (AudioNode node in nodes){
-
             node.dest = false;
             node.source = false;
             node.strength = 0;
