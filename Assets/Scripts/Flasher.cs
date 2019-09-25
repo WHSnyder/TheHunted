@@ -91,7 +91,7 @@ public class Flasher : MonoBehaviour{
             transform.position = GameObject.Find("Door").transform.position + 2 * GameObject.Find("Door").transform.up;
         }
 
-        if (!win) {
+        /*if (!win) {
             GameObject[] enemyList = GameObject.FindGameObjectsWithTag("Enemy");
             for (int z = 0; z < enemyList.Length; z++) { 
                 if ((Vector3.Magnitude(transform.position - enemyList[z].transform.position) < 2)
@@ -103,7 +103,7 @@ public class Flasher : MonoBehaviour{
                     }
                 }
             }
-        } 
+        }*/ 
 
         if (Input.GetKeyDown("q")) {
             SceneManager.LoadScene("MainMenu");
