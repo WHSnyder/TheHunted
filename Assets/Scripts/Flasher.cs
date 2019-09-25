@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement; 
-using UnityEngine.UI;
+
 
 public class Flasher : MonoBehaviour{
 
@@ -19,12 +17,9 @@ public class Flasher : MonoBehaviour{
     private float jump = 5.0f, gravity = 9.8f;
 
     //Dan adds 5/12
-    private GameObject door;
-    private GameObject[] teleporters;
-
     private bool win, dead, canTeleport, hasKey;
 
-    private FLSource lit;
+    private FLSource flashlight;
     private float lightDist, lightAngle, spotAngle, time = 5.0f, transparency;
 
     private CharacterController control;
@@ -41,7 +36,7 @@ public class Flasher : MonoBehaviour{
     // Start is called before the first frame update
     void Start(){
 
-        door = GameObject.Find("Door"); key = GameObject.Find("key");
+        key = GameObject.Find("key");
         keyLoc = key.transform.position; 
 
         control = GetComponent<CharacterController>();
@@ -62,12 +57,6 @@ public class Flasher : MonoBehaviour{
         //flBottom = help;
         flUL = Quaternion.Euler(0, 0, 60) * help;
         //flUR = Quaternion.Euler(0, 0, 60) * flUL;
-
-        /*
-        Debug.DrawRay(flashlight.transform.position, 2 * flBottom, Color.yellow, 15);
-        Debug.DrawRay(flashlight.transform.position, 2 * flUR, Color.green, 15);
-        Debug.DrawRay(flashlight.transform.position, 2 * flUL, Color.blue, 15);
-        */
     }
 
 
@@ -77,7 +66,6 @@ public class Flasher : MonoBehaviour{
     
         setMouseParams();
         setMovementParams();
-        //Debug.DrawRay(flashlight.transform.position, flashlight.transform.forward * 20, Color.red);
         //EnemyStun();
         
         if (win) countdown();

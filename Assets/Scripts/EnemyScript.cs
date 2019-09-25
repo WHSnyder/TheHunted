@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-
 /*
  * looking is when the slist ARRIVES at a PATROL POINT and looks around
  * searching is when the PLAYERS LOCATION is KNOWN
@@ -11,19 +10,16 @@ using UnityEngine.AI;
  * will add ambush if have time...
  */
 
-public enum EvilState
-{
+public enum EvilState{
     Patrolling, Looking, Attacking, Seeking, Ambush, Stunned, Init 
 };
-
 
 /*
  * commands can be sent from brain (to search), from the player (to stun),
  * or from the slist itself (to queue an obvious state transition)
  */
 
-public class Command
-{
+public class Command{
     public Vector3 loc;
     public EvilState action;
 
@@ -34,26 +30,21 @@ public class Command
 }
 
 
-
-
 public class EnemyScript : MonoBehaviour{
 
     //AI stuff
     private AIBrain brain; 
     private NavMeshAgent agent;
-    public int id = 0;
-    public static int idCounter = 0;
-
+    public int id;
+    public static int idCounter;
 
     //for random patrol initialization...
-    int index = 0;
-
+    int index;
 
     //data necessary for movement, sight, distance calculations...
     Vector3 toPlayer, navDest, toNavDest;
     private float angleToPlayer, magToPlayer;
     RaycastHit caster;
-
 
     //variables referring to other relevant objects and the player
     GameObject player;
@@ -61,15 +52,12 @@ public class EnemyScript : MonoBehaviour{
     GameObject[] patrolPoints;
     Vector3 patrolPt;
 
-
     //basic dummy state
     public EvilState currState = EvilState.Init;
-
 
     //this var represents a command the slist has yet to process, they can 
     //be sent from the player (when stunning) or from the brain..
     private Command queuedCommand = null;
-
 
     //animator params
     Animator animator;
@@ -77,39 +65,26 @@ public class EnemyScript : MonoBehaviour{
     int lookHash = Animator.StringToHash("Base Layer.Looking");
     int stunHash = Animator.StringToHash("Base Layer.Stun");
 
-
     //audio params
     private AudioPlanner planner;
-    private GameObject sourceOne, sourceTwo;
+    private GameObject sourceOne;
     public AudioClip crank;
+    private AudioSource one;
 
-
-    private AudioSource one, two;
-    private int freq = 0;
-    public int maxDistAudio = 30;
-
+    private int freq;
+    public int maxDistAudio = 60;
 
     //Public vars to be set in editor for tweaking behavior (myhead is head collider, prolly fine as is)
     public GameObject myHead;
     public static int sightRange = 15; 
 
-
     //Timers for each state, can be set in editor for performance tweaks
     //the time far stays as is, the timer vars change...
-    public static float stunTime = 10;
-    private float stunTimer = stunTime;
-
-    public static float lookTime = 4;
-    private float lookTimer = lookTime;
-
-    public static float trackingTime = 10;
-    private float trackingTimer = trackingTime;
-
-    public static float ambushTime = 15;
-    private float ambushTimer = ambushTime;
+    public static float stunTime = 10, lookTime = 4, trackingTime = 10, ambushTime = 15;
+    private float stunTimer = stunTime, lookTimer = lookTime, trackingTimer = trackingTime, ambushTimer = ambushTime;
 
     private int ambushOrPatrol;
-    private bool ambshing = false;
+    private bool ambshing;
 
     AudioRequest req;
 
@@ -122,10 +97,7 @@ public class EnemyScript : MonoBehaviour{
         id = idCounter++;
         
         sourceOne = Instantiate(Resources.Load<GameObject>("AudioEmitter")) as GameObject;
-        sourceTwo = Instantiate(Resources.Load<GameObject>("AudioEmitter")) as GameObject;
-
         one = sourceOne.GetComponent<AudioSource>();
-        two = sourceTwo.GetComponent<AudioSource>();
 
         planner = GameObject.Find("AudioPlanner").GetComponent<AudioPlanner>();
 
@@ -186,19 +158,16 @@ public class EnemyScript : MonoBehaviour{
 
         // if in 20 to 25 distance randomly go into ambush or keep patrolling
         if ((magToPlayer >20) && (magToPlayer < 25) && (currState == EvilState.Patrolling) && (id % 2 == 0)) {
-            if (ambushOrPatrol == 1) {
+            if (ambushOrPatrol == 1){
                 //transitionToAmbush();
-            } 
+            }
         }
 
         if (Input.GetKeyDown("t")){
 
-            if (ambshing){
-                transitionToPatrolling();
-            }
-            else {
-                transitionToAmbush();
-            }
+            if (ambshing) transitionToPatrolling();
+            else transitionToAmbush();
+            
             ambshing = !ambshing;
         }
 
@@ -234,9 +203,7 @@ public class EnemyScript : MonoBehaviour{
                     }
                 }
 
-                if (Vector3.Magnitude(toNavDest) < 1){
-                    transitionToLooking();
-                }
+                if (Vector3.Magnitude(toNavDest) < 1) transitionToLooking();
                 
                 break;
 
@@ -270,10 +237,8 @@ public class EnemyScript : MonoBehaviour{
                         return;
                     }
                 }
-                if (Vector3.Magnitude(toNavDest) < 1) {
-                    transitionToLooking();
-                }
-
+                if (Vector3.Magnitude(toNavDest) < 1) transitionToLooking();
+               
                 break;
 
 
@@ -288,9 +253,7 @@ public class EnemyScript : MonoBehaviour{
 
                     stunTimer = stunTime;//reset timer
 
-                    if (queuedCommand != null){
-                        transitionFromCommand(queuedCommand);
-                    }
+                    if (queuedCommand != null) transitionFromCommand(queuedCommand);
                     else transitionToLooking();
                 }
                 else stunTimer -= Time.deltaTime;
@@ -387,9 +350,11 @@ public class EnemyScript : MonoBehaviour{
     private void transitionToSeeking(Vector3 loc) {
 
         if (currState == EvilState.Stunned){
+
             queuedCommand = new Command(loc, EvilState.Seeking);
         }
-        else{
+        else
+        {
             currState = EvilState.Seeking;
             navDest = loc;
             agent.enabled = true;
@@ -455,6 +420,7 @@ public class EnemyScript : MonoBehaviour{
 
     //slist sticks to the ceiling by disabling navmesh and moving 
     //important bones in line with the angle of the face directly above...
+
     /*private void transitionToAmbush(){
 
         //animator.WriteDefaultValues();
@@ -561,17 +527,14 @@ public class EnemyScript : MonoBehaviour{
 
             bone.position = (Vector3)points[i];
 
-
-            if (bone.gameObject.name.Contains("nkle")){
-                boneFwd = bone.up;
-            }
+            if (bone.gameObject.name.Contains("nkle")) boneFwd = bone.up;
+            
             else if (bone.gameObject.name.Contains("iddle") ||
                      bone.gameObject.name.Contains("hin")){
                 boneFwd = bone.right;
             }
-            else {
-                boneFwd = bone.forward;
-            }
+            else boneFwd = bone.forward;
+            
 
             crossProd = Vector3.Cross((Vector3)angles[i], boneFwd);
             boneAngle = Vector3.SignedAngle(boneFwd, (Vector3)angles[i], crossProd);
@@ -606,15 +569,11 @@ public class EnemyScript : MonoBehaviour{
     //if not, raycast to see if theyre in sight...
     private bool checkForPlayer() {
         if (Physics.Raycast(myHead.transform.position, toPlayer, out caster, sightRange) && (angleToPlayer < 30)){
-            if (caster.collider.CompareTag("Player")){
-                return true;
-            }
-            else return false;
+            if (caster.collider.CompareTag("Player")) return true;
+            return false;
         }
-        else if (magToPlayer < 5 && angleToPlayer > 90){
-            return true;
-        }
-        else return false;
+        if (magToPlayer < 5 && angleToPlayer > 90) return true;
+        return false;
     }
 
 
@@ -627,16 +586,12 @@ public class EnemyScript : MonoBehaviour{
 
             return;
         }
-        else queuedCommand = new Command(loc, order);
+        queuedCommand = new Command(loc, order);
     }
 
 
     //step 
-    public void Step(){
-        //float vol = 1 - Vector3.Magnitude(transform.position - player.transform.position) / maxDistAudio;
-        //one.PlayOneShot(stepSound, vol);
-        //two.PlayOneShot(stepSound, vol);
-    }
+    public void Step(){}
 
 
     //for setting up the abmush pose
