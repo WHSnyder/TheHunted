@@ -112,17 +112,10 @@ public class Flasher : MonoBehaviour{
 
 
     private bool EnemyStun() {
-
-        if (!lit.source.enabled) return false;
-       
-        if (Physics.Raycast(flashlight.transform.position, flashlight.transform.forward, out caster, 30)) { 
-
-            if (caster.collider.gameObject.CompareTag("Enemy")){
-                GameObject head = caster.collider.gameObject;
-                head.gameObject.GetComponent<EnemyScript>().processCommand(Vector3.zero, EvilState.Stunned);
-                return true;
-            }
-            return false;
+        if (Physics.Raycast(flashlight.transform.position, flashlight.transform.forward, out caster, 30, 1<<10)) { 
+            GameObject head = caster.collider.gameObject;
+            head.GetComponent<HeadRef>().slist.GetComponent<EnemyScript>().processCommand(Vector3.zero, EvilState.Stunned);
+            return true;
         }
         return false;
     }
