@@ -86,7 +86,7 @@ public class EnemyScript : MonoBehaviour{
     private int ambushOrPatrol;
     private bool ambshing;
 
-    AudioRequest req;
+    AudioRequest req = new AudioRequest(Vector3.zero);
 
 
     // Start is called before the first frame update
@@ -115,8 +115,6 @@ public class EnemyScript : MonoBehaviour{
 
         Random.InitState(System.DateTime.Now.Millisecond);
         ambushOrPatrol = Random.Range(1, 3);
-
-        req = new AudioRequest(Vector3.zero);
 
         StartCoroutine("crankSound");
     }
@@ -307,10 +305,8 @@ public class EnemyScript : MonoBehaviour{
                     transitionToPatrolling();
                     ambushTimer = ambushTime;
                 }
-                else{
-                    ambushTimer -= Time.deltaTime;
-                }
-
+                else ambushTimer -= Time.deltaTime;
+                
                 break;
         }
     }

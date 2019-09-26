@@ -362,7 +362,7 @@ public class AudioPlanner : MonoBehaviour {
 
     ArrayList constants = new ArrayList();
 
-    LLQueue<AudioRequest> requests;
+    LLQueue<AudioRequest> requests = new LLQueue<AudioRequest>();
 
     GameObject player;
 
@@ -373,7 +373,6 @@ public class AudioPlanner : MonoBehaviour {
         //Init audio graph from random node.
         initAudioGraph(AudioNode.AudioNodeFromObj(GameObject.Find("seg_four").transform.GetChild(1).gameObject));
         player = GameObject.Find("Player");
-        requests = new LLQueue<AudioRequest>();
         StartCoroutine("ExecuteAudio");
     }
 
