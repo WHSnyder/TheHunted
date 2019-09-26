@@ -8,9 +8,8 @@ public class Flasher : MonoBehaviour{
 
     private Vector3 keyLoc;
 
-    float ButtonCooler;
-    int ButtonCount;
-    int speed;
+    float buttonCooler;
+    int buttonCount, speed;
 
     private Vector3 moveDirectionUp = Vector3.zero;
 
@@ -56,14 +55,6 @@ public class Flasher : MonoBehaviour{
         
         if (win || dead) countdown();
         
-        if (Input.GetKeyDown("m")) {
-            transform.position = GameObject.Find("key_room_locked").transform.position + .1f*Vector3.up;
-        }
-
-        if (Input.GetKeyDown("l")){
-            transform.position = GameObject.Find("Door").transform.position + 2 * GameObject.Find("Door").transform.up;
-        }
-
         /*if (!win) {
             GameObject[] enemyList = GameObject.FindGameObjectsWithTag("Enemy");
             for (int z = 0; z < enemyList.Length; z++) { 
@@ -94,10 +85,8 @@ public class Flasher : MonoBehaviour{
 
     private void setMouseParams(){
 
-        Vector2 mc = new Vector2(Input.GetAxisRaw("Mouse X"),Input.GetAxisRaw("Mouse Y"));
-
         // Add new movement to current mouse direction.
-        mDir += mc;
+        mDir += new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
 
         // Rotate head up or down.
         cam.transform.localRotation = Quaternion.AngleAxis(-mDir.y, Vector3.right);
@@ -114,14 +103,17 @@ public class Flasher : MonoBehaviour{
         //jump if grounded
         if (Input.GetKeyDown("space") && control.isGrounded) moveDirectionUp.y = jump;
         
-        if (ButtonCooler > 0.0f) ButtonCooler -= 1.0f * Time.deltaTime;
-        else ButtonCount = 0;
+        if (buttonCooler > 0.0f) buttonCooler -= 1.0f * Time.deltaTime;
+        else buttonCount = 0;
 
         float x = Input.GetAxis("Horizontal") * Time.deltaTime * 150.0f;
         float ver = Input.GetAxis("Vertical") * Time.deltaTime * speed;
 
         transform.Rotate(0, x, 0);
         control.Move(transform.forward * ver*2);
+
+        if (Input.GetKey("a")) control.Move(transform.right * Time.deltaTime * -2.0f);
+        if (Input.GetKey("d")) control.Move(transform.right * Time.deltaTime * 2.0f);
 
         //jumps
         moveDirectionUp.y -= gravity * Time.deltaTime;
@@ -132,13 +124,13 @@ public class Flasher : MonoBehaviour{
 
     private int move() {
 
-        if (ButtonCooler > 0.0f && ButtonCount == 1){
+        if (buttonCooler > 0.0f && buttonCount == 1){
             if (dead || win) return 0;
             return 3;
         }
         
-        ButtonCooler = 0.5f;
-        ButtonCount += 1;
+        buttonCooler = 0.5f;
+        buttonCount += 1;
 
         if (dead || win) return 0;
 
