@@ -20,11 +20,11 @@ RenderSettings:
   m_FogDensity: 0.2
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
+  m_AmbientSkyColor: {r: 0.26944643, g: 0.28969386, b: 0.3301887, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 0
+  m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.0536668, g: 0.054498024, b: 0.05660379, a: 1}
   m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: 0.5
@@ -51,7 +51,7 @@ LightmapSettings:
     m_IndirectOutputScale: 1
     m_AlbedoBoost: 1
     m_EnvironmentLightingMode: 0
-    m_EnableBakedLightmaps: 1
+    m_EnableBakedLightmaps: 0
     m_EnableRealtimeLightmaps: 0
   m_LightmapEditorSettings:
     serializedVersion: 12
@@ -6292,6 +6292,86 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Lightmapping
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6606562028554985792, guid: 293ca8d5290004e778079df3fe80592a,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967294
+      objectReference: {fileID: 0}
+    - target: {fileID: 6606562028556926848, guid: 293ca8d5290004e778079df3fe80592a,
+        type: 3}
+      propertyPath: m_ReceiveShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6606562028556926848, guid: 293ca8d5290004e778079df3fe80592a,
+        type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7343678388268779585, guid: 293ca8d5290004e778079df3fe80592a,
+        type: 3}
+      propertyPath: m_ReceiveShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4547965955064107927, guid: 293ca8d5290004e778079df3fe80592a,
+        type: 3}
+      propertyPath: m_Lightmapping
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4547965955064107927, guid: 293ca8d5290004e778079df3fe80592a,
+        type: 3}
+      propertyPath: m_RenderMode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4547965955064107927, guid: 293ca8d5290004e778079df3fe80592a,
+        type: 3}
+      propertyPath: m_Intensity
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 4547965955064107927, guid: 293ca8d5290004e778079df3fe80592a,
+        type: 3}
+      propertyPath: m_Range
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6263684775841183709, guid: 293ca8d5290004e778079df3fe80592a,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6263684775841183709, guid: 293ca8d5290004e778079df3fe80592a,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800813670941728141, guid: 293ca8d5290004e778079df3fe80592a,
+        type: 3}
+      propertyPath: m_RenderMode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800813670941728141, guid: 293ca8d5290004e778079df3fe80592a,
+        type: 3}
+      propertyPath: m_Intensity
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800813670941728141, guid: 293ca8d5290004e778079df3fe80592a,
+        type: 3}
+      propertyPath: m_Range
+      value: 5.192937
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800813670941728141, guid: 293ca8d5290004e778079df3fe80592a,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.23921566
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800813670941728141, guid: 293ca8d5290004e778079df3fe80592a,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.5522326
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800813670941728141, guid: 293ca8d5290004e778079df3fe80592a,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.9607843
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 293ca8d5290004e778079df3fe80592a, type: 3}

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 /*
  * Basic linked list node class containing an AudioNode and its fscore.
  */
@@ -76,9 +77,8 @@ public class LLQueue<T> {
 
         LLNode<T> ret = head;
 
-        if (head != null){
-            head = head.next;
-        }
+        if (head != null) head = head.next;
+        
         return ret;
     }
 }
@@ -241,10 +241,7 @@ public class AudioNode {
         else return null;
 
         for (int i = 0; i < num; i++){
-
-            if (pos[i] != Vector3.zero){
-                result.Add(pos[i]);
-            }
+            if (pos[i] != Vector3.zero) result.Add(pos[i]);
         }
 
         return result;
@@ -304,10 +301,7 @@ public class AudioNode {
 
         if (positions != null){
 
-            foreach (Vector3 pos in positions){
-
-                result.Add(castDetect(map, pos));
-            }
+            foreach (Vector3 pos in positions) result.Add(castDetect(map, pos));
         }
         else return null;
 
@@ -439,9 +433,7 @@ public class AudioPlanner : MonoBehaviour {
                 curr.visited = true;
 
                 foreach (AudioNode node in neighbors){
-                    if (node != null && node.visited == false){
-                        queue.Enqueue(node);
-                    }
+                    if (node != null && node.visited == false) queue.Enqueue(node);   
                 }
             }
         }
@@ -472,9 +464,8 @@ public class AudioPlanner : MonoBehaviour {
         int[] preds = new int[AudioNode.counter + 1];
 
 
-        for (int i = 0; i < AudioNode.counter; i++){
-            gscores[i] = 100000000000.0f;
-        }
+        for (int i = 0; i < AudioNode.counter; i++) gscores[i] = 100000000000.0f;
+        
 
         if (curr == null){
             dist = -1;

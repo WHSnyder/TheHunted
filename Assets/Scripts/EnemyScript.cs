@@ -132,10 +132,8 @@ public class EnemyScript : MonoBehaviour{
             planner.requestSearch(ref req);
             //Debug.Log(this.name + ": Requested search");
 
-            while (!req.done){
-                //Debug.Log("hi");
-                yield return null;
-            }
+            while (!req.done) yield return null;
+            
             //Debug.Log(this.name + ": Search done, distance " + req.distance);
             if (req.distance > 0){
                 float vol = Mathf.Clamp(1.0f - req.distance/maxDistAudio, 0.0f, 1.0f);

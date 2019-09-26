@@ -28,6 +28,7 @@ TagManager:
   - Head
   - Teleporter
   - Mirror
+  - lightcase
   layers:
   - Default
   - TransparentFX
