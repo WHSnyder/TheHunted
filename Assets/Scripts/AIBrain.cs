@@ -15,14 +15,9 @@ public class AIBrain : MonoBehaviour{
         }
     }
 
-
     public void notifyFound(Vector3 playerLoc,  int id){
-
         foreach (EnemyScript enemy in enemyList){
-
-            if (enemy.id != id){
-                enemy.processCommand(playerLoc, EvilState.Seeking);
-            }
+            if (enemy.id != id) enemy.processCommand(playerLoc, EvilState.Seeking);
         }
     }
 }

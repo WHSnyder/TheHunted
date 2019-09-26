@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class Flasher : MonoBehaviour{
 
-    Vector2 mDir,mousePos;
+    Vector2 mDir;
 
     private Vector3 keyLoc;
 
@@ -18,19 +18,13 @@ public class Flasher : MonoBehaviour{
 
     //Dan adds 5/12
     private bool win, dead, canTeleport, hasKey;
-
-    private FLSource flashlight;
     private float lightDist, lightAngle, spotAngle, time = 5.0f, transparency;
 
     private CharacterController control;
 
     public GameObject crumb, key, cam, flashlight;
 
-
-    Vector3 flBottom, flUR, flUL;
-
     private RaycastHit caster;
-    
 
 
     // Start is called before the first frame update
@@ -49,15 +43,7 @@ public class Flasher : MonoBehaviour{
 
         Vector3 lightPos = this.transform.position + .25f * Vector3.right + .65f * Vector3.forward + .15f*Vector3.down;
 
-        flashlight = GameObject.Find("flashlight_withcone").gameObject;         flashlight.transform.SetPositionAndRotation(lightPos, Quaternion.Euler(0, 0, 0));         flashlight.transform.parent = GameObject.Find("Main Camera").gameObject.transform; 
-        lit = flashlight.GetComponent<FLSource>();
-
-        Vector3 help = Quaternion.Euler(new Vector3(60, 0, 0)) * flashlight.transform.forward;
-
-        //flBottom = help;
-        flUL = Quaternion.Euler(0, 0, 60) * help;
-        //flUR = Quaternion.Euler(0, 0, 60) * flUL;
-    }
+        flashlight = GameObject.Find("flashlight_withcone").gameObject;         flashlight.transform.SetPositionAndRotation(lightPos, Quaternion.Euler(0, 0, 0));         flashlight.transform.parent = GameObject.Find("Main Camera").gameObject.transform;     }
 
 
 
@@ -68,8 +54,7 @@ public class Flasher : MonoBehaviour{
         setMovementParams();
         //EnemyStun();
         
-        if (win) countdown();
-        if (dead) countdown();
+        if (win || dead) countdown();
         
         if (Input.GetKeyDown("m")) {
             transform.position = GameObject.Find("key_room_locked").transform.position + .1f*Vector3.up;
@@ -93,9 +78,7 @@ public class Flasher : MonoBehaviour{
             }
         }*/ 
 
-        if (Input.GetKeyDown("q")) {
-            SceneManager.LoadScene("MainMenu");
-        }
+        if (Input.GetKeyDown("q")) SceneManager.LoadScene("MainMenu");
     }
 
 
@@ -121,19 +104,16 @@ public class Flasher : MonoBehaviour{
 
         // Rotate body left or right.
         gameObject.transform.localRotation = Quaternion.AngleAxis(mDir.x*2, Vector3.up);
-
-        mousePos = Input.mousePosition;
     }
 
 
     private void setMovementParams(){
 
-        if (Input.GetKeyDown("w") || (Input.GetKeyDown("s"))) speed = move();
+        if (Input.GetKeyDown("w") || Input.GetKeyDown("s")) speed = move();
 
         //jump if grounded
-        if (Input.GetKeyDown("space") && (control.isGrounded)) moveDirectionUp.y = jump;
+        if (Input.GetKeyDown("space") && control.isGrounded) moveDirectionUp.y = jump;
         
-
         if (ButtonCooler > 0.0f) ButtonCooler -= 1.0f * Time.deltaTime;
         else ButtonCount = 0;
 
@@ -153,19 +133,16 @@ public class Flasher : MonoBehaviour{
     private int move() {
 
         if (ButtonCooler > 0.0f && ButtonCount == 1){
-            if ((dead) || (win)) {
-                return 0;
-            }
+            if (dead || win) return 0;
             return 3;
         }
-        else {
-            ButtonCooler = 0.5f;
-            ButtonCount += 1; 
-            if ((dead) || (win)) {
-                return 0;
-            }
-            return 1;
-        }
+        
+        ButtonCooler = 0.5f;
+        ButtonCount += 1;
+
+        if (dead || win) return 0;
+
+        return 1;
     }
 
 
@@ -177,8 +154,6 @@ public class Flasher : MonoBehaviour{
             //img.color = copyCol2;
             time -= Time.deltaTime; 
         } 
-        else {
-            SceneManager.LoadScene("MainMenu");
-        }
+        else  SceneManager.LoadScene("MainMenu");
     }
 }
