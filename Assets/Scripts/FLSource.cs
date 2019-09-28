@@ -55,16 +55,12 @@ public class FLSource : MonoBehaviour{
 
                 objhit = hit.transform;
 
-                bounce.SetActive(true);
-                bounce.transform.position = hit.point;
-
                 refl_forward = Vector3.Reflect(transform.forward, hit.normal);
                 refl_up = Vector3.Reflect(transform.up, hit.normal);
 
+                bounce.SetActive(true);
+                bounce.transform.position = hit.point;
                 bounce.transform.forward = refl_forward;
-                bounce.transform.right = Vector3.Cross(refl_up, refl_forward);
-                bounce.transform.up = refl_up;
-
                 bounce_material.color = objhit.gameObject.GetComponent<Renderer>().material.color * beam_material.color;
             }
             else bounce.SetActive(false);
