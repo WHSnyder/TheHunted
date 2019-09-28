@@ -2,11 +2,9 @@
 using UnityEngine.SceneManagement; 
 
 
-public class Flasher : MonoBehaviour{
+public class Flasher : MonoBehaviour {
 
     Vector2 mDir;
-
-    private Vector3 keyLoc;
 
     float buttonCooler;
     int buttonCount, speed;
@@ -21,16 +19,13 @@ public class Flasher : MonoBehaviour{
 
     private CharacterController control;
 
-    public GameObject crumb, key, cam, flashlight;
+    public GameObject crumb, cam, flashlight;
 
     private RaycastHit caster;
 
 
     // Start is called before the first frame update
     void Start(){
-
-        key = GameObject.Find("key");
-        keyLoc = key.transform.position; 
 
         control = GetComponent<CharacterController>();
 

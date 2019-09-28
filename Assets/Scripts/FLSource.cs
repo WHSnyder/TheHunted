@@ -38,7 +38,7 @@ public class FLSource : MonoBehaviour{
     // Update is called once per frame
     void Update(){
 
-        if (Input.GetKeyDown(KeyCode.F)){
+        if (Input.GetMouseButtonDown(0)){
             source.enabled = !source.enabled;
             on = !on;
             beam.SetActive(on);
@@ -63,7 +63,7 @@ public class FLSource : MonoBehaviour{
 
                 bounce.transform.forward = refl_forward;
                 bounce.transform.right = Vector3.Cross(refl_up, refl_forward);
-                bounce.transform.up = -1.0f * refl_up;
+                bounce.transform.up = refl_up;
 
                 bounce_material.color = objhit.gameObject.GetComponent<Renderer>().material.color * beam_material.color;
             }
