@@ -37,7 +37,7 @@ public class Flasher : MonoBehaviour {
 
         Vector3 lightPos = this.transform.position + .25f * Vector3.right + .65f * Vector3.forward + .15f*Vector3.down;
 
-        flashlight = GameObject.Find("flashlight_withcone").gameObject;         flashlight.transform.SetPositionAndRotation(lightPos, Quaternion.Euler(0, 0, 0));         flashlight.transform.parent = GameObject.Find("Main Camera").gameObject.transform;     }
+        flashlight = GameObject.Find("device").gameObject;         flashlight.transform.SetPositionAndRotation(lightPos, Quaternion.Euler(0, 0, 0));         flashlight.transform.parent = GameObject.Find("Main Camera").gameObject.transform;     }
 
 
 
