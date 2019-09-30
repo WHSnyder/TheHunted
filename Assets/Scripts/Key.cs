@@ -27,13 +27,11 @@ public class Key : MonoBehaviour {
         playerTransform = GameObject.Find("Player").gameObject.transform;
     }
 
-
     // Update is called once per frame
     void Update(){
         transform.Rotate(Vector3.up * (RotationSpeed * Time.deltaTime));
         one.volume = 1.0f;
     }
-
 
     private void OnCollisionEnter(Collision collision){
         if (collision.gameObject.tag == "Player") {

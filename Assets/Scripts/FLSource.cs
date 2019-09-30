@@ -43,13 +43,11 @@ public class FLSource : MonoBehaviour{
             on = !on;
             beam.SetActive(on);
             source.intensity = 0;
-
             bounce.SetActive(on);
         }
 
-
         if (on){
-            source.intensity = 10;
+            source.intensity = 30;
 
             if (Physics.Raycast(transform.position, transform.forward, out hit, 40, 1 << 11)){
 
@@ -65,7 +63,6 @@ public class FLSource : MonoBehaviour{
             }
             else bounce.SetActive(false);
         }
-
 
         if (power <= 0.0f){
             source.enabled = false;
