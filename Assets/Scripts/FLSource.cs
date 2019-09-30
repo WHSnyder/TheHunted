@@ -9,7 +9,7 @@ public class FLSource : MonoBehaviour{
     private bool on;
     private float power = 200.0f;
 
-    Vector3 shot, refl_forward,refl_up;
+    Vector3 shot, refl_forward;
     Transform objhit;
     RaycastHit hit;
     private Material beam_material,bounce_material;
@@ -54,7 +54,6 @@ public class FLSource : MonoBehaviour{
                 objhit = hit.transform;
 
                 refl_forward = Vector3.Reflect(transform.forward, hit.normal);
-                refl_up = Vector3.Reflect(transform.up, hit.normal);
 
                 bounce.SetActive(true);
                 bounce.transform.position = hit.point;

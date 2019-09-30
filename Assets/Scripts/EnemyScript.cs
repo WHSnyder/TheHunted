@@ -128,18 +128,16 @@ public class EnemyScript : MonoBehaviour{
             req.location = transform.position;
 
             planner.requestSearch(ref req);
-            //Debug.Log(this.name + ": Requested search");
 
             while (!req.done) yield return null;
             
-            //Debug.Log(this.name + ": Search done, distance " + req.distance);
             if (req.distance > 0){
                 float vol = Mathf.Clamp(1.0f - req.distance/maxDistAudio, 0.0f, 1.0f);
                 sourceOne.transform.position = req.endspot;
                 one.PlayOneShot(crank, vol);
             }
 
-            yield return new WaitForSeconds(2.0f);
+            yield return new WaitForSeconds(1.0f);
         }
     }
 
@@ -317,22 +315,15 @@ public class EnemyScript : MonoBehaviour{
         switch (command.action){
 
             case EvilState.Looking:
-
                 transitionToLooking();
                 break;
-
             case EvilState.Seeking:
-
                 transitionToSeeking(command.loc);
                 break;
-
             case EvilState.Patrolling:
-
                 transitionToPatrolling();
                 break;
-
             case EvilState.Stunned:
-
                 transitionToStunned();
                 break;
         }
@@ -344,11 +335,9 @@ public class EnemyScript : MonoBehaviour{
     private void transitionToSeeking(Vector3 loc) {
 
         if (currState == EvilState.Stunned){
-
             queuedCommand = new Command(loc, EvilState.Seeking);
         }
-        else
-        {
+        else{
             currState = EvilState.Seeking;
             navDest = loc;
             agent.enabled = true;
@@ -367,7 +356,6 @@ public class EnemyScript : MonoBehaviour{
      */
 
     private void transitionToLooking() {
-
         currState = EvilState.Looking;
         animator.Play(lookHash);
     }
@@ -525,7 +513,7 @@ public class EnemyScript : MonoBehaviour{
             
             else if (bone.gameObject.name.Contains("iddle") ||
                      bone.gameObject.name.Contains("hin")){
-                boneFwd = bone.right;
+                 boneFwd = bone.right;
             }
             else boneFwd = bone.forward;
             
@@ -552,10 +540,8 @@ public class EnemyScript : MonoBehaviour{
 
     //uses sight range public var to determine if player could possibly be seen
     private bool withinRange() {
-        if (magToPlayer < sightRange) {
-            return true;
-        }
-        else return false;
+        if (magToPlayer < sightRange) return true;
+        return false;
     }
 
 
@@ -577,7 +563,6 @@ public class EnemyScript : MonoBehaviour{
 
         if (currState == EvilState.Attacking && order != EvilState.Stunned){
             //do nothing, ignores everything when attacking EXCEPT when player stuns them
-
             return;
         }
         queuedCommand = new Command(loc, order);
