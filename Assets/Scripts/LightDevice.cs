@@ -47,7 +47,7 @@ public class LightDevice : MonoBehaviour{
         }
 
         if (on){
-            source.intensity = 30;
+            source.intensity = 60;
 
             if (Physics.Raycast(transform.position, transform.forward, out hit, 40, 1 << 11)){
 
