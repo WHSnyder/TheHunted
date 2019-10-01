@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 
 
-public class FLSource : MonoBehaviour{
+public class LightDevice : MonoBehaviour{
 
-    public Light source;
+    private Light source;
     private GameObject beam,bounce;
 
     private bool on;
