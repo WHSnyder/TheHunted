@@ -11,7 +11,7 @@ public class LightDevice : MonoBehaviour{
     Color case_color;
 
     private bool on;
-    private float power = 200.0f, drain_time, drain_amt, spin_time, spin_speed;
+    private float power = 0.0f, drain_time, drain_amt, spin_time, spin_speed, on_time;
 
     Vector3 shot, refl_forward;
     Transform objhit;
@@ -43,6 +43,7 @@ public class LightDevice : MonoBehaviour{
 
         bulbmaterial = transform.Find("Bulb").gameObject.GetComponent<Renderer>().material;
         bulbmaterial.SetColor("_EmissionColor", Color.black);
+        beam_material.color = Color.black;
     }
 
 
@@ -56,11 +57,14 @@ public class LightDevice : MonoBehaviour{
             beam.SetActive(on);
             source.intensity = 0;
             bounce.SetActive(on);
+            on_time = 0.0f;
         }
 
         if (on){
 
-            source.intensity = 60;
+            power -= Time.deltaTime * .1f;
+            power = Mathf.Clamp(power, 0.0f, 1.0f);
+            beam_material.color *= power;
 
             if (Physics.Raycast(transform.position, transform.forward, out hit, 40, 1 << 11)){
 
@@ -85,16 +89,21 @@ public class LightDevice : MonoBehaviour{
                     lightcasematerial = objhit.Find("Sphere").gameObject.GetComponent<Renderer>().material;
                     caselight = objhit.Find("Point Light").gameObject.GetComponent<Light>();
                     drain_time = 0.0f;
+                    drain_amt = 0.0f;
                     case_color = caselight.color;
                     Debug.Log("Hit a new light");
                 }
-                drain_amt += Time.deltaTime * .2f;
-                drain_amt = Mathf.Clamp(drain_amt, 0.0f, 1.0f);
+                drain_amt = Time.deltaTime * .2f;
+                //drain_amt = Mathf.Clamp(drain_amt, 0.0f, 1.0f);
 
-                lightcasematerial.SetColor("_EmissionColor", (1.0f - drain_amt) * 3.0f * case_color);
-                caselight.color = (1.0f - drain_amt) * case_color;
+                //set the color of the emissive sphere
+                lightcasematerial.SetColor("_EmissionColor", 3.0f*(case_color - drain_amt * case_color));
 
-                bulbmaterial.SetColor("_EmissionColor", drain_amt * 3.0f * case_color);
+                //set the color of the point light
+                caselight.color = case_color - drain_amt * case_color;
+
+                bulbmaterial.SetColor("_EmissionColor",  drain_amt * 3.0f * case_color);
+                beam_material.color = drain_amt * case_color;
             }
         }
         else current_light = null;
