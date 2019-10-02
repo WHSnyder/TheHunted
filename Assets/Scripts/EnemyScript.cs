@@ -132,12 +132,12 @@ public class EnemyScript : MonoBehaviour{
             while (!req.done) yield return null;
             
             if (req.distance > 0){
-                float vol = Mathf.Clamp(1.0f - req.distance/maxDistAudio, 0.0f, 1.0f);
+                float vol = Mathf.Clamp(1.0f - req.distance/100.0f, 0.0f, 1.0f);
                 sourceOne.transform.position = req.endspot;
                 one.PlayOneShot(crank, vol);
             }
 
-            yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSeconds(1.5f);
         }
     }
 

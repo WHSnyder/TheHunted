@@ -371,6 +371,7 @@ public class AudioPlanner : MonoBehaviour {
     public void Start(){
 
         //Init audio graph from random node.
+
         initAudioGraph(AudioNode.AudioNodeFromObj(GameObject.Find("seg_four").transform.GetChild(1).gameObject));
         player = GameObject.Find("Player");
         StartCoroutine("ExecuteAudio");
