@@ -31,6 +31,12 @@ public class LightDevice : MonoBehaviour{
 
         beam.SetActive(false);
         bounce.SetActive(false);
+
+        foreach (GameObject lightcase in GameObject.FindGameObjectsWithTag("lightcase")){
+
+            Color color = lightcase.transform.Find("Point Light").gameObject.GetComponent<Light>().color;
+            lightcase.transform.Find("Sphere").gameObject.GetComponent<Renderer>().material.SetColor("_EmissionColor", 2*color);
+        }
     }
 
 
