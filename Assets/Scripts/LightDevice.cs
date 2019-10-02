@@ -1,18 +1,22 @@
 ﻿using UnityEngine;
 
+/*
+ * Class for controlling the player's device.
+ */
 
 public class LightDevice : MonoBehaviour{
 
-    private Light source;
-    private GameObject beam,bounce;
+    private Light source, caselight;
+    private GameObject beam,bounce,current_light;
+    Color case_color;
 
     private bool on;
-    private float power = 200.0f;
+    private float power = 200.0f, drain_time, drain_amt, spin_time, spin_speed;
 
     Vector3 shot, refl_forward;
     Transform objhit;
     RaycastHit hit;
-    private Material beam_material,bounce_material;
+    private Material beam_material,bounce_material, bulbmaterial,lightcasematerial;
 
 
 
@@ -33,10 +37,12 @@ public class LightDevice : MonoBehaviour{
         bounce.SetActive(false);
 
         foreach (GameObject lightcase in GameObject.FindGameObjectsWithTag("lightcase")){
-
             Color color = lightcase.transform.Find("Point Light").gameObject.GetComponent<Light>().color;
-            lightcase.transform.Find("Sphere").gameObject.GetComponent<Renderer>().material.SetColor("_EmissionColor", 2*color);
+            lightcase.transform.Find("Sphere").gameObject.GetComponent<Renderer>().material.SetColor("_EmissionColor", 3*color);
         }
+
+        bulbmaterial = transform.Find("Bulb").gameObject.GetComponent<Renderer>().material;
+        bulbmaterial.SetColor("_EmissionColor", Color.black);
     }
 
 
@@ -53,6 +59,7 @@ public class LightDevice : MonoBehaviour{
         }
 
         if (on){
+
             source.intensity = 60;
 
             if (Physics.Raycast(transform.position, transform.forward, out hit, 40, 1 << 11)){
@@ -68,6 +75,29 @@ public class LightDevice : MonoBehaviour{
             }
             else bounce.SetActive(false);
         }
+
+        if (Input.GetMouseButton(1)){
+            if (Physics.Raycast(transform.position, transform.forward, out hit, 40, 1 << 12)){
+
+                objhit = hit.transform;
+                if (current_light != objhit.gameObject){
+                    current_light = objhit.gameObject;
+                    lightcasematerial = objhit.Find("Sphere").gameObject.GetComponent<Renderer>().material;
+                    caselight = objhit.Find("Point Light").gameObject.GetComponent<Light>();
+                    drain_time = 0.0f;
+                    case_color = caselight.color;
+                    Debug.Log("Hit a new light");
+                }
+                drain_amt += Time.deltaTime * .2f;
+                drain_amt = Mathf.Clamp(drain_amt, 0.0f, 1.0f);
+
+                lightcasematerial.SetColor("_EmissionColor", (1.0f - drain_amt) * 3.0f * case_color);
+                caselight.color = (1.0f - drain_amt) * case_color;
+
+                bulbmaterial.SetColor("_EmissionColor", drain_amt * 3.0f * case_color);
+            }
+        }
+        else current_light = null;
 
         if (power <= 0.0f){
             source.enabled = false;
