@@ -67,13 +67,13 @@ public class LightDevice : MonoBehaviour{
 
         if (on && power > .0001f){
 
-            power -= Time.deltaTime * 100.0f;
-            power = Mathf.Clamp(power, 0.0f, 10000.0f);
-            bulbmaterial.SetColor("_EmissionColor", 2.0f * power * (1/300.0f) * bulb_color);
+            power -= Time.deltaTime * .2f;
+            power = Mathf.Clamp(power, 0.0f, 3.0f);
+            bulbmaterial.SetColor("_EmissionColor", 2.0f * .3f * power * bulb_color);
 
-            beam_material.color = power/300.0f * bulb_color;//bulbmaterial.GetColor("_EmissionColor");
+            beam_material.color = .3f * power * bulb_color;//bulbmaterial.GetColor("_EmissionColor");
             beam_light.color = bulb_color;//bulbmaterial.GetColor("_EmissionColor");
-            beam_light.intensity = 20.0f * power / 300.0f;
+            beam_light.intensity = 20.0f * .3f * power;
 
 
             if (Physics.Raycast(transform.position, transform.forward, out hit, 40, 1 << 11) && power > 0.0f){
@@ -107,19 +107,19 @@ public class LightDevice : MonoBehaviour{
                     bulb_color = Color.black;
                 }
 
-                drain_amt = Time.deltaTime * 100.0f;
+                drain_amt = Time.deltaTime;
 
                 //set the color  of the point light
-                caselight.intensity = Mathf.Clamp(caselight.intensity - drain_amt, 0.0f, 300.0f);
+                caselight.intensity = Mathf.Clamp(caselight.intensity - 100.0f*drain_amt, 0.0f, 300.0f);
 
                 //set the color of the emissive sphere
                 lightcasematerial.SetColor("_EmissionColor", .01f * caselight.intensity * case_color);
 
                 //set color of bulb on flashlight
-                bulb_color += .003f * drain_amt * case_color;
+                bulb_color += .3f * drain_amt * case_color;
                 bulbmaterial.SetColor("_EmissionColor", 2.0f * bulb_color);
 
-                power = Mathf.Clamp(power + drain_amt, 0.0f, 300.0f);
+                power = Mathf.Clamp(power + drain_amt, 0.0f, 3.0f);
             }
         }
         else current_light = null;
