@@ -47,24 +47,9 @@ public class Player : MonoBehaviour {
     
         setMouseParams();
         setMovementParams();
-        //EnemyStun();
         
         if (win || dead) countdown();
         
-        /*if (!win) {
-            GameObject[] enemyList = GameObject.FindGameObjectsWithTag("Enemy");
-            for (int z = 0; z < enemyList.Length; z++) { 
-                if ((Vector3.Magnitude(transform.position - enemyList[z].transform.position) < 2)
-                        || (transform.position.y < -10.0f)) {
-                    if (enemyList[z].GetComponent<EnemyScript>().currState != EvilState.Stunned){
-                        dead = true;
-                        win = false;
-                        countdown();// setInfoText();
-                    }
-                }
-            }
-        }*/ 
-
         if (Input.GetKeyDown("q")) SceneManager.LoadScene("MainMenu");
     }
 

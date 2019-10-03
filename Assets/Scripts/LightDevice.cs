@@ -20,6 +20,8 @@ public class LightDevice : MonoBehaviour{
 
     private Color bulb_color;
 
+    private Color[] colors = { Color.blue, Color.red, Color.green, Color.cyan, Color.magenta, Color.yellow, Color.white };
+
 
     // Start is called before the first frame update
     void Start(){
@@ -39,8 +41,11 @@ public class LightDevice : MonoBehaviour{
         beam.SetActive(false);
         bounce.SetActive(false);
 
+        Random.InitState(10344);
+
         foreach (GameObject lightcase in GameObject.FindGameObjectsWithTag("lightcase")){
-            Color color = lightcase.transform.Find("Point Light").gameObject.GetComponent<Light>().color;
+            Color color = colors[ Mathf.FloorToInt( Random.Range(0.0f,7.0f) )];
+            lightcase.transform.Find("Point Light").gameObject.GetComponent<Light>().color = color;
             lightcase.transform.Find("Sphere").gameObject.GetComponent<Renderer>().material.SetColor("_EmissionColor", 3*color);
         }
 
@@ -70,6 +75,8 @@ public class LightDevice : MonoBehaviour{
 
         if (on && power > .0001f){
 
+            EnemyStun();
+
             drain_amt = Time.deltaTime;
             power -= drain_amt;
 
@@ -77,11 +84,11 @@ public class LightDevice : MonoBehaviour{
             bulbmaterial.SetColor("_EmissionColor", 2.0f * .3f * power * bulb_color);
 
             //Sets color of light beam mesh
-            beam_material.color = 2.0f * .3f * power * bulb_color;
+            beam_material.color = 1.0f * .3f * power * bulb_color;
 
             //Sets color and intensity of beam's spotlight 
             beam_light.color = bulb_color;
-            beam_light.intensity = 90.0f * .3f * power;
+            beam_light.intensity = 180.0f * .3f * power;
 
 
             if (Physics.Raycast(transform.position, transform.forward, out hit, 40, 1 << 11)){ //11 = reflectives
@@ -162,5 +169,16 @@ public class LightDevice : MonoBehaviour{
             }
         }
         else current_light = null;
+    }
+
+
+    private bool EnemyStun(){
+
+        if (Physics.Raycast(transform.position, transform.forward, out hit, 30, 1 << 10)){ //Heads lol
+            GameObject head = hit.collider.gameObject;
+            head.GetComponent<HeadRef>().slist.GetComponent<EnemyScript>().processCommand(Vector3.zero, EvilState.Stunned);
+            return true;
+        }
+        return false;
     }
 }

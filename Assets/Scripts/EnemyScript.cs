@@ -151,7 +151,7 @@ public class EnemyScript : MonoBehaviour{
         magToPlayer = Vector3.Magnitude(toPlayer);
 
         // if in 20 to 25 distance randomly go into ambush or keep patrolling
-        if ((magToPlayer >20) && (magToPlayer < 25) && (currState == EvilState.Patrolling) && (id % 2 == 0)) {
+        if ((magToPlayer > 20) && (magToPlayer < 25) && (currState == EvilState.Patrolling) && (id % 2 == 0)) {
             if (ambushOrPatrol == 1){
                 //transitionToAmbush();
             }
@@ -565,6 +565,9 @@ public class EnemyScript : MonoBehaviour{
             //do nothing, ignores everything when attacking EXCEPT when player stuns them
             return;
         }
+
+        if (order == EvilState.Stunned) Debug.Log("I'm stunned!");
+
         queuedCommand = new Command(loc, order);
     }
 
