@@ -59,8 +59,22 @@ public class LightDevice : MonoBehaviour{
     // Update is called once per frame
     void Update(){
 
-        if (Input.GetKeyDown("f") || Input.GetKeyUp("f")){
+       
+        if (Input.GetKeyDown("f")){
             on = !on;
+
+            beam.SetActive(on);
+            beam_light.intensity = 1.0f;
+            beam_light.enabled = on;
+
+            bounce.SetActive(on);
+            bounce_light.enabled = on;
+
+            current_light = null;
+        }
+
+        if (power < .0001f && on){
+            on = false;
 
             beam.SetActive(on);
             beam_light.intensity = 1.0f;
@@ -90,7 +104,7 @@ public class LightDevice : MonoBehaviour{
             beam_light.color = bulb_color;
             beam_light.intensity = 180.0f * .3f * power;
 
-
+            //Testing if flashlight hits reflective surfaces...
             if (Physics.Raycast(transform.position, transform.forward, out hit, 40, 1 << 11)){ //11 = reflectives
 
                 objhit = hit.transform;
@@ -115,7 +129,7 @@ public class LightDevice : MonoBehaviour{
                 bounce.SetActive(false);
                 bounce_light.enabled = false;
 
-                //For giving light back 
+                //For giving light back...
                 if (Physics.Raycast(transform.position, transform.forward, out hit, 40, 1 << 12)){ //12 = lights
 
                     objhit = hit.transform;
@@ -127,17 +141,20 @@ public class LightDevice : MonoBehaviour{
                         caselight = objhit.Find("Point Light").gameObject.GetComponent<Light>();
                     }
 
+
                     //set the color  of the point light
                     caselight.intensity = Mathf.Clamp(caselight.intensity + 50.0f * drain_amt, 0.0f, 300.0f);
                     caselight.color += .5f * (-1.0f * drain_amt * caselight.color + drain_amt * bulb_color);
 
                     //set the color of the emissive sphere
-                    lightcasematerial.SetColor("_EmissionColor", .015f * caselight.intensity * caselight.color);
+                    lightcasematerial.SetColor("_EmissionColor", .015f * caselight.intensity * caselight.color);                    
                 }
             }
         }
 
+        //Handles light drain
         if (Input.GetMouseButton(0)){
+            on = false;
             if (Physics.Raycast(transform.position, transform.forward, out hit, 40, 1 << 12)){
 
                 objhit = hit.transform;
@@ -150,22 +167,25 @@ public class LightDevice : MonoBehaviour{
                     drain_intensity = caselight.intensity;
 
                     case_color = caselight.color;
-                    bulb_color = Color.black;
+                    //bulb_color = Color.black;
                 }
 
-                drain_amt = 2.0f * Time.deltaTime;
+                if (caselight.intensity > 0.0f){
 
-                //set the color  of the point light
-                caselight.intensity = Mathf.Clamp(caselight.intensity - 100.0f*drain_amt, 0.0f, 300.0f);
+                    drain_amt = 2.0f * Time.deltaTime;
 
-                //set the color of the emissive sphere
-                lightcasematerial.SetColor("_EmissionColor", .01f * caselight.intensity * case_color);
+                    //set the color  of the point light
+                    caselight.intensity = Mathf.Clamp(caselight.intensity - 100.0f * drain_amt, 0.0f, 300.0f);
 
-                //set color of bulb on flashlight
-                bulb_color += .3f * drain_amt * case_color;
-                bulbmaterial.SetColor("_EmissionColor", 2.0f * bulb_color);
+                    //set the color of the emissive sphere
+                    lightcasematerial.SetColor("_EmissionColor", .01f * caselight.intensity * case_color);
 
-                power += drain_amt;//  Mathf.Clamp(power + drain_amt, 0.0f, 3.0f);
+                    //set color of bulb on flashlight
+                    bulb_color += .25f * (-1.0f * drain_amt * bulb_color + drain_amt * caselight.color);
+                    bulbmaterial.SetColor("_EmissionColor", 2.0f * bulb_color);
+
+                    power += drain_amt;
+                }
             }
         }
         else current_light = null;

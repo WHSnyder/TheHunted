@@ -41,7 +41,6 @@ public class Player : MonoBehaviour {
         flashlight = GameObject.Find("device").gameObject;         flashlight.transform.SetPositionAndRotation(lightPos, Quaternion.Euler(0, 0, 90));         flashlight.transform.parent = GameObject.Find("Main Camera").gameObject.transform;     }
 
 
-
     // Update is called once per frame
     void Update(){
     
@@ -51,16 +50,6 @@ public class Player : MonoBehaviour {
         if (win || dead) countdown();
         
         if (Input.GetKeyDown("q")) SceneManager.LoadScene("MainMenu");
-    }
-
-
-    private bool EnemyStun() {
-        if (Physics.Raycast(flashlight.transform.position, flashlight.transform.forward, out caster, 30, 1<<10)) { 
-            GameObject head = caster.collider.gameObject;
-            head.GetComponent<HeadRef>().slist.GetComponent<EnemyScript>().processCommand(Vector3.zero, EvilState.Stunned);
-            return true;
-        }
-        return false;
     }
 
 
