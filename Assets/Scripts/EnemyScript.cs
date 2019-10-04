@@ -19,7 +19,8 @@ public enum EvilState{
  * or from the slist itself (to queue an obvious state transition)
  */
 
-public class Command{
+public class Command {
+
     public Vector3 loc;
     public EvilState action;
 
@@ -291,6 +292,7 @@ public class EnemyScript : MonoBehaviour{
 
             //stick slist to ceiling and wait...
             case EvilState.Ambush:
+
                 if (magToPlayer < 8) {
                     agent.enabled = true;
                     animator.enabled = true;
@@ -368,7 +370,7 @@ public class EnemyScript : MonoBehaviour{
         queuedCommand = null;
         agent.enabled = true;
         agent.SetDestination(playerTransform.position);
-        agent.speed = agent.speed * 3f;
+        agent.speed *= 3.0f;
     }
 
 
@@ -565,9 +567,6 @@ public class EnemyScript : MonoBehaviour{
             //do nothing, ignores everything when attacking EXCEPT when player stuns them
             return;
         }
-
-        if (order == EvilState.Stunned) Debug.Log("I'm stunned!");
-
         queuedCommand = new Command(loc, order);
     }
 

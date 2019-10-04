@@ -11,7 +11,7 @@ public class LightDevice : MonoBehaviour{
     Color case_color;
 
     private bool on;
-    private float power = 0.0f, drain_time, drain_amt, spin_time, spin_speed, on_time, drain_intensity, recip = 1/255.0f,frac;
+    private float power, drain_amt, spin_time, spin_speed;
 
     Vector3 shot, refl_forward;
     Transform objhit;
@@ -41,9 +41,10 @@ public class LightDevice : MonoBehaviour{
         beam.SetActive(false);
         bounce.SetActive(false);
 
-        Random.InitState(10344);
+        Random.InitState((int)System.DateTime.Now.Ticks);
 
         foreach (GameObject lightcase in GameObject.FindGameObjectsWithTag("lightcase")){
+
             Color color = colors[ Mathf.FloorToInt( Random.Range(0.0f,7.0f) )];
             lightcase.transform.Find("Point Light").gameObject.GetComponent<Light>().color = color;
             lightcase.transform.Find("Sphere").gameObject.GetComponent<Renderer>().material.SetColor("_EmissionColor", 3*color);
@@ -59,39 +60,21 @@ public class LightDevice : MonoBehaviour{
     // Update is called once per frame
     void Update(){
 
-       
-        if (Input.GetKeyDown("f")){
+        if (power > .0001f && Input.GetKeyDown("f")){
             on = !on;
-
-            beam.SetActive(on);
-            beam_light.intensity = 1.0f;
-            beam_light.enabled = on;
-
-            bounce.SetActive(on);
-            bounce_light.enabled = on;
-
-            current_light = null;
+            SetLights(on);
         }
-
-        if (power < .0001f && on){
+        
+        if (on && power < .0001f){
             on = false;
-
-            beam.SetActive(on);
-            beam_light.intensity = 1.0f;
-            beam_light.enabled = on;
-
-            bounce.SetActive(on);
-            bounce_light.enabled = on;
-
-            current_light = null;
+            SetLights(on);
         }
 
-
-        if (on && power > .0001f){
+        if (on){
 
             EnemyStun();
 
-            drain_amt = Time.deltaTime;
+            drain_amt = .2f * Time.deltaTime;
             power -= drain_amt;
 
             //Sets color of bulb on player's device
@@ -124,6 +107,7 @@ public class LightDevice : MonoBehaviour{
                 bounce_light.intensity = beam_light.intensity;
                 bounce_light.color = bounce_material.color;
             }
+
             else {
 
                 bounce.SetActive(false);
@@ -141,7 +125,6 @@ public class LightDevice : MonoBehaviour{
                         caselight = objhit.Find("Point Light").gameObject.GetComponent<Light>();
                     }
 
-
                     //set the color  of the point light
                     caselight.intensity = Mathf.Clamp(caselight.intensity + 50.0f * drain_amt, 0.0f, 300.0f);
                     caselight.color += .5f * (-1.0f * drain_amt * caselight.color + drain_amt * bulb_color);
@@ -154,7 +137,10 @@ public class LightDevice : MonoBehaviour{
 
         //Handles light drain
         if (Input.GetMouseButton(0)){
+
             on = false;
+            SetLights(on);
+
             if (Physics.Raycast(transform.position, transform.forward, out hit, 40, 1 << 12)){
 
                 objhit = hit.transform;
@@ -162,12 +148,9 @@ public class LightDevice : MonoBehaviour{
                 if (current_light != objhit.gameObject){
                     current_light = objhit.gameObject;
                     lightcasematerial = objhit.Find("Sphere").gameObject.GetComponent<Renderer>().material;
+
                     caselight = objhit.Find("Point Light").gameObject.GetComponent<Light>();
-
-                    drain_intensity = caselight.intensity;
-
                     case_color = caselight.color;
-                    //bulb_color = Color.black;
                 }
 
                 if (caselight.intensity > 0.0f){
@@ -184,7 +167,7 @@ public class LightDevice : MonoBehaviour{
                     bulb_color += .25f * (-1.0f * drain_amt * bulb_color + drain_amt * caselight.color);
                     bulbmaterial.SetColor("_EmissionColor", 2.0f * bulb_color);
 
-                    power += drain_amt;
+                    power += .5f * drain_amt;
                 }
             }
         }
@@ -194,11 +177,23 @@ public class LightDevice : MonoBehaviour{
 
     private bool EnemyStun(){
 
-        if (Physics.Raycast(transform.position, transform.forward, out hit, 30, 1 << 10)){ //Heads lol
+        if (Physics.Raycast(transform.position, transform.forward, out hit, 30, 1 << 10)){ //Heads layer
             GameObject head = hit.collider.gameObject;
             head.GetComponent<HeadRef>().slist.GetComponent<EnemyScript>().processCommand(Vector3.zero, EvilState.Stunned);
             return true;
         }
         return false;
+    }
+
+    private void SetLights(bool status){
+
+        beam.SetActive(status);
+        beam_light.intensity = status ? 1.0f : 0.0f;
+        beam_light.enabled = status;
+
+        bounce.SetActive(status);
+        bounce_light.enabled = status;
+
+        current_light = null;
     }
 }

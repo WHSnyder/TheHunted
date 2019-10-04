@@ -14,12 +14,14 @@ public class Player : MonoBehaviour {
     private float jump = 5.0f, gravity = 9.8f;
 
     //Dan adds 5/12
-    private bool win, dead, canTeleport, hasKey;
-    private float lightDist, lightAngle, spotAngle, time = 5.0f, transparency;
+    private bool win, dead, paused;
+    private float time = 5.0f, transparency;
+
+    private Canvas canvas;
 
     private CharacterController control;
 
-    public GameObject crumb, cam, flashlight;
+    public GameObject cam, flashlight;
 
     private RaycastHit caster;
 
@@ -38,7 +40,7 @@ public class Player : MonoBehaviour {
 
         Vector3 lightPos = this.transform.position + .25f * Vector3.right + .65f * Vector3.forward + .15f*Vector3.down;
 
-        flashlight = GameObject.Find("device").gameObject;         flashlight.transform.SetPositionAndRotation(lightPos, Quaternion.Euler(0, 0, 90));         flashlight.transform.parent = GameObject.Find("Main Camera").gameObject.transform;     }
+        flashlight = GameObject.Find("device").gameObject;         flashlight.transform.SetPositionAndRotation(lightPos, Quaternion.Euler(0, 0, 90));         flashlight.transform.parent = GameObject.Find("Main Camera").gameObject.transform;          canvas = GameObject.Find("Canvas").GetComponent<Canvas>();     }
 
 
     // Update is called once per frame
@@ -50,6 +52,12 @@ public class Player : MonoBehaviour {
         if (win || dead) countdown();
         
         if (Input.GetKeyDown("q")) SceneManager.LoadScene("MainMenu");
+
+        if (Input.GetKeyDown(KeyCode.Escape)){
+
+            paused = !paused;
+            Time.timeScale = paused ? 0.0f : 1.0f;            
+        }
     }
 
 
@@ -68,6 +76,7 @@ public class Player : MonoBehaviour {
 
     private void setMovementParams(){
 
+        //back and forth
         if (Input.GetKeyDown("w") || Input.GetKeyDown("s")) speed = move();
 
         //jump if grounded
@@ -82,6 +91,7 @@ public class Player : MonoBehaviour {
         transform.Rotate(0, x, 0);
         control.Move(transform.forward * ver*2);
 
+        //strafing
         if (Input.GetKey("a")) control.Move(transform.right * Time.deltaTime * -2.0f);
         if (Input.GetKey("d")) control.Move(transform.right * Time.deltaTime * 2.0f);
 
