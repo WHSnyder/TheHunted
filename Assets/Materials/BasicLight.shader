@@ -67,14 +67,15 @@ Shader "Custom/BasicLight" {
                 // get raycast between vertice's dir and normal
                 // discard vertices facing opposite way with view direction 
                 // if the value is closer to 1 then that means the vertex is facing more towards the camera
-                float raycast = saturate(dot(viewDir, i.normal));
+                float raycast = saturate(dot(viewDir,i.normal));
+                
                 // make extreme distribution
                 float fresnel = pow(raycast, _Fresnel);
 
                 // fade out
                 //float fade = saturate(pow(1. - i.uv.y, _Fade));
 
-                col.a *= fresnel * _AlphaOffset;// * fade;
+                col.a *= fresnel * _AlphaOffset;
 
                 return col;
             }
