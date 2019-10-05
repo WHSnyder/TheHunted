@@ -29,6 +29,7 @@ public class Player : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start(){
+        Cursor.lockState = CursorLockMode.Locked;
 
         control = GetComponent<CharacterController>();
 
@@ -40,7 +41,11 @@ public class Player : MonoBehaviour {
 
         Vector3 lightPos = this.transform.position + .25f * Vector3.right + .65f * Vector3.forward + .15f*Vector3.down;
 
-        flashlight = GameObject.Find("device").gameObject;         flashlight.transform.SetPositionAndRotation(lightPos, Quaternion.Euler(0, 0, 90));         flashlight.transform.parent = GameObject.Find("Main Camera").gameObject.transform;          canvas = GameObject.Find("Canvas").GetComponent<Canvas>();     }
+        flashlight = GameObject.Find("device").gameObject;  
+        flashlight.transform.SetPositionAndRotation(lightPos, Quaternion.Euler(0, 0, 90));  
+        flashlight.transform.parent = GameObject.Find("Main Camera").gameObject.transform;    
+        canvas = GameObject.Find("Canvas").GetComponent<Canvas>();    
+    }
 
 
     // Update is called once per frame
