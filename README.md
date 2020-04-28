@@ -1,5 +1,5 @@
 # TheHunted
-<a href="https://www.youtube.com/watch?v=x7sWHIO9aA8&t=1s"> CMSC425 final project </a> by Will Snyder,<a href="https://github.com/DanRessler"> Dan Ressler </a>, and <a href="https://github.com/jlford97">Leighton Ford </a>.
+<a href="https://www.youtube.com/watch?v=x7sWHIO9aA8&t=1s"> CMSC425 final project </a> by Will Snyder,<a href="https://github.com/DanRessler"> Dan Ressler </a>, and <a href="https://github.com/jlford97">Leighton Ford </a>.  I have no idea why they aren't listed as contributors, their commits are logged but their accounts disconnected from the repo...
  
  
  The player must find a key in a labrynthe filled with overpowered demons.  The player can only use their ears to avoid enemies.  
